@@ -1,0 +1,11 @@
+.game-container {
+    height: 300px;
+    width: 300px;
+    background-color: blue;   
+}
+
+.test-button {
+    height: 50px;
+    width: 50px;
+    background-color: green;
+}
