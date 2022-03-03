@@ -1,11 +1,62 @@
-.game-container {
-    height: 300px;
-    width: 300px;
-    background-color: blue;   
+
+.home-container {
+    height: 500px;
+    width: 500px;
+    /* background-color: yellow; */
+
+    display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: center;
+	align-items: center;
+	align-content: stretch;
 }
 
-.test-button {
+.columns {
+    height: 300px;
+    width: 300px;
+    /* background-color: blue;    */
+
+    display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: center;
+	/* align-content: center; */
+}
+
+.tile {
+    margin: 20px;
     height: 50px;
     width: 50px;
     background-color: green;
+    opacity: .1;
+}
+
+.rows {
+    display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: center;
+	align-content: center;
+}
+
+.player-row {
+    height: 100px;
+    width: 300px;
+    display: flex;
+	flex-direction: row;
+	flex-wrap: nowrap;
+	justify-content: space-around;
+	align-items: center;
+	align-content: stretch;
+    margin: auto;
+}
+
+.player-seat {
+    height: 50px;
+    width: 50px;
+    background-color: orange;
+    margin: auto;
 }
