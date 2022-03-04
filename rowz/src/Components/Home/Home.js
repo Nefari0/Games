@@ -23,18 +23,27 @@ class Home extends Component {
                 [null,null,null],
                 [null,null,null]
             ],
-            currentPlayer:'X',
+            currentPlayer:"X",
+            playerX:null,
+            playerY:null,
+            enterTextX:false,
+            enterTextY:false,
             // data:null,
         }
         this.makeMove = this.makeMove.bind(this)
-        this.isSolved = this.isSolved.bind(this)
+        // this.isSolved = this.isSolved.bind(this)
+        // this.switchPlayer = this.switchPlayer.bind(this)
+        this.getConnected = this.getConnected.bind(this)
     }
 
         componentDidMount() {
             this.getConnected()
-            // axios.get('/api/board/get').then(res => {
-            //     this.setState({...this.state,board:res.data})
-            // })
+        }
+
+        componentDidUpdate(prevProps,prevState) {
+            const { currentPlayer } = prevState
+            // console.log('prev props',currentPlayer)
+            // if (currentPlayer === "X") {this.setState({currentPlayer:"O"})}
         }
 
         getConnected = (input) => {
@@ -44,56 +53,25 @@ class Home extends Component {
             client.onmessage = (message) => {
             
                 const dataFromServer = JSON.parse(message.data);
-                console.log('got reply',dataFromServer)
                 const { board,currentPlayer } = dataFromServer.input
+                this.isSolved(board,currentPlayer)
+                this.switchPlayer(currentPlayer)
+                // console.log('got reply',currentPlayer)
                 if (dataFromServer.type === 'newTurn' ) {
-                // this.setState((State) =>
-                // ({newMessages:[...this.state.newMessages,
-                // {
-                //     msg: dataFromServer.msg,
-                //     user:dataFromServer.user
-                // }]
-        
-                // }))
                 this.setState({
                     board:board,
-                    currentPlayer:currentPlayer
+                    // currentPlayer:currentPlayer
                 })
                 }
                 }
             }
-    
-        sendToSockets = (input) => {
-            // const { messages,loggedInUser } = this.state
-            // const { user } = this.props.user.user
-            // client.send(JSON.stringify({type: "message",msg:text,user:user, conversation_id:conversation_id}))
-            client.send(JSON.stringify({type: "message",input}))
-        };
 
         sendToSocketsSwitch = (input) => {
-            // const { messages,loggedInUser } = this.state
-            // const { user } = this.props.user.user
-            // client.send(JSON.stringify({type: "message",msg:text,user:user, conversation_id:conversation_id}))
             client.send(JSON.stringify({type: "newTurn",input}))
         };
 
-        sendToSockets2 = (input) => {
-            // const { messages,loggedInUser } = this.state
-            // const { user } = this.props.user.user
-            // client.send(JSON.stringify({type: "message",msg:text,user:user, conversation_id:conversation_id}))
-            client.send(JSON.stringify({type: "information",input}))
-        };
-
-        pickedPlayerX = () => {
-
-        }
-
-        pickedPlayerO = () => {
-
-        }
-
-        isSolved = (board) => {
-            const { currentPlayer } = this.state
+        isSolved = (board,currentPlayer) => {
+            // const { currentPlayer } = this.state
             var horizontalWinner = null
             var diagonalWinner = null
             var verticalWinner = null
@@ -102,45 +80,59 @@ class Home extends Component {
             for (let i = 0; i < board.length; i++){
                 for (let j = 0; j < board.length; j++){
                     //   console.log('here is i',j,board[j])
-                    var isSame = board[i].filter(element => element === "X")
-                    console.log('winner',isSame)
+                    var isSame = board[i].filter(element => element === currentPlayer)
                     if (isSame.length === 3){
-                        if (isSame[0] > 0){console.log(isSame[0])} else {console.log(-1)}
+                        if (isSame[0][0] === currentPlayer){this.setState({horizontalWinner:currentPlayer})} else {console.log(-1)}
                     } else {horizontalWinner = false}
                 }
             }
+            // this.switchPlayer(currentPlayer)
 
             // check diagonal
-            //   if(board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
-            //     if(board[0][0] > 0) {return(board[0][0])} else {return(-1)}
-            // }
-            //   if(board[2][0] === board[1][1] && board[1][1] === board[0][2]) {
-            //     if(board[2][0] > 0) {return(board[0][2])} else {return(-1)}
-            // } else {diagonalWinner = false}
+            console.log('winner',board[2][0])
+              if(board[0][0] === board[1][1] && board[1][1] === board[2][2]) {
+                // if(board[0][0] === currentPlayer) {return(board[0][0])} else {return(-1)}
+                if(board[0][0] === currentPlayer) {this.setState({diagonalWinner:currentPlayer})} else {return(-1)}
+            }
+              if(board[2][0] === board[1][1] && board[1][1] === board[0][2]) {
+                if(board[2][0] === currentPlayer) {this.setState({diagonalWinner:currentPlayer})} else {return(-1)}
+            } else {diagonalWinner = false}
             
             // check vertical
-            // for (let i = 0; i < board.length; i++){
-            //   if (board[0][i] === board[1][i] && board[1][i] === board[2][i]){
-            //     return(board[0][i])
-            //     } else {verticalWinner = false}
-            // }
+            for (let i = 0; i < board.length; i++){
+              if (board[0][i] === board[1][i] && board[1][i] === board[2][i]){
+                this.setState({verticalWinner:currentPlayer})
+                } else {verticalWinner = false}
+            }
             // check board for completion
-            // for (let i = 0; i < board.length; i++){
-            //   if(board[i].includes(0) != false) {return (-1)}
-            // }
+            for (let i = 0; i < board.length; i++){
+              if(board[i].includes(null) != false) {return (-1)}
+            }
             // verify draw
             // if (horizontalWinner === false && verticalWinner === false && diagonalWinner === false){
             //   return(0)
             // }
           }
 
-        makeMove = (row,col) => {
+
+        //   -----------------------------
+        switchPlayer = (input) => {
+            switch (input) {
+                case 'O':
+                    this.setState({currentPlayer:'X'})
+                    break;
+                case 'X':
+                    this.setState({currentPlayer:'O'})
+            }
+        }
+
+        makeMove = (row,col,player) => {
             const { board,currentPlayer } = this.state
             let updateBoard = [...board]
-            let player = null
+            // let player = this.switchPlayer(currentPlayer)
             if (board[row][col] === null ) {updateBoard[row][col] = currentPlayer}
-            if (currentPlayer === "X") {player = "O"} else {player = "X"}
-            console.log(updateBoard)
+            // if (currentPlayer === "X") {player = "O"} else {player = "X"}
+            // console.log(player,'here is player')
             // const isWinner = this.isSolved(updateBoard)
             this.setState({
                 board:updateBoard,
@@ -152,9 +144,21 @@ class Home extends Component {
             // console.log('here is the clone',updateBoard)
         }
 
+        handleInput = (prop,val) => {
+            this.setState({[prop]:val})
+        }
+        
+
+        // joinGame = (player,name) => {
+        //     const { playerX,playerY } = this.state
+        //     if (player === "X" && playerX === null) {
+        //         this.setState({[player]:name})
+        //     }
+        // }
+
     render() {
 
-        const { row1,currentPlayer } = this.state
+        const { row1,currentPlayer,playerX,playerY } = this.state
 
         // const mappedRow1 = row1.map(el => {
         //     return <div className='rows' key={el.id} ></div>
@@ -183,24 +187,12 @@ class Home extends Component {
                         <div className='tile' onClick={() => this.makeMove(2,1)} >{this.state.board[2][1]}</div>
                         <div className='tile' onClick={() => this.makeMove(2,2)} >{this.state.board[2][2]}</div>
                     </div>
-
-                    {/* <div className='rows'>
-                        <div className='tile' onClick={() => this.sendToSockets('this is input')} ></div>
-                        <div className='tile' onClick={() => this.sendToSockets('this is input')} ></div>
-                        <div className='tile' onClick={() => this.sendToSockets('this is input')} ></div>
-                    </div> */}
-
-                    {/* <div className='rows'>
-                        <div className='tile' onClick={() => this.sendToSockets('this is input')} ></div>
-                        <div className='tile' onClick={() => this.sendToSockets('this is input')} ></div>
-                        <div className='tile' onClick={() => this.sendToSockets('this is input')} ></div>
-                    </div> */}
                     
                 </div>
-                {/* <div className='player-row'>
-                    <div className='player-seat'><h1>O</h1></div>
-                    <div className='player-seat'><h1>X</h1></div>
-                </div> */}
+                <div className='player-row'>
+                    <div className='player-seat' ><h1>O</h1></div>
+                    <div className='player-seat' ><h1>X</h1></div>
+                </div>
             </div>
         )
     }
