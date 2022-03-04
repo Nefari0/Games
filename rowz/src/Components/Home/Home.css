@@ -30,7 +30,7 @@
     height: 50px;
     width: 50px;
     background-color: green;
-    opacity: .1;
+    /* opacity: .1; */
 }
 
 .rows {
@@ -59,4 +59,5 @@
     width: 50px;
     background-color: orange;
     margin: auto;
+    opacity: .1;
 }
