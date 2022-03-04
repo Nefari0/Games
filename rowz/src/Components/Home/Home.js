@@ -2,8 +2,8 @@ import './Home.css'
 import React, { Component } from 'react'
 import axios from 'axios';
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-const client = new W3CWebSocket(`ws://127.0.0.1:8001`); // production
-// const client = new W3CWebSocket(`ws://165.227.102.189:8001`); // build
+// const client = new W3CWebSocket(`ws://127.0.0.1:8001`); // production
+const client = new W3CWebSocket(`ws://165.227.102.189:8001`); // build
 
 class Home extends Component {
     constructor() {

@@ -24,10 +24,10 @@ app.use(
     }),
     )
     
-    // app.use( express.static( __dirname + '/../build'));
-    // app.get('*', (req,res) => {
-    //     res.send(path.join(__dirname, '../build/index.html'))
-    // })
+    app.use( express.static( __dirname + '/../build'));
+    app.get('*', (req,res) => {
+        res.send(path.join(__dirname, '../build/index.html'))
+    })
     
     
     // websocket
