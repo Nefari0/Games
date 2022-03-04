@@ -171,28 +171,28 @@ class Home extends Component {
                     {/* {mappedBoard} */}
                     {/* <p>home</p> */}
                     <div className='rows'>
-                        <div className='tile' onClick={() => this.makeMove(0,0)} >{this.state.board[0][0]}</div>
-                        <div className='tile' onClick={() => this.makeMove(0,1)} >{this.state.board[0][1]}</div>
-                        <div className='tile' onClick={() => this.makeMove(0,2)} >{this.state.board[0][2]}</div>
+                        <div className='tile' onClick={() => this.makeMove(0,0)} ><h1 className='selected-h1'>{this.state.board[0][0]}</h1></div>
+                        <div className='tile' onClick={() => this.makeMove(0,1)} ><h1 className='selected-h1'>{this.state.board[0][1]}</h1></div>
+                        <div className='tile' onClick={() => this.makeMove(0,2)} ><h1 className='selected-h1'>{this.state.board[0][2]}</h1></div>
                     </div>
 
                     <div className='rows'>
-                        <div className='tile' onClick={() => this.makeMove(1,0)} >{this.state.board[1][0]}</div>
-                        <div className='tile' onClick={() => this.makeMove(1,1)} >{this.state.board[1][1]}</div>
-                        <div className='tile' onClick={() => this.makeMove(1,2)} >{this.state.board[1][2]}</div>
+                        <div className='tile' onClick={() => this.makeMove(1,0)} ><h1 className='selected-h1'>{this.state.board[1][0]}</h1></div>
+                        <div className='tile' onClick={() => this.makeMove(1,1)} ><h1 className='selected-h1'>{this.state.board[1][1]}</h1></div>
+                        <div className='tile' onClick={() => this.makeMove(1,2)} ><h1 className='selected-h1'>{this.state.board[1][2]}</h1></div>
                     </div>
 
                     <div className='rows'>
-                        <div className='tile' onClick={() => this.makeMove(2,0)} >{this.state.board[2][0]}</div>
-                        <div className='tile' onClick={() => this.makeMove(2,1)} >{this.state.board[2][1]}</div>
-                        <div className='tile' onClick={() => this.makeMove(2,2)} >{this.state.board[2][2]}</div>
+                        <div className='tile' onClick={() => this.makeMove(2,0)} ><h1 className='selected-h1'>{this.state.board[2][0]}</h1></div>
+                        <div className='tile' onClick={() => this.makeMove(2,1)} ><h1 className='selected-h1'>{this.state.board[2][1]}</h1></div>
+                        <div className='tile' onClick={() => this.makeMove(2,2)} ><h1 className='selected-h1'>{this.state.board[2][2]}</h1></div>
                     </div>
                     
                 </div>
-                <div className='player-row'>
+                {/* <div className='player-row'>
                     <div className='player-seat' ><h1>O</h1></div>
                     <div className='player-seat' ><h1>X</h1></div>
-                </div>
+                </div> */}
             </div>
         )
     }
