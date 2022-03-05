@@ -9,11 +9,12 @@ const webSocketServer = require('websocket').server;
 
 
 
-
 // server
 const { SESSION_SECRET, CONNECTION_STRING, SERVER_PORT } = process.env
 
 const app = express();
+
+app.use(express.json());
 
 app.use(
     session({
