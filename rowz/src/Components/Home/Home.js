@@ -157,6 +157,7 @@ class Home extends Component {
                 ],
                 currentPlayer:"X",
             })
+            this.sendToSocketsSwitch(this.state)
         }
         
 
