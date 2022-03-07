@@ -31,6 +31,7 @@ class Home extends Component {
             // data:null,
         }
         this.makeMove = this.makeMove.bind(this)
+        this.flipBoard = this.flipBoard.bind(this)
         // this.isSolved = this.isSolved.bind(this)
         // this.switchPlayer = this.switchPlayer.bind(this)
         this.getConnected = this.getConnected.bind(this)
