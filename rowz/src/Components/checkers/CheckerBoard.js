@@ -36,34 +36,50 @@ class CheckerBoard extends Component {
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
+        this.getConnected = this.getConnected.bind(this)
     }
 
     componentDidMount() {
         // console.log('is mounted',pieces)
         this.setState({data:[...data],pieces:pieces})
         this.boardFactory()
+        this.getConnected()
         // this.setState({pieces:[...pieces]})
         // var M = Array.from(Array(3), () => Array.from(Array(8)).fill('adfdf'));
         // var M = Array.from(Array(3), () => Array.from(Array(8)).fill(null));
         // this.setState({board:[...M]})
     }
+    getConnected = (input) => {
+        client.onopen = () => {
+            console.log('client connected')
+        }
+        client.onmessage = (message) => {
+        
+            const dataFromServer = JSON.parse(message.data);
+            const { board,currentPlayer,pieces } = dataFromServer.input
+            console.log(dataFromServer.input)
+            // this.isSolved(board,currentPlayer)
+            // this.switchPlayer(currentPlayer)
+            // console.log('got reply',currentPlayer)
+            if (dataFromServer.type === 'checkerTurn' ) {
+            this.setState({
+                pieces:dataFromServer.input,
+                // currentPlayer:currentPlayer
+            })
+            }
+        }
+    }
 
-    // pieceFactory = () => {
-
-    // }
+    sendToSocketsSwitch = (input) => {
+        client.send(JSON.stringify({type: "checkerTurn",input}))
+    };
 
     boardFactory = () => {
-          // var newRow = []  
-  // var counter = numOfTiles
     var matrix = []
     var numOfTiles = 8
     var M = Array.from(Array(numOfTiles))
-    // var mValues = M.forEach(el => {el = 23})
-    // var M = Array.from(Array(9)).forEach(el => console.log(el))
     for(let i = 0; i < numOfTiles; i++){ // columns
-    // for (let j = 0; j < numOfTiles; i++){matrix.push(i)}
     matrix.push(M)
-    // matrix.push(M)
         }
         this.setState({matrix:matrix})
     }
@@ -102,6 +118,7 @@ class CheckerBoard extends Component {
             pieces:updatePieces,
             activeLocation:[null,null]
         })
+        this.sendToSocketsSwitch(this.state.pieces)
         // if (matrix[x][y] === undefined){console.log('you can move here',matrix[x][y] )}
         // console.log(x,y,'down',updatePieces[pieceIndex])
     }
@@ -114,7 +131,7 @@ class CheckerBoard extends Component {
         // this.setState({activeLocation:updateMatrix[x][y]})
         const getContents = (piece) => {
             if(piece[0] != undefined) {
-                console.log(piece[0].x,piece[0].y,piece,'here is x in select tile')
+                // console.log(piece[0].x,piece[0].y,piece,'here is x in select tile')
                 // this.setMoves(piece[0].x,piece[0].y,piece[0].id)
                 return piece[0]}
         }
