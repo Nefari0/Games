@@ -1,3 +1,4 @@
+// import { PieceFactory } from './Factory'
 import './CheckerBoard.css'
 import React, { Component } from 'react'
 import Tile from './Tile'
@@ -16,23 +17,25 @@ class CheckerBoard extends Component {
         this.state = {
             // M:Array.from(Array(9), () => Array.from(Array(9)));
             // M:[]
-            board:[
-                [null,null,null,null,null,null,null,null],
-                [null,null,null,null,null,null,null,null],
-                [null,null,null,null,null,null,null,null],
-                [null,null,null,null,null,null,null,null],
-                [null,null,null,null,null,null,null,null],
-                [null,null,null,null,null,null,null,null],
-                [null,null,null,null,null,null,null,null],
-                [null,null,null,null,null,null,null,null],
-            ],
+            // board:[
+            //     [null,null,null,null,null,null,null,null],
+            //     [null,null,null,null,null,null,null,null],
+            //     [null,null,null,null,null,null,null,null],
+            //     [null,null,null,null,null,null,null,null],
+            //     [null,null,null,null,null,null,null,null],
+            //     [null,null,null,null,null,null,null,null],
+            //     [null,null,null,null,null,null,null,null],
+            //     [null,null,null,null,null,null,null,null],
+            // ],
             playerGood:{},
             playerBad:{},
             selectedPiece:{}, // 
             activeLocation:[null,null], // player selects tile
             // data:[],
             pieces:[],
-            matrix:[]
+            matrix:[],
+            setPermission:true,
+            currentPlayer:'good'
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
@@ -41,14 +44,16 @@ class CheckerBoard extends Component {
 
     componentDidMount() {
         // console.log('is mounted',pieces)
-        this.setState({data:[...data],pieces:pieces})
+        this.setState({pieces:pieces})
         this.boardFactory()
         this.getConnected()
+        // this.populateMatrix(this.state.matrix)
         // this.setState({pieces:[...pieces]})
         // var M = Array.from(Array(3), () => Array.from(Array(8)).fill('adfdf'));
         // var M = Array.from(Array(3), () => Array.from(Array(8)).fill(null));
         // this.setState({board:[...M]})
     }
+
     getConnected = (input) => {
         client.onopen = () => {
             console.log('client connected')
@@ -59,11 +64,11 @@ class CheckerBoard extends Component {
             const { board,currentPlayer,pieces } = dataFromServer.input
             console.log(dataFromServer.input)
             // this.isSolved(board,currentPlayer)
-            // this.switchPlayer(currentPlayer)
+            this.switchPlayer(currentPlayer)
             // console.log('got reply',currentPlayer)
             if (dataFromServer.type === 'checkerTurn' ) {
             this.setState({
-                pieces:dataFromServer.input,
+                pieces:dataFromServer.input.newPieces,
                 // currentPlayer:currentPlayer
             })
             }
@@ -71,13 +76,14 @@ class CheckerBoard extends Component {
     }
 
     sendToSocketsSwitch = (input) => {
+        console.log('hit sockets')
         client.send(JSON.stringify({type: "checkerTurn",input}))
     };
 
     boardFactory = () => {
     var matrix = []
     var numOfTiles = 8
-    var M = Array.from(Array(numOfTiles))
+    var M = Array.from(Array(numOfTiles)) // rows
     for(let i = 0; i < numOfTiles; i++){ // columns
     matrix.push(M)
         }
@@ -106,11 +112,25 @@ class CheckerBoard extends Component {
             // move selected piece to empty square past opponent
             // remove opponent piece from play
     setMoves = (x,y,id) => { // gets all move options based on active location
-        const { pieces } = this.state
+        const { pieces,currentPlayer } = this.state
         var updatePieces = [...pieces]
+        // console.log('pieces',pieces.findIndex())
         var pieceIndex = pieces.findIndex((el) => el.id === id)
-        // pieces.forEach(el => console.log('here is el',el.id))
-        // var up_left = [y-1,x-1]
+
+        if(currentPlayer != pieces[pieceIndex].player){
+            return
+        }
+
+        for (let key in pieces){
+            // console.log(pieces[key].x,pieces[key].y,'key')
+            if(pieces[key].x === x && pieces[key].y === y){
+                
+                console.log('here')
+                return 'pick another one'
+            }
+        }
+
+
         updatePieces[pieceIndex].x = x
         updatePieces[pieceIndex].y = y
         // updatePieces.y = y+1
@@ -118,9 +138,28 @@ class CheckerBoard extends Component {
             pieces:updatePieces,
             activeLocation:[null,null]
         })
-        this.sendToSocketsSwitch(this.state.pieces)
+        var sendInfo = {
+            newPieces:this.state.pieces,
+            currentPlayer:this.state.currentPlayer
+        }
+        // this.sendToSocketsSwitch(this.state.pieces)
+        this.sendToSocketsSwitch(sendInfo)
         // if (matrix[x][y] === undefined){console.log('you can move here',matrix[x][y] )}
         // console.log(x,y,'down',updatePieces[pieceIndex])
+    }
+
+    // getMoves = (currenPieceX,currenPieceY) => {
+
+    // }
+
+    switchPlayer = (input) => {
+        switch (input) {
+            case 'good':
+                this.setState({currentPlayer:'bad'})
+                break;
+            case 'bad':
+                this.setState({currentPlayer:'good'})
+        }
     }
 
     selectTile = (x,y,piece) => {
@@ -129,6 +168,7 @@ class CheckerBoard extends Component {
         // updateMatrix[x][y] = piece
         // console.log('hit select tile',updateMatrix[0])
         // this.setState({activeLocation:updateMatrix[x][y]})
+        
         const getContents = (piece) => {
             if(piece[0] != undefined) {
                 // console.log(piece[0].x,piece[0].y,piece,'here is x in select tile')
@@ -161,7 +201,6 @@ class CheckerBoard extends Component {
         const mappedMatrix = matrix.map((el,id) => {
             return el.map((el2,id2) => {
                 const currentPiece = pieces.filter(e => e.x === id2 && e.y === id)
-                // console.log(currentPiece,'here is id')
                 return <Tile key={[id2,id]} x={id2} y={id} color={(-1)**(id+id2)} selectTile={this.selectTile} setMoves={this.setMoves} currentPiece={currentPiece} activeLocation={activeLocation} />
             })
         })
@@ -189,6 +228,7 @@ class CheckerBoard extends Component {
             {/* <span className='check-row-1' >{mappedBoard}</span> */}
             {/* <Tile /> */}
             {/* <Piece /> */}
+            {/* <span className='check-row-1' >{mappedMoves}</span> */}
             <span className='check-row-1' >{mappedMatrix}</span>
             
             {/* <span className='check-row-1' >
