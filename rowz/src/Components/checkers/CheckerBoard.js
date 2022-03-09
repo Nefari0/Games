@@ -35,11 +35,14 @@ class CheckerBoard extends Component {
             pieces:[],
             matrix:[],
             setPermission:true,
-            currentPlayer:'good'
+            currentPlayer:'bad',
+            tileIsSelected:1,
+            wasKillMade:false,
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
         this.getConnected = this.getConnected.bind(this)
+        // this.checkForKill = this.checkForKill.bind(this)
     }
 
     componentDidMount() {
@@ -64,13 +67,13 @@ class CheckerBoard extends Component {
             const { board,currentPlayer,pieces } = dataFromServer.input
             console.log(dataFromServer.input)
             // this.isSolved(board,currentPlayer)
-            this.switchPlayer(currentPlayer)
             // console.log('got reply',currentPlayer)
             if (dataFromServer.type === 'checkerTurn' ) {
-            this.setState({
-                pieces:dataFromServer.input.newPieces,
-                // currentPlayer:currentPlayer
-            })
+                this.setState({
+                    pieces:dataFromServer.input.newPieces,
+                    // currentPlayer:currentPlayer
+                })
+                this.switchPlayer(currentPlayer)
             }
         }
     }
@@ -112,7 +115,7 @@ class CheckerBoard extends Component {
             // move selected piece to empty square past opponent
             // remove opponent piece from play
     setMoves = (x,y,id) => { // gets all move options based on active location
-        const { pieces,currentPlayer } = this.state
+        const { pieces,currentPlayer,activeLocation } = this.state
         var updatePieces = [...pieces]
         // console.log('pieces',pieces.findIndex())
         var pieceIndex = pieces.findIndex((el) => el.id === id)
@@ -121,36 +124,98 @@ class CheckerBoard extends Component {
             return
         }
 
+        // this checks all pieces on board for available locations/moves
         for (let key in pieces){
             // console.log(pieces[key].x,pieces[key].y,'key')
             if(pieces[key].x === x && pieces[key].y === y){
-                
-                console.log('here')
-                return 'pick another one'
+                if(pieces[key].player != currentPlayer){
+                    return (
+                    // console.log('process should be terminated',this.state.wasKillMade),
+                    // this.setState({wasKillMade:true}),
+                    // console.log('after set state',this.state.wasKillMade),
+                    this.checkForKill(pieces[key].x,pieces[key].y,activeLocation[0],activeLocation[1],id)
+                    )} else {return}
+                // console.log('here')
+                // return 'pick another one'
             }
         }
-
-
+        // console.log('if you see this message, no enemies were killed')
         updatePieces[pieceIndex].x = x
         updatePieces[pieceIndex].y = y
-        // updatePieces.y = y+1
         this.setState({
-            pieces:updatePieces,
-            activeLocation:[null,null]
+            // pieces:updatePieces,
+            activeLocation:[null,null],
+            tileIsSelected:1
         })
         var sendInfo = {
             newPieces:this.state.pieces,
             currentPlayer:this.state.currentPlayer
         }
-        // this.sendToSocketsSwitch(this.state.pieces)
-        this.sendToSocketsSwitch(sendInfo)
-        // if (matrix[x][y] === undefined){console.log('you can move here',matrix[x][y] )}
-        // console.log(x,y,'down',updatePieces[pieceIndex])
+        // if(this.state.wasKillMade === false){
+            this.sendToSocketsSwitch(sendInfo)
+            // this.setState({wasKillMade:false})}
     }
 
-    // getMoves = (currenPieceX,currenPieceY) => {
+    checkForKill = async (enemyX,enemyY,currentX,currentY,id) => {
+        const { pieces,currentPlayer,activeLocation } = this.state
+        // var updatePieces = [...pieces]
+        var pieceIndex = pieces.findIndex((el) => el.id === id)
+        // console.log('hit check for kill')
+        // console.log(currentX,currentY)
+        // console.log(enemyX,enemyY)
 
-    // }
+        if(currentX > enemyX && currentY < enemyY){
+            if(this.checkPieceLocations(enemyX-1,enemyY+1) === undefined) {
+                // console.log('tyring to reach',this.checkPieceLocations(enemyX-1,enemyY+1))
+                
+                var updatePieces = await this.killPiece(enemyX,enemyY,id)
+                updatePieces[pieceIndex].x = enemyX-1
+                updatePieces[pieceIndex].y = enemyY+1
+                this.setState({
+                    pieces:updatePieces,
+                    activeLocation:[null,null],
+                    tileIsSelected:1,
+                })
+
+                var sendInfo = {
+                    newPieces:this.state.pieces,
+                    currentPlayer:this.state.currentPlayer
+                }
+                return this.sendToSocketsSwitch(sendInfo)
+
+            }
+            // this.checkPieceLocations(enemyX-1,enemyY+1)
+        }
+    }
+
+    killPiece = (enemyX,enemyY,id) => {
+        const { pieces } = this.state
+        var updatedPieces = [...pieces]
+        console.log('here is kill piece')
+        var pieceId = this.checkPieceLocations(enemyX,enemyY).id
+        var index = pieces.findIndex((el) => el.id === pieceId)
+        updatedPieces.splice(index,1)
+        // this.setState({pieces:updatedPieces})
+        // var sendInfo = {
+        //     newPieces:updatedPieces,
+        //     currentPlayer:this.state.currentPlayer
+        // }
+        // this.sendToSocketsSwitch(sendInfo)
+        console.log('index in kill piece',index)
+        return updatedPieces
+    }
+
+    checkPieceLocations = (x,y) => {
+        // console.log('hit check piece locations')
+        const { pieces } = this.state
+        for (let key in pieces){
+            // console.log(pieces[key].x,pieces[key].y,'key')
+            if(pieces[key].x === x && pieces[key].y === y){
+                // console.log('is not available')
+                return pieces[key]
+            }
+        }
+    }
 
     switchPlayer = (input) => {
         switch (input) {
@@ -175,7 +240,13 @@ class CheckerBoard extends Component {
                 // this.setMoves(piece[0].x,piece[0].y,piece[0].id)
                 return piece[0]}
         }
-        this.handleInput('activeLocation',[x,y,getContents(piece)])
+        this.handleInput('activeLocation',[x,y,.2,getContents(piece)])
+        this.handleInput('tileIsSelected',.4)
+    }
+    
+    unselectTile = () => {
+        this.handleInput('tileIsSelected',1)
+        this.handleInput('activeLocation',[null,null])
     }
 
     // makeMove = (x,y,id) => {
@@ -196,12 +267,12 @@ class CheckerBoard extends Component {
 
     render() {
 
-        const { matrix,pieces,activeLocation } = this.state
+        const { matrix,pieces,activeLocation,currentPlayer,tileIsSelected } = this.state
 
         const mappedMatrix = matrix.map((el,id) => {
             return el.map((el2,id2) => {
                 const currentPiece = pieces.filter(e => e.x === id2 && e.y === id)
-                return <Tile key={[id2,id]} x={id2} y={id} color={(-1)**(id+id2)} selectTile={this.selectTile} setMoves={this.setMoves} currentPiece={currentPiece} activeLocation={activeLocation} />
+                return <Tile key={[id2,id]} x={id2} y={id} color={(-1)**(id+id2)} selectTile={this.selectTile} unselectTile={this.unselectTile} setMoves={this.setMoves} currentPiece={currentPiece} currentPlayer={currentPlayer} activeLocation={activeLocation} tileIsSelected={tileIsSelected} />
             })
         })
 
