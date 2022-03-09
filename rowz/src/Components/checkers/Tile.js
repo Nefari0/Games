@@ -13,7 +13,7 @@ const Tile = (props) => {
     return(<div className='tile-location'><div className={`tile-color ${color -1 ? true : 'tile-color-dark'} `} onClick={() => props.selectTile(x,y,currentPiece)} >
     {/* // return(<div> */}
         {/* <p style={{color:'white'}} >{getCurrent()}</p> */}
-        {currentPiece[0] != undefined ? <div ><p className='player-text'>{currentPiece[0].id}</p></div> : null}
+        {currentPiece[0] != undefined ? <div ><p className='player-text'>{currentPiece[0].player}</p></div> : null}
         {/* {mappedEl} */}
         {/* <input type='text' onChange={(e) => {props.changeTitle('title',e.target.value)}} /> */}
 
