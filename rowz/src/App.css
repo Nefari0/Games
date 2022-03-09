@@ -7,6 +7,38 @@
   pointer-events: none;
 }
 
+
+.choose-button {
+  position: absolute;
+  top: 350px;
+  left: 100px;
+  margin: 20px;
+  height: 50px;
+  width: 100px;
+  background: linear-gradient(0turn,#3c598e,#5077be);
+  border-radius: 2px;
+  box-shadow: 0px 5px 20px -7px #000000;
+}
+
+.choose-button-checkers {
+  position: absolute;
+  top: 350px;
+  left: 100px;
+  margin: 20px;
+  height: 50px;
+  width: 100px;
+  /* background: linear-gradient(0turn,#3c598e,#5077be); */
+  border-radius: 2px;
+  box-shadow: 0px 5px 20px -7px #000000;
+  background: linear-gradient(0turn,rgb(255, 127, 80),rgb(245, 222, 179));
+}
+
+.App-h4 {
+  color: #fff;
+  font-weight: 300;
+  margin: 0px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
