@@ -193,6 +193,41 @@ class CheckerBoard extends Component {
                 }
                 return this.sendToSocketsSwitch(sendInfo)
             }
+        } else if (currentX < enemyX && currentY > enemyY) {
+            if(this.checkPieceLocations(enemyX+1,enemyY-1) === undefined) {
+                // console.log('hit conditional')
+                var updatePieces = await this.killPiece(enemyX,enemyY,id)
+                var pieceIndex = updatePieces.findIndex((el) => el.id === id)
+                updatePieces[pieceIndex].x = enemyX+1
+                updatePieces[pieceIndex].y = enemyY-1
+                this.setState({
+                    pieces:updatePieces,
+                    activeLocation:[null,null],
+                    tileIsSelected:1
+                })
+                var sendInfo = {
+                    newPieces:this.state.pieces,
+                    currentPlayer:this.state.currentPlayer
+                }
+                return this.sendToSocketsSwitch(sendInfo)
+            }
+        } else if (currentX < enemyX && currentY < enemyY) {
+            if(this.checkPieceLocations(enemyX+1,enemyY+1) === undefined) {
+                var updatePieces = await this.killPiece(enemyX,enemyY,id)
+                var pieceIndex = updatePieces.findIndex((el) => el.id === id)
+                updatePieces[pieceIndex].x = enemyX+1
+                updatePieces[pieceIndex].y = enemyY+1
+                this.setState({
+                    pieces:updatePieces,
+                    activeLocation:[null,null],
+                    tileIsSelected:1
+                })
+                var sendInfo = {
+                    newPieces:this.state.pieces,
+                    currentPlayer:this.state.currentPlayer
+                }
+                return this.sendToSocketsSwitch(sendInfo)
+            }
         }
     }
 
