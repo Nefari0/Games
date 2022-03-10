@@ -126,20 +126,14 @@ class CheckerBoard extends Component {
 
         // this checks all pieces on board for available locations/moves
         for (let key in pieces){
-            // console.log(pieces[key].x,pieces[key].y,'key')
             if(pieces[key].x === x && pieces[key].y === y){
                 if(pieces[key].player != currentPlayer){
                     return (
-                    // console.log('process should be terminated',this.state.wasKillMade),
-                    // this.setState({wasKillMade:true}),
-                    // console.log('after set state',this.state.wasKillMade),
-                    this.checkForKill(pieces[key].x,pieces[key].y,activeLocation[0],activeLocation[1],id)
+                        // if the chosen move already contains a piece, check if friend or foe
+                        this.checkForKill(pieces[key].x,pieces[key].y,activeLocation[0],activeLocation[1],id)
                     )} else {return}
-                // console.log('here')
-                // return 'pick another one'
             }
         }
-        // console.log('if you see this message, no enemies were killed')
         updatePieces[pieceIndex].x = x
         updatePieces[pieceIndex].y = y
         this.setState({
@@ -147,28 +141,26 @@ class CheckerBoard extends Component {
             activeLocation:[null,null],
             tileIsSelected:1
         })
+        // this is the information send to socket
         var sendInfo = {
             newPieces:this.state.pieces,
             currentPlayer:this.state.currentPlayer
         }
-        // if(this.state.wasKillMade === false){
             this.sendToSocketsSwitch(sendInfo)
-            // this.setState({wasKillMade:false})}
     }
 
     checkForKill = async (enemyX,enemyY,currentX,currentY,id) => {
         const { pieces,currentPlayer,activeLocation } = this.state
         // var updatePieces = [...pieces]
         var pieceIndex = pieces.findIndex((el) => el.id === id)
-        // console.log('hit check for kill')
-        // console.log(currentX,currentY)
-        // console.log(enemyX,enemyY)
+        console.log('hit check for kill')
+        console.log('x',currentX,'y',currentY,'current')
+        console.log('x',enemyX,'y',enemyY,'enemy')
 
         if(currentX > enemyX && currentY < enemyY){
             if(this.checkPieceLocations(enemyX-1,enemyY+1) === undefined) {
-                // console.log('tyring to reach',this.checkPieceLocations(enemyX-1,enemyY+1))
-                
                 var updatePieces = await this.killPiece(enemyX,enemyY,id)
+                console.log('you hit north east',updatePieces[pieceIndex])
                 updatePieces[pieceIndex].x = enemyX-1
                 updatePieces[pieceIndex].y = enemyY+1
                 this.setState({
@@ -184,34 +176,42 @@ class CheckerBoard extends Component {
                 return this.sendToSocketsSwitch(sendInfo)
 
             }
-            // this.checkPieceLocations(enemyX-1,enemyY+1)
+        } else if (currentX > enemyX && currentY > enemyY) {
+            if(this.checkPieceLocations(enemyX-1,enemyY-1) === undefined) {
+                var updatePieces = await this.killPiece(enemyX,enemyY,id)
+                var pieceIndex = updatePieces.findIndex((el) => el.id === id)
+                updatePieces[pieceIndex].x = enemyX-1
+                updatePieces[pieceIndex].y = enemyY-1
+                this.setState({
+                    pieces:updatePieces,
+                    activeLocation:[null,null],
+                    tileIsSelected:1
+                })
+                var sendInfo = {
+                    newPieces:this.state.pieces,
+                    currentPlayer:this.state.currentPlayer
+                }
+                return this.sendToSocketsSwitch(sendInfo)
+            }
         }
     }
 
-    killPiece = (enemyX,enemyY,id) => {
+    killPiece = async (enemyX,enemyY,id) => {
         const { pieces } = this.state
         var updatedPieces = [...pieces]
+        var pieceIndex = pieces.findIndex((el) => el.id === id)
         console.log('here is kill piece')
         var pieceId = this.checkPieceLocations(enemyX,enemyY).id
-        var index = pieces.findIndex((el) => el.id === pieceId)
-        updatedPieces.splice(index,1)
-        // this.setState({pieces:updatedPieces})
-        // var sendInfo = {
-        //     newPieces:updatedPieces,
-        //     currentPlayer:this.state.currentPlayer
-        // }
-        // this.sendToSocketsSwitch(sendInfo)
-        console.log('index in kill piece',index)
+        var killIndex = pieces.findIndex((el) => el.id === pieceId)
+        updatedPieces.splice(killIndex,1)
+        
         return updatedPieces
     }
 
     checkPieceLocations = (x,y) => {
-        // console.log('hit check piece locations')
         const { pieces } = this.state
         for (let key in pieces){
-            // console.log(pieces[key].x,pieces[key].y,'key')
             if(pieces[key].x === x && pieces[key].y === y){
-                // console.log('is not available')
                 return pieces[key]
             }
         }
