@@ -31,15 +31,17 @@
     height: 35px;
     width: 35px;
     border-radius: 50%;
-    background-color: #555;
+    /* background-color: #555; */
+    background: linear-gradient(0turn,#555,rgb(143, 143, 143));
     box-shadow: 5px 5px 20px -7px #000000;
-    border: 1px solid #fff;
+    border: .1px solid #fff;
     /* transform: scaleY(.7); */
 }
 .bad-player {
     /* background-color: #fff; */
-    background-color: rgb(226, 226, 226);
-    border: 1px solid #555;
+    /* background-color: rgb(226, 226, 226); */
+    background: linear-gradient(0turn,rgb(160, 158, 158),rgb(226, 226, 226));
+    border: .1px solid #555;
 }
 
 /* .opac { */
