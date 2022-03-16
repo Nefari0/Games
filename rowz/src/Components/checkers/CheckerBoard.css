@@ -5,6 +5,7 @@
     /* width: 400px; */
     height: 350px;
     width: 350px;
+    margin-top: 30px;
     /* background-color: brown; */
     background-color: rgb(240, 240, 240);
     /* background-color: blue; */
@@ -15,7 +16,7 @@
 	justify-content: center;
 	align-items: flex-start;
 	align-content: stretch; */
-  /* opacity: .2; */
+  /* opacity: .1; */
 
     display: flex;
 	flex-direction: row;
@@ -47,6 +48,35 @@
 	align-items: flex-start;
 	align-content: stretch;
     /* background-color: #DF2E2E; */
+  }
+
+  .turn-indicator {
+    position: absolute;
+    top: 390px;
+    /* left: 390px; */
+    /* background-color: blue; */
+    color: #555;
+    z-index: 100000;
+    height: 50px;
+    width: 180px;
+    margin-left: 20px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: stretch;
+    /* opacity: 0; */
+    background: rgba(165, 165, 165, 0.116);
+    box-shadow: 5px 5px 20px -7px #000000;
+    backdrop-filter: blur(12px);
+    border-radius: 10px;
+  }
+  .turn-indicator-text {
+    margin-left: 5px;
+    font-weight: 800;
+    font-family: 'Poppins', sans-serif;
+    opacity: .6;
   }
 
   .check-row-1 div:nth-of-type(2n+1) {

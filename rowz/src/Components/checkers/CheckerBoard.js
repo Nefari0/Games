@@ -5,6 +5,7 @@ import Tile from './Tile'
 import data from '.././data'
 import pieces from '.././pieces'
 import Piece from './Piece'
+import CurrentPlayer from './CurrentPlayer'
 import { act } from 'react-dom/test-utils'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 // const client = new W3CWebSocket(`ws://127.0.0.1:8001`); // production
@@ -456,7 +457,7 @@ class CheckerBoard extends Component {
         //     return <Tile el={el}/>
         // })
 
-        return(<div className='checker-table'>
+        return(<div>
             {/* {console.log('here is board',this.state.matrix)} */}
             {/* {this.state.matrix.forEach(el => console.log(el[0]))} */}
             {/* <div className='data-spec' >  */}
@@ -465,7 +466,9 @@ class CheckerBoard extends Component {
             {/* <Tile /> */}
             {/* <Piece /> */}
             {/* <span className='check-row-1' >{mappedMoves}</span> */}
-            <span className='check-row-1' >{mappedMatrix}</span>
+            <div className='checker-table' ><span className='check-row-1' >{mappedMatrix} </span></div>
+            <CurrentPlayer currentPlayer={currentPlayer} />
+           
             
             {/* <span className='check-row-1' >
                 <div className='scrollitems'>{board[0][0]}</div>
