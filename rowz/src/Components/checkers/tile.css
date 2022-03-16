@@ -42,10 +42,12 @@
     /* background-color: rgb(226, 226, 226); */
     background: linear-gradient(0turn,rgb(160, 158, 158),rgb(226, 226, 226));
     border: .1px solid #555;
+    transition: visibility 0s 4s, opacity 4s linear;
 }
 
 /* .opac { */
     /* opacity: .2; */
+    /* background-color: yellow; */
 /* } */
 
 .player-text {
