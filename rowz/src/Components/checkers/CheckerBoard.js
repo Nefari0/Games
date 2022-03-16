@@ -257,7 +257,7 @@ class CheckerBoard extends Component {
 
     // looks for and executes available attacks
     checkForKill = async (enemyX,enemyY,currentX,currentY,id,activeLocationTeam) => {
-        const { pieces,currentPlayer,activeLocation } = this.state
+        const { pieces,currentPlayer,activeLocation,matrix } = this.state
         const { player,isKing } = activeLocationTeam
         console.log('king in check for kill',player,isKing)
         // var updatePieces = [...pieces]
@@ -276,6 +276,9 @@ class CheckerBoard extends Component {
                 var pieceIndex = updatePieces.findIndex((el) => el.id === id)
                 updatePieces[pieceIndex].x = enemyX-1
                 updatePieces[pieceIndex].y = enemyY+1
+                if (player === 'good' && updatePieces[pieceIndex].y === matrix.length-1) {
+                    updatePieces[pieceIndex].isKing = true
+                }
                 this.setState({
                     // pieces:updatePieces,
                     activeLocation:[null,null],
@@ -299,6 +302,9 @@ class CheckerBoard extends Component {
                 var pieceIndex = updatePieces.findIndex((el) => el.id === id)
                 updatePieces[pieceIndex].x = enemyX-1
                 updatePieces[pieceIndex].y = enemyY-1
+                if(player === 'bad' && updatePieces[pieceIndex].y === 0 ){
+                    updatePieces[pieceIndex].isKing = true
+                }
                 this.setState({
                     // pieces:updatePieces,
                     activeLocation:[null,null],
@@ -320,6 +326,9 @@ class CheckerBoard extends Component {
                 var pieceIndex = updatePieces.findIndex((el) => el.id === id)
                 updatePieces[pieceIndex].x = enemyX+1
                 updatePieces[pieceIndex].y = enemyY-1
+                if(player === 'bad' && updatePieces[pieceIndex].y === 0 ){
+                    updatePieces[pieceIndex].isKing = true
+                }
                 this.setState({
                     // pieces:updatePieces,
                     activeLocation:[null,null],
@@ -341,6 +350,9 @@ class CheckerBoard extends Component {
                 var pieceIndex = updatePieces.findIndex((el) => el.id === id)
                 updatePieces[pieceIndex].x = enemyX+1
                 updatePieces[pieceIndex].y = enemyY+1
+                if (player === 'good' && updatePieces[pieceIndex].y === matrix.length-1) {
+                    updatePieces[pieceIndex].isKing = true
+                }
                 this.setState({
                     // pieces:updatePieces,
                     activeLocation:[null,null],
