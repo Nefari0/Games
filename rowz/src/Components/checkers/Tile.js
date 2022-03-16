@@ -6,7 +6,7 @@ const Tile = (props) => {
     const { x,y,color,currentPiece,activeLocation,currentPlayer,tileIsSelected,pieces } = props
     // console.log('current piece',currentPiece)
 
-    const [makeMove,setMakeMove] = useState(false)
+    // const [makeMove,setMakeMove] = useState(false)
     
     
     // const getCurrent = () => {

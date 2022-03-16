@@ -26,6 +26,7 @@
     z-index: 10;
 }
 
+.switch-turn,
 .bad-player,
 .good-player {
     height: 35px;
@@ -43,6 +44,10 @@
     background: linear-gradient(0turn,rgb(160, 158, 158),rgb(226, 226, 226));
     border: .1px solid #555;
     transition: visibility 0s 4s, opacity 4s linear;
+}
+
+.switch-turn {
+    transform: scaleX(1);
 }
 
 /* .opac { */
