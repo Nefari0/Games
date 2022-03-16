@@ -1,10 +1,10 @@
-import './Piece.css'
+// import './Piece.css'
 
-const Piece = (props) => {
+// const Piece = (props) => {
 
-    return(<div className='good-piece' >
+//     return(<div className='good-piece' >
 
-    </div>)
-}
+//     </div>)
+// }
 
-export default Piece
+// export default Piece
