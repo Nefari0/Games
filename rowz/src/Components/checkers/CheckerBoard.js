@@ -160,9 +160,11 @@ class CheckerBoard extends Component {
     }
 
     // checks for chain kills
-    chainKills = async (x,y,player,updatedPieces,currentPiece) => {
+    chainKills = async (x,y,updatedPieces,currentPiece) => {
         const { matrix } = this.state
-        // console.log('hit chainKills',currentPiece)
+        const { player } = currentPiece[0]
+        console.log('hit chainKills current',currentPiece[0])
+        console.log('hit chainKills update',updatedPieces)
         // const upLeft = [x-1,y-1]
         // const upRight = [x+1,y-1]
         // const downLeft = [x-1,y+1]
@@ -238,7 +240,8 @@ class CheckerBoard extends Component {
                     return (
                         // if the chosen move already contains a piece, check if friend or foe
                         // res
-                        await this.checkForKill(pieces[key].x,pieces[key].y,activeLocation[0],activeLocation[1],id,activeLocation[3],currentPiece)
+                        // await this.checkForKill(pieces[key].x,pieces[key].y,activeLocation[0],activeLocation[1],id,activeLocation[3],currentPiece)
+                        await this.checkForKill(pieces[key].x,pieces[key].y,currentPiece)
                     )} else {return}
             }
         }
@@ -304,9 +307,15 @@ class CheckerBoard extends Component {
     // }
 
     // -- looks for and executes available attacks -- //
-    checkForKill = async (enemyX,enemyY,currentX,currentY,id,activeLocationTeam,currentPiece) => {
+    // checkForKill = async (enemyX,enemyY,currentX,currentY,id,activeLocationTeam,currentPiece) => {
+        checkForKill = async (enemyX,enemyY,currentPiece) => {
+        // console.log('hit "checkForKill"',currentPiece[0].x === currentX)
         const { pieces,currentPlayer,activeLocation,matrix } = this.state
-        const { player,isKing } = activeLocationTeam
+        // const { player,isKing } = activeLocationTeam
+        const { player,isKing,id,x,y } = currentPiece[0]
+        var currentX = x
+        var currentY = y
+        console.log('is king and player',isKing,player)
         var pieceIndex = pieces.findIndex((el) => el.id === id)
 
         // -- LOWER LEFT ATTACK -- //
@@ -334,8 +343,7 @@ class CheckerBoard extends Component {
 
                     // -- make chain attack if available -- //
                     // this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,currentPlayer,updatePieces,currentPiece)
-                    // await this.selectTile(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,updatePieces[pieceIndex])
-                    // await this.autoStartTurn(currentPlayer,updatePieces[pieceIndex],updatePieces)
+                    this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,updatePieces,currentPiece)
 
                     // -- update info -- //
                     this.setState({
