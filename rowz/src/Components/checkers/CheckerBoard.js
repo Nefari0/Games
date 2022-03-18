@@ -362,7 +362,7 @@ class CheckerBoard extends Component {
             if(await this.checkPieceLocations(enemyX-1,enemyY+1,null) === undefined) {
 
                 // -- is location on the board? -- //
-                if(enemyX-1 >= 0 && enemyY+1 <= matrix.length){
+                if(enemyX-1 >= 0 && enemyY+1 <= matrix.length-1){
 
                     // -- update pieces -- //
                     var updatePieces = await this.killPiece(enemyX,enemyY,id)
@@ -454,7 +454,7 @@ class CheckerBoard extends Component {
             if(await this.checkPieceLocations(enemyX+1,enemyY-1,null) === undefined) {
                 
                 // -- is location on the board? -- //
-                if(enemyX+1 >= 0 && enemyY-1 >= 0){
+                if(enemyX+1 <= matrix.length-1 && enemyY-1 >= 0){
 
                     // -- update pieces -- //
                     var updatePieces = await this.killPiece(enemyX,enemyY,id)
