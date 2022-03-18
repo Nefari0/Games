@@ -181,8 +181,8 @@ class CheckerBoard extends Component {
     chainKills = async (x,y,updatedPieces,currentPiece) => {
         const { matrix } = this.state
         const { player } = currentPiece[0]
-        console.log('hit chainKills current',currentPiece[0])
-        console.log('hit chainKills update',updatedPieces)
+        // console.log('hit chainKills')
+        // console.log('hit chainKills update',updatedPieces)
         // const upLeft = [x-1,y-1]
         // const upRight = [x+1,y-1]
         // const downLeft = [x-1,y+1]
@@ -200,45 +200,45 @@ class CheckerBoard extends Component {
             if(locatePiece !== undefined && locatePiece.player !== player){
                 
                 // --- if it is a foe, is the next location over available? --- //
-                console.log('e.vals',parseInt(e[0]),parseInt(e[1]))
-                console.log('locatePiece.',locatePiece.x,locatePiece.y)
+                // console.log('e.vals',parseInt(e[0]),parseInt(e[1]))
+                // console.log('locatePiece.',locatePiece.x,locatePiece.y)
                 var nextX = parseInt(e[0]) + locatePiece.x // potential jump to x
                 var nextY = parseInt(e[1]) + locatePiece.y // potential jump to y
                 var availMove = this.checkPieceLocations(nextX,nextY,updatedPieces) // are available "jump to" coordinates available
-                console.log('nextVals',nextX,nextY)
+                // console.log('nextVals',nextX,nextY)
                 if(availMove === undefined) {
-                    // console.log('is available')
-                    // --- can I attack if Im not a king? --- //
-                    // --- make attack --- //
                     
-                    // --- send location / piece to sockets to ensure only the current piece and available move can be taken after socket update --- //
-                    var obj = {
-                        nextX:nextX,
-                        nextY:nextY,
-                        updatedPieces
-                    }
-                    this.setState({
-                        chainKillData:currentPiece,
-                        enemyX:locatePiece.x,
-                        enemyY:locatePiece.y,
-                        // chainKillData:obj,
-                        chainKillAvailable:true
-                    })
-    
-                    // const { isKing } = this.state.chainKillData[0]
-                    // var obj = {
-                    //     player:player,
-                    //     isKing:isKing,
-                    // }
-                    // console.log('chain kils', nextX,nextY)
-                    // this.selectTile(x,y,[obj])
+                    // -- is location on the board -- //
+                    if(nextX >= 0 && nextX < matrix.length){
+                        if(nextY >= 0 && nextY < matrix.length) {
 
+                            // --- can move be made if isKing === false ? --- //
+                            // --- "good" non-kings
+                            if(player === "good" && nextY < currentPiece[0].y){return}
+                            
+                            // --- "bad" non-kings
+                            if(player === "bad" && nextY > currentPiece[0].y){return}
+
+                            // --- send location / piece to sockets to ensure only the current piece and available move can be taken after socket update --- //
+                            var obj = {
+                                nextX:nextX,
+                                nextY:nextY,
+                                updatedPieces
+                            }
+                            this.setState({
+                                chainKillData:currentPiece,
+                                enemyX:locatePiece.x,
+                                enemyY:locatePiece.y,
+                                // chainKillData:obj,
+                                chainKillAvailable:true
+                            })
+            
+                            
+                            this.switchPlayer(player)
+                            return
+                        }
+                    }
                     
-    
-                    // --- this.switchplayer is invoked so when the updated state is sent to sockets, player will not change. --- //
-                    // console.log('does this message display after server update')
-                    this.switchPlayer(player)
-                    return
                 }
                 
 
