@@ -6,6 +6,7 @@ import data from '.././data'
 import pieces from '.././pieces'
 import Piece from './Piece'
 import CurrentPlayer from './CurrentPlayer'
+// import Notice from '../Notice/Notice'
 import { act } from 'react-dom/test-utils'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 // const client = new W3CWebSocket(`ws://127.0.0.1:8001`); // production
@@ -181,7 +182,7 @@ class CheckerBoard extends Component {
     chainKills = async (x,y,updatedPieces,currentPiece) => {
         const { matrix } = this.state
         const { player } = currentPiece[0]
-        // console.log('hit chainKills')
+        console.log('hit chainKills',x,y)
         // console.log('hit chainKills update',updatedPieces)
         // const upLeft = [x-1,y-1]
         // const upRight = [x+1,y-1]
@@ -194,10 +195,11 @@ class CheckerBoard extends Component {
         const moves = [upLeft,upRight,downLeft,downRight]
         moves.forEach(e => {
             var locatePiece = this.checkPieceLocations(x+e[0],y+e[1],updatedPieces)
-
+            
             // --- check for adjacent pieces / is piece friend of foe? --- //
             // if(this.checkPieceLocations(e[0],e[1],updatedPieces) !== undefined && this.checkPieceLocations(e[0],e[1],updatedPieces).player !== player){
             if(locatePiece !== undefined && locatePiece.player !== player){
+                console.log('locate piece',locatePiece.x,locatePiece.y)
                 
                 // --- if it is a foe, is the next location over available? --- //
                 // console.log('e.vals',parseInt(e[0]),parseInt(e[1]))
@@ -205,7 +207,7 @@ class CheckerBoard extends Component {
                 var nextX = parseInt(e[0]) + locatePiece.x // potential jump to x
                 var nextY = parseInt(e[1]) + locatePiece.y // potential jump to y
                 var availMove = this.checkPieceLocations(nextX,nextY,updatedPieces) // are available "jump to" coordinates available
-                // console.log('nextVals',nextX,nextY)
+                console.log('nextVals',nextX,nextY)
                 if(availMove === undefined) {
                     
                     // -- is location on the board -- //
@@ -214,10 +216,14 @@ class CheckerBoard extends Component {
 
                             // --- can move be made if isKing === false ? --- //
                             // --- "good" non-kings
-                            if(player === "good" && nextY < currentPiece[0].y){return}
+                            if(player === "good" && nextY < currentPiece[0].y){
+                                if(currentPiece[0].isKing === false){return}
+                            }
                             
                             // --- "bad" non-kings
-                            if(player === "bad" && nextY > currentPiece[0].y){return}
+                            if(player === "bad" && nextY > currentPiece[0].y){
+                                if(currentPiece[0].isKing === false){return}
+                            }
 
                             // --- send location / piece to sockets to ensure only the current piece and available move can be taken after socket update --- //
                             var obj = {
@@ -343,7 +349,7 @@ class CheckerBoard extends Component {
     // -- looks for and executes available attacks -- //
     // checkForKill = async (enemyX,enemyY,currentX,currentY,id,activeLocationTeam,currentPiece) => {
         checkForKill = async (enemyX,enemyY,currentPiece) => {
-        console.log('hit "checkForKill"',enemyX,enemyY)
+        // console.log('hit "checkForKill"',enemyX,enemyY)
         const { pieces,currentPlayer,activeLocation,matrix } = this.state
         // const { player,isKing } = activeLocationTeam
         const { player,isKing,id,x,y } = currentPiece[0]
@@ -400,7 +406,7 @@ class CheckerBoard extends Component {
 
         // -- UPPER LEFT ATTACK -- //
         } else if (currentX > enemyX && currentY > enemyY) {
-            console.log('hit upper left')
+            // console.log('hit upper left')
             // -- non-kings can only attack one direction on the y-axis -- //
             if(player === 'good' && isKing === false){return}
 
@@ -445,7 +451,7 @@ class CheckerBoard extends Component {
 
         // -- UPPER RIGHT ATTACK -- /
         } else if (currentX < enemyX && currentY > enemyY) {
-            console.log('hit upper right')
+            // console.log('hit upper right')
 
             // -- non-kings can only attack one direction on the y-axis -- //
             if(player === 'good' && isKing === false){return}
@@ -492,7 +498,7 @@ class CheckerBoard extends Component {
 
         // -- LOWER RIGHT ATTACK -- //
         } else if (currentX < enemyX && currentY < enemyY) {
-            console.log('hit lower right')
+            // console.log('hit lower right')
 
             // -- non-kings can only attack one direction on the y-axis -- //
             if(player === 'bad' && isKing === false){return}
@@ -503,7 +509,7 @@ class CheckerBoard extends Component {
 
                 // -- is location on the board? -- //
                 if(enemyX+1 >= 0 && enemyY+1 <= matrix.length-1) {
-                    console.log('is on board')
+                    // console.log('is on board')
                     var updatePieces = await this.killPiece(enemyX,enemyY,id)
                     var pieceIndex = updatePieces.findIndex((el) => el.id === id)
                     updatePieces[pieceIndex].x = enemyX+1
@@ -668,6 +674,10 @@ class CheckerBoard extends Component {
             {/* <span className='check-row-1' >{mappedMoves}</span> */}
             <div className='checker-table' ><span className='check-row-1' >{mappedMatrix} </span></div>
             <CurrentPlayer currentPlayer={currentPlayer} />
+
+            {/*  --- test --- */}
+            {/* <Notice info={currentPlayer}/>  */}
+            {/*  --- test --- */}
            
             
             {/* <span className='check-row-1' >
