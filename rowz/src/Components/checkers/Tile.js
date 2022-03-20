@@ -1,6 +1,7 @@
 import './tile.css'
 import './CheckerBoard.css'
 import { useState } from 'react'
+import Notice from '../Notice/Notice'
 const Tile = (props) => {
 
     const { x,y,color,currentPiece,activeLocation,currentPlayer,tileIsSelected,pieces } = props
@@ -43,8 +44,8 @@ const Tile = (props) => {
         {currentPiece[0] != undefined ? <div className={`${currentPiece[0].player === "good" ? 'good-player' : ''}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null}
         
         
-        
 
+        {/* {currentPiece[0] != undefined ?<Notice /> : null} */}
     </div>
         {activeLocation[0] === x && activeLocation[1] === y ? <div className='select-box-overlay'>
             <div className='cancel-select-tile' onClick={() => {props.unselectTile()}} ><h1 style={{opacity:'.5',color:'#fff'}} >X</h1></div>
