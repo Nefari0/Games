@@ -37,7 +37,7 @@ class CheckerBoard extends Component {
             pieces:[],
             matrix:[],
             setPermission:true,
-            currentPlayer:'bad',
+            currentPlayer:'good',
             tileIsSelected:1,
             wasKillMade:false,
             chainKillData:{},
@@ -47,7 +47,17 @@ class CheckerBoard extends Component {
         this.boardFactory = this.boardFactory.bind(this)
         this.getConnected = this.getConnected.bind(this)
         this.checkForKill = this.checkForKill.bind(this)
-        // this.setMoves = this.setMoves.bind(this)
+        this.sendToSocketsSwitch = this.sendToSocketsSwitch.bind(this)
+        this.chainKills = this.chainKills.bind(this)
+        this.setMoves = this.setMoves.bind(this)
+        this.executeMovePiece = this.executeMovePiece.bind(this)
+        this.killPiece = this.killPiece.bind(this)
+        this.checkPieceLocations = this.checkPieceLocations.bind(this)
+        this.switchPlayer = this.switchPlayer.bind(this)
+        this.selectTile = this.selectTile.bind(this)
+        this.unselectTile = this.unselectTile.bind(this)
+        this.handleInput = this.handleInput.bind(this)
+
         // this.autoStartTurn = this.autoStartTurn.bind(this)
     }
 
@@ -71,7 +81,7 @@ class CheckerBoard extends Component {
     // }
 
     getConnected = (input) => {
-        console.log('connect with chain kill 1',this.state.chainKillAvailable)
+        // console.log('connect with chain kill 1',this.state.chainKillAvailable)
         client.onopen = () => {
             console.log('client connected')
         }
@@ -105,10 +115,10 @@ class CheckerBoard extends Component {
                 if(this.state.chainKillAvailable === true){
                     if(this.state.chainKillData != undefined){
                         const { x,y,player,isKing } = this.state.chainKillData[0]
-                        var obj = {
-                            player:player,
-                            isKing:isKing
-                        }
+                        // var obj = {
+                        //     player:player,
+                        //     isKing:isKing
+                        // }
                         // this.selectTile(x,y,[obj])
                         this.checkForKill(this.state.enemyX,this.state.enemyY,this.state.chainKillData)
                         this.setState({chainKillAvailable:false})
@@ -182,7 +192,7 @@ class CheckerBoard extends Component {
     chainKills = async (x,y,updatedPieces,currentPiece) => {
         const { matrix } = this.state
         const { player } = currentPiece[0]
-        console.log('hit chainKills',x,y)
+        // console.log('checking equalities',updatedPieces[0].x,currentPiece[0].x)
         // console.log('hit chainKills update',updatedPieces)
         // const upLeft = [x-1,y-1]
         // const upRight = [x+1,y-1]
@@ -199,7 +209,7 @@ class CheckerBoard extends Component {
             // --- check for adjacent pieces / is piece friend of foe? --- //
             // if(this.checkPieceLocations(e[0],e[1],updatedPieces) !== undefined && this.checkPieceLocations(e[0],e[1],updatedPieces).player !== player){
             if(locatePiece !== undefined && locatePiece.player !== player){
-                console.log('locate piece',locatePiece.x,locatePiece.y)
+                // console.log('locate piece',locatePiece.x,locatePiece.y)
                 
                 // --- if it is a foe, is the next location over available? --- //
                 // console.log('e.vals',parseInt(e[0]),parseInt(e[1]))
@@ -207,12 +217,12 @@ class CheckerBoard extends Component {
                 var nextX = parseInt(e[0]) + locatePiece.x // potential jump to x
                 var nextY = parseInt(e[1]) + locatePiece.y // potential jump to y
                 var availMove = this.checkPieceLocations(nextX,nextY,updatedPieces) // are available "jump to" coordinates available
-                console.log('nextVals',nextX,nextY)
+                // console.log('nextVals',nextX,nextY)
                 if(availMove === undefined) {
                     
                     // -- is location on the board -- //
-                    if(nextX >= 0 && nextX < matrix.length){
-                        if(nextY >= 0 && nextY < matrix.length) {
+                    if(nextX >= 0 && nextX <= matrix.length){
+                        if(nextY >= 0 && nextY <= matrix.length) {
 
                             // --- can move be made if isKing === false ? --- //
                             // --- "good" non-kings
@@ -226,13 +236,15 @@ class CheckerBoard extends Component {
                             }
 
                             // --- send location / piece to sockets to ensure only the current piece and available move can be taken after socket update --- //
-                            var obj = {
-                                nextX:nextX,
-                                nextY:nextY,
-                                updatedPieces
-                            }
+                            // var obj = {
+                            //     nextX:nextX,
+                            //     nextY:nextY,
+                            //     updatedPieces
+                            // }
+                            console.log('current',currentPiece[0].x,currentPiece[0].y)
                             this.setState({
                                 chainKillData:currentPiece,
+                                // chainKillData:updatedPieces,
                                 enemyX:locatePiece.x,
                                 enemyY:locatePiece.y,
                                 // chainKillData:obj,
@@ -349,7 +361,7 @@ class CheckerBoard extends Component {
     // -- looks for and executes available attacks -- //
     // checkForKill = async (enemyX,enemyY,currentX,currentY,id,activeLocationTeam,currentPiece) => {
         checkForKill = async (enemyX,enemyY,currentPiece) => {
-        // console.log('hit "checkForKill"',enemyX,enemyY)
+        // console.log('check for kill func',enemyX,enemyY)
         const { pieces,currentPlayer,activeLocation,matrix } = this.state
         // const { player,isKing } = activeLocationTeam
         const { player,isKing,id,x,y } = currentPiece[0]
@@ -360,6 +372,7 @@ class CheckerBoard extends Component {
 
         // -- LOWER LEFT ATTACK -- //
         if(currentX > enemyX && currentY < enemyY){
+            // console.log('hit "checkForKill_1')
 
             // -- non-kings can only attack one direction on the y-axis -- //
             if(player === 'bad' && isKing === false){return}
@@ -384,6 +397,8 @@ class CheckerBoard extends Component {
                     // -- make chain attack if available -- //
                     // this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,currentPlayer,updatePieces,currentPiece)
                     this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,updatePieces,currentPiece)
+                    currentPiece[0].x = updatePieces[pieceIndex].x
+                    currentPiece[0].y = updatePieces[pieceIndex].y
 
                     // -- update info -- //
                     this.setState({
@@ -406,6 +421,7 @@ class CheckerBoard extends Component {
 
         // -- UPPER LEFT ATTACK -- //
         } else if (currentX > enemyX && currentY > enemyY) {
+            // console.log('hit "checkForKill_2')
             // console.log('hit upper left')
             // -- non-kings can only attack one direction on the y-axis -- //
             if(player === 'good' && isKing === false){return}
@@ -429,6 +445,8 @@ class CheckerBoard extends Component {
 
                     // -- make chain attack if available -- //
                     this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,updatePieces,currentPiece)
+                    currentPiece[0].x = updatePieces[pieceIndex].x
+                    currentPiece[0].y = updatePieces[pieceIndex].y
                     
                     // -- update info -- //
                     this.setState({
@@ -451,6 +469,7 @@ class CheckerBoard extends Component {
 
         // -- UPPER RIGHT ATTACK -- /
         } else if (currentX < enemyX && currentY > enemyY) {
+            // console.log('hit "checkForKill_3',currentX,currentY,enemyX,enemyY)
             // console.log('hit upper right')
 
             // -- non-kings can only attack one direction on the y-axis -- //
@@ -476,6 +495,8 @@ class CheckerBoard extends Component {
 
                     // -- make chain attack if available -- //
                     this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,updatePieces,currentPiece)
+                    currentPiece[0].x = updatePieces[pieceIndex].x
+                    currentPiece[0].y = updatePieces[pieceIndex].y
 
                     // -- update info -- //
                     this.setState({
@@ -498,6 +519,7 @@ class CheckerBoard extends Component {
 
         // -- LOWER RIGHT ATTACK -- //
         } else if (currentX < enemyX && currentY < enemyY) {
+            // console.log('hit "checkForKill_4')
             // console.log('hit lower right')
 
             // -- non-kings can only attack one direction on the y-axis -- //
@@ -521,6 +543,10 @@ class CheckerBoard extends Component {
 
                     // -- make chain attack if available -- //
                     this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,updatePieces,currentPiece)
+                    // console.log('prev',currentPiece[0].x,currentPiece[0].y)
+                    currentPiece[0].x = updatePieces[pieceIndex].x
+                    currentPiece[0].y = updatePieces[pieceIndex].y
+                    // console.log('next',currentPiece[0].x,currentPiece[0].y)
 
                     this.setState({
                         // pieces:updatePieces,
