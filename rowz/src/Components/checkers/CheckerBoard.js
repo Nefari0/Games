@@ -125,6 +125,7 @@ class CheckerBoard extends Component {
     // checks for chain kills
     chainKills = async (x,y,updatedPieces,currentPiece,attack) => {
         // --- the "attack" parameter is a boolean used for checking whether or not an attack is available, without executing attack --- //
+        // this.handleInput('moveOptions',[])
         const { matrix } = this.state
         const { player } = currentPiece[0]
         var moveOptions = []
@@ -195,6 +196,7 @@ class CheckerBoard extends Component {
         const { moveOptions,pieces,currentPlayer } = this.state
         // this.setState({moveOptions:[]})
         pieces.forEach(el => el.pendingDeath = false)
+        // this.handleInput('moveOptions',[])
         console.log('select',moveOptions)
         // this.checkForKill(this.state.enemyX,this.state.enemyY,this.state.chainKillData)
         var enemy = pieces.filter(el => el.player !== currentPlayer)
@@ -222,7 +224,7 @@ class CheckerBoard extends Component {
 
     setMoves = async (x,y,id,activeLocation,manualControl,currentPlayer,pieces,isKing,currentPiece) => { // gets all move options based on active location
         // --- kingAll() is for testing moves
-        // this.kingAll()
+        this.kingAll()
         var pieceIndex = pieces.findIndex((el) => el.id === id)
 
         if(currentPlayer !== pieces[pieceIndex].player){
@@ -313,6 +315,7 @@ class CheckerBoard extends Component {
 
                     // -- update pieces -- //
                     var updatePieces = await this.killPiece(enemyX,enemyY,id)
+                    var pieceIndex = updatePieces.findIndex((el) => el.id === id)
                     updatePieces[pieceIndex].x = enemyX-1
                     updatePieces[pieceIndex].y = enemyY+1
 
