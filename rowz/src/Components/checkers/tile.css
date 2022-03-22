@@ -36,8 +36,17 @@
     background: linear-gradient(0turn,#555,rgb(143, 143, 143));
     box-shadow: 5px 5px 20px -7px #000000;
     border: .1px solid #fff;
-    /* transition: opacity 2s linear; */
     /* transform: scaleY(.7); */
+    visibility: visible;
+    opacity: 1;
+    transition: opacity 2s linear;
+    z-index: 1000;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 4s, opacity 4s linear;
 }
 
 .bad-player {
@@ -62,6 +71,19 @@
     color: white;
     margin: none;
     z-index: 2;
+}
+
+.emo-head-good,
+.emo-head-bad {
+    left: 4px;
+    top: -0px;
+    color: #555;
+    position: absolute;
+    height: 30px;
+    width: 30px;
+}
+.emo-head-good {
+    color: #fff;
 }
 
 .not-selected {
@@ -189,8 +211,8 @@
         transition: visibility 0s 4s, opacity 4s linear;
     } */
 
-    /* .dead-piece {
+    .dead-piece {
       visibility: hidden;
-      opacity: 0;
+      /* opacity: 0; */
       transition: visibility 0s 4s, opacity 4s linear;
-    } */
+    }
