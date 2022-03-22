@@ -224,7 +224,7 @@ class CheckerBoard extends Component {
 
     setMoves = async (x,y,id,activeLocation,manualControl,currentPlayer,pieces,isKing,currentPiece) => { // gets all move options based on active location
         // --- kingAll() is for testing moves
-        this.kingAll()
+        // this.kingAll()
         var pieceIndex = pieces.findIndex((el) => el.id === id)
 
         if(currentPlayer !== pieces[pieceIndex].player){
