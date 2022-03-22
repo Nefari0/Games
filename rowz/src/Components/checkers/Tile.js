@@ -36,7 +36,8 @@ const Tile = (props) => {
     if(getCurrent('pendingDeath') === true){console.log('pending death',getCurrent('id'))}
     // console.log(activeLocation[0] === x && activeLocation[1] === y,'in tile')
     
-    return(<div className='tile-location'  ><div style={{opacity:`${tileIsSelected}`}} className={`tile-color ${activeLocation[0] ? null : 'opac' } ${color -1 ? true : 'tile-color-dark'} `} onClick={() => props.selectTile(x,y,currentPiece)} >
+    // return(<div className='tile-location'  ><div style={{opacity:`${tileIsSelected}`}} className={`tile-color ${activeLocation[0] ? null : 'opac' } ${color -1 ? true : 'tile-color-dark'} `} onClick={() => props.selectTile(x,y,currentPiece)} >
+    return(<div className='tile-location'  ><div className={`tile-color ${!activeLocation[0] ? 'hide-opac' : 'display-opac' } ${color -1 ? true : 'tile-color-dark'} `} onClick={() => props.selectTile(x,y,currentPiece)} >
 
         {/* {currentPiece[0] != undefined ?<Notice setMoves={props.setMoves} getCurrent={getCurrent} x={x} y={y} activeLocation={activeLocation} pieces={pieces} /> : null} */}
 
@@ -44,10 +45,10 @@ const Tile = (props) => {
 
         {/* -- animated deaths -- original code above */}
 
-        {currentPiece[0] !== undefined ? <div className={`${currentPiece[0].player === "bad"  ? 'bad-player' : 'dead-piece'}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null}
+        {currentPiece[0] !== undefined ? <div className={`${currentPiece[0].player === "bad" ? 'bad-player' : 'dead-piece'}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null}
         {/* {currentPiece[0] != undefined ? <div className={`${currentPiece[0].player === "bad"  ? 'bad-player' : 'dead-piece'}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : <div className={`notice-container ${inPlay ? true : 'hidden'}`}></div>} */}
 
-        {currentPiece[0] !== undefined ? <div className={`${currentPiece[0].player === "good" ? 'good-player' : ''}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null}
+        {currentPiece[0] !== undefined ? <div className={`${currentPiece[0].player === "good" ? 'good-player' : 'dead-piece'}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null}
 
         {getCurrent('pendingDeath') === true && currentPiece[0].player === "bad" ? 
         // <p className='player-text dead'>:-(</p>
