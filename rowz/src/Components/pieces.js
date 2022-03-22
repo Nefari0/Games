@@ -8,6 +8,7 @@ const pieces = [
         y:0,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
 
     {
@@ -17,6 +18,7 @@ const pieces = [
         y:0,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     {
         id:3,
@@ -25,6 +27,7 @@ const pieces = [
         y:0,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     {
         id:4,
@@ -33,6 +36,7 @@ const pieces = [
         y:0,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     // ---2
     {
@@ -42,6 +46,7 @@ const pieces = [
         y:2,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     {
         id:6,
@@ -50,6 +55,7 @@ const pieces = [
         y:1,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     {
         id:7,
@@ -58,6 +64,7 @@ const pieces = [
         y:1,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     {
         id:8,
@@ -66,6 +73,7 @@ const pieces = [
         y:1,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     // ---- 3
     {
@@ -75,6 +83,7 @@ const pieces = [
         y:2,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
 
     {
@@ -85,6 +94,7 @@ const pieces = [
         // y:6,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     {
         id:11,
@@ -94,6 +104,7 @@ const pieces = [
         // y:4, 
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     {
         id:12,
@@ -102,6 +113,7 @@ const pieces = [
         y:2 ,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
 
     // bad pieces
@@ -113,6 +125,7 @@ const pieces = [
         y:7,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
 
     {
@@ -122,6 +135,7 @@ const pieces = [
         y:7,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     {
         id:15,
@@ -130,6 +144,7 @@ const pieces = [
         y:7,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     {
         id:16,
@@ -138,6 +153,7 @@ const pieces = [
         y:7,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     // ---2
     {
@@ -147,6 +163,7 @@ const pieces = [
         y:6,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
     {
         id:18,
@@ -155,6 +172,7 @@ const pieces = [
         y:6,
         isInGame:true,
         isKing:false,
+    pendingDeath:false,
     },
     {
         id:19,
@@ -163,6 +181,7 @@ const pieces = [
         y:6,
         isInGame:true,
         isKing:false,
+    pendingDeath:false,
     },
     {
         id:20,
@@ -171,6 +190,7 @@ const pieces = [
         y:6,
         isInGame:true,
         isKing:false,
+    pendingDeath:false,
     },
     // // ---- 3
     {
@@ -180,6 +200,7 @@ const pieces = [
         y:5,
         isInGame:true,
         isKing:false,
+        pendingDeath:false,
     },
 
     {
@@ -189,6 +210,7 @@ const pieces = [
         y:5,
         isInGame:true,
         isKing:false,
+    pendingDeath:false,
     },
     {
         id:23,
@@ -197,6 +219,7 @@ const pieces = [
         y:5,
         isInGame:true,
         isKing:false,
+    pendingDeath:false,
     },
     {
         id:24,
@@ -205,6 +228,7 @@ const pieces = [
         y:5,
         isInGame:true,
         isKing:false,
+    pendingDeath:false,
     },
 ]
 
