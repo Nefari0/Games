@@ -553,8 +553,8 @@ class CheckerBoard extends Component {
 
         const { matrix,pieces,activeLocation,currentPlayer,tileIsSelected,moveOptions,chainKillAvailable } = this.state
 
-        const mappedMatrix = matrix.map((el,id) => {
-            return el.map((el2,id2) => {
+        const mappedMatrix = matrix.map((row,id) => {
+            return row.map((col,id2) => {
                 const currentPiece = pieces.filter(e => e.x === id2 && e.y === id)
                 return <Tile key={[id2,id]} x={id2} y={id} color={(-1)**(id+id2)} selectTile={this.selectTile} unselectTile={this.unselectTile} setMoves={this.setMoves} currentPiece={currentPiece} currentPlayer={currentPlayer} activeLocation={activeLocation} tileIsSelected={tileIsSelected} pieces={pieces} moveOptions={moveOptions} chainKillAvailable={chainKillAvailable}/>
             })
