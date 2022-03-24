@@ -1,10 +1,17 @@
-// import './Piece.css'
 
-// const Piece = (props) => {
+import './tile.css'
 
-//     return(<div className='good-piece' >
+const Piece = (props) => {
 
-//     </div>)
-// }
+    return (
+        <div>
+            {props.getCurrent('player') ==='good' ? 
+            <div className={`good-player ${props.getCurrent('isInGame') ? false : 'hidden'}`}>{props.getCurrent('isKing') === true ? <p className='player-text'>king</p> : null}</div>
+        :
+            <div className={`bad-player ${props.getCurrent('isInGame') ? false : 'hidden'}`}>{props.getCurrent('isKing') === true ? <p className='player-text'>king</p> : null}</div>}
+            
+        </div>
+    )
+}
 
-// export default Piece
+export default Piece
