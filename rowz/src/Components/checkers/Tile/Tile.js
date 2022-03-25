@@ -1,5 +1,6 @@
+
 import './tile.css'
-import './CheckerBoard.css'
+import '.././CheckerBoard'
 import { useState,useEffect, useRef } from 'react'
 // import Notice from '../Notice/Notice'
 import Piece from './Piece'
@@ -41,7 +42,6 @@ const Tile = (props) => {
 
     return(<div className='tile-location'  ><div className={`tile-color ${!activeLocation[0] ? 'hide-opac' : 'display-opac' } ${color -1 ? true : 'tile-color-dark'} `} onClick={() => props.selectTile(x,y,currentPiece)} >
 
-
         {/* {currentPiece[0] !== undefined ? <div className={`${currentPiece[0].player === "bad" ? 'bad-player' : 'dead-piece'}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null} */}
 
         {/* {currentPiece[0] !== undefined ? <div className={`${currentPiece[0].player === "good" ? 'good-player' : 'dead-piece'}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null} */}
@@ -61,6 +61,7 @@ const Tile = (props) => {
             <path strokeLinecap="round" strokeLinejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
          : null}
+
         
     </div>
         {activeLocation[0] === x && activeLocation[1] === y ? 

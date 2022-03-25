@@ -1,7 +1,7 @@
-
+// const sass = require('sass');
 import './CheckerBoard.css'
 import React, { Component } from 'react'
-import Tile from './Tile'
+import Tile from './Tile/Tile'
 import pieces from '.././pieces'
 import CurrentPlayer from './CurrentPlayer'
 // import Notice from '../Notice/Notice'

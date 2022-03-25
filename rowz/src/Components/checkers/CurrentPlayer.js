@@ -1,5 +1,5 @@
-import './CheckerBoard.css'
-import './tile.css'
+// import './CheckerBoard.css'
+// import './Tile'
 import { useEffect,useState } from 'react'
 
 const CurrentPlayer = (props) => {
