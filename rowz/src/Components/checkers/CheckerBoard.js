@@ -114,6 +114,7 @@ class CheckerBoard extends Component {
     // checks for available attacks of current play at biginning of each turn
     autoStartTurn = async () => {
         const { pieces,currentPlayer } = this.state
+        this.handleInput('moveOptions',[])
     //     // var updatedPieces = [...pieces]
         var currentPieces = pieces.filter((el) => el.player === currentPlayer)
         var ememyPieces = pieces.filter((el) => el.player !== currentPlayer)
@@ -128,7 +129,8 @@ class CheckerBoard extends Component {
         // this.handleInput('moveOptions',[])
         const { matrix } = this.state
         const { player } = currentPiece[0]
-        var moveOptions = []
+        var { moveOptions } = this.state
+        var updateMoves = [...moveOptions]
         const upLeft = [-1,-1]
         const upRight = [1,-1]
         const downLeft = [-1,1]
@@ -163,10 +165,12 @@ class CheckerBoard extends Component {
                                 if(currentPiece[0].isKing === false){return}
                             }
 
-                            moveOptions.push([locatePiece.x,locatePiece.y])
+                            // moveOptions.push([locatePiece.x,locatePiece.y])
+                            updateMoves.push([locatePiece.x,locatePiece.y])
 
                             // --- this returns move options without making an attack --- //
-                            if(attack === false){return this.setState({moveOptions:moveOptions})}
+                            // if(attack === false){return this.setState({moveOptions:moveOptions})}
+                            if(attack === false){return this.setState({moveOptions:updateMoves})}
 
                             console.log('current',currentPiece[0].x,currentPiece[0].y)
                             this.setState({
