@@ -29,7 +29,7 @@ app.use(
     })
     
     // websocket
-    const webSocketsServerPort = 8000;
+    const webSocketsServerPort = 8003;
     
     const server = http.createServer();
     server.listen(webSocketsServerPort, () => console.log(`sockets connected on ${webSocketsServerPort}`));
