@@ -7,17 +7,24 @@ import Piece from './Piece'
 const Tile = (props) => {
 
     
-    const { x,y,color,currentPiece,activeLocation,currentPlayer,tileIsSelected,pieces,chainKillAvailable,moveOptions } = props
+    const {
+        x,
+        y,
+        color,
+        currentPiece,
+        activeLocation,
+        currentPlayer,
+        tileIsSelected,
+        pieces,
+        chainKillAvailable,
+        moveOptions
+    } = props
 
     // const [inPlay,setInPlay] = useState(false)
     // const [makeMove,setMakeMove] = useState(false)
 
     const prevPiece = useRef()
 
-    // useEffect(() => {
-    //     prevPiece.alive = currentPiece[0]
-    // })
-    
     if(moveOptions.length > 0){
         if ([x+1,y+1] === moveOptions) {console.log('here is the move',x+1, moveOptions)}
     }
@@ -40,14 +47,14 @@ const Tile = (props) => {
         }
     }
 
-    return(<div className='tile-location'  ><div className={`tile-color ${!activeLocation[0] ? 'hide-opac' : 'display-opac' } ${color -1 ? true : 'tile-color-dark'} `} onClick={() => props.selectTile(x,y,currentPiece)} >
+    return(<div className='tile-location'  ><div className={`tile-color ${!activeLocation[1] ? 'hide-opac' : 'display-opac' } ${color -1 ? true : 'tile-color-dark'} `} onClick={() => props.selectTile(x,y,currentPiece)} >
 
         {/* {currentPiece[0] !== undefined ? <div className={`${currentPiece[0].player === "bad" ? 'bad-player' : 'dead-piece'}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null} */}
 
         {/* {currentPiece[0] !== undefined ? <div className={`${currentPiece[0].player === "good" ? 'good-player' : 'dead-piece'}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null} */}
 
         {/* ------- animated deaths ------- original code above ----*/}
-        <Piece setMoves={props.setMoves} prevPiece={prevPiece.current} getCurrent={getCurrent} x={x} y={y} activeLocation={activeLocation} pieces={pieces} currentPiece={currentPiece}/>
+        <Piece setMoves={props.setMoves} prevPiece={prevPiece.current} getCurrent={getCurrent} x={x} y={y} pieces={pieces} currentPiece={currentPiece}/>
 
         {getCurrent('pendingDeath') === true && currentPiece[0].player === "bad" ? 
         
@@ -66,7 +73,11 @@ const Tile = (props) => {
     </div>
         {activeLocation[0] === x && activeLocation[1] === y ? 
         <div className='select-box-overlay'>
-            <div className='cancel-select-tile' onClick={() => {props.unselectTile()}} ><h1 style={{opacity:'.5',color:'#fff'}} >X</h1></div>
+            <div className='cancel-select-tile' onClick={() => {props.unselectTile()}} >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
             <div className={`low-right`} onClick={() => props.setMoves(x+1,y+1,getCurrent('id'),activeLocation,true,currentPlayer,pieces,getCurrent('isKing'),currentPiece)} ></div>
             <div className='low-left' onClick={() => props.setMoves(x-1,y+1,getCurrent('id'),activeLocation,true,currentPlayer,pieces,getCurrent('isKing'),currentPiece)}></div>
             <div className='top-left' onClick={() => props.setMoves(x-1,y-1,getCurrent('id'),activeLocation,true,currentPlayer,pieces,getCurrent('isKing'),currentPiece)}></div>
