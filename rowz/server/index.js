@@ -28,7 +28,7 @@ app.use(
         res.send(path.join(__dirname, '../build/index.html'))
     })
     
-    // websocket
+    // websocket // 8003
     const webSocketsServerPort = 8003;
     
     const server = http.createServer();
