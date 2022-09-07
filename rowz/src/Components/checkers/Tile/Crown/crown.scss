@@ -1,30 +1,18 @@
-/* $size: 10rem; */
+$size: 15px;
 
 .crown {
 	position: absolute;
-	top: 50%;
+	top: 0px;
 	left: 50%;
 	transform: translate(-50%,-50%);
     width: 40px;
     height: 40px;
-	/* width: $size; */
-	/* height: $size/1.1; */
+	width: $size+5;
+	height: $size/1.1;
 	overflow: hidden;
+	z-index: 10;
 }
-	
-	/* crown:after {
-		content: '';
-		position: absolute;
-
-		left: 0;
-		width: 100%;
-
-		background-color: gold;
-		border-top-left-radius: 50%;
-		border-top-right-radius: 50%;
-	} */
-	
-	/* .point {
+	.point {
 		position: absolute;
 		background-color: gold;
 		transform: translate(-50%,50%) rotate(45deg) skew(30deg,30deg);
@@ -81,4 +69,3 @@
 			left: 100%;
 		}
 	}
-} */

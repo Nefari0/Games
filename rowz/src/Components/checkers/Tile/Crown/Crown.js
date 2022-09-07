@@ -1,15 +1,15 @@
 // const sass = require('sass');
-import './crown.css'
+import './crown.scss'
 
 const Crown = () => {
 
     return(
-        <div class="crown">
-            <div class="point"></div>
-            <div class="point"></div>
-            <div class="point"></div>
-            <div class="point"></div>
-            <div class="point"></div>
+        <div className="crown">
+            <div className="point"></div>
+            <div className="point"></div>
+            <div className="point"></div>
+            <div className="point"></div>
+            <div className="point"></div>
         </div>
     )
 }
