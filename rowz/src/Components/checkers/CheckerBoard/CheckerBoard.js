@@ -1,7 +1,7 @@
 import { CheckerTable,Rowz,OpacityLens } from './board.styles'
 import React, { Component } from 'react'
 import Tile from '../Tile/Tile'
-import Piece from '../Tile/Piece/Piece'
+import Piece from '../Tile/Piece/piece.component'
 import pieces from '../../pieces'
 import CurrentPlayer from '../TurnIndicator/current.component'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
