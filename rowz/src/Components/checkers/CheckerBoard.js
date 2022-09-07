@@ -2,6 +2,7 @@
 import './CheckerBoard.css'
 import React, { Component } from 'react'
 import Tile from './Tile/Tile'
+import Piece from './Tile/Piece'
 import pieces from '.././pieces'
 import CurrentPlayer from './CurrentPlayer'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
@@ -547,11 +548,23 @@ class CheckerBoard extends Component {
             })
         })
 
-        return(<div>
-            <div className='checker-table' ><span className='check-row-1' >{mappedMatrix} </span></div>
-            <CurrentPlayer currentPlayer={currentPlayer} />
+        const mappedPieces = pieces.map(el => {
+            return (
+                <Piece key={el.id} items={el} />
+            )
+        })
 
-        </div>)
+        return(
+            <div>
+                <div className='checker-table' >
+                    <span className='check-row-1' >
+                        {mappedPieces}
+                        {mappedMatrix}
+                    </span>
+                </div>
+                <CurrentPlayer currentPlayer={currentPlayer} />
+            </div>
+        )
     }
 }
 
