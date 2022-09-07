@@ -12,16 +12,15 @@
     width: 40px;
     background-color: coral;
     margin: 1px;
-    z-index: 10;
 }
 
 .tile-color-dark {
     background-color: wheat;
-    z-index: 10;
 }
 
 .bad-player,
 .good-player {
+    position: absolute;
     height: 35px;
     width: 35px;
     border-radius: 50%;
@@ -31,7 +30,8 @@
     visibility: visible;
     opacity: 1;
     transition: opacity .2s linear;
-    z-index: 0;
+    z-index: 3;
+    pointer-events: none;
 }
 
 .bad-player {
@@ -63,7 +63,6 @@
     position: absolute;
     color: white;
     margin: none;
-    z-index: 2;
 }
 
 .emo-head-good,
@@ -85,7 +84,8 @@
     width: 150px;
     right: -55px;
     top: -55px;
-    z-index: 100;
+    z-index: 99;
+    pointer-events: auto;
 }
 
 .top-left,
@@ -99,7 +99,8 @@
     border: solid green;
     border-width: 0 6px 6px 0;
     display: inline-block;
-    z-index: 11;
+    z-index: 1000;
+    pointer-events: auto;
 }
 
 .low-right {
@@ -114,12 +115,12 @@
 .top-left {
     left: 20px;
     top: 20px;
-    transform: rotate(180deg)
+    transform: rotate(180deg);
 }
 .top-right {
     left:105px;
     top: 20px;
-    transform: rotate(270deg)
+    transform: rotate(270deg);
 }
 
 .cancel-select-tile {
@@ -136,4 +137,5 @@
 	justify-content: center;
 	align-items: center;
 	align-content: center;
+    pointer-events: auto;
 }
