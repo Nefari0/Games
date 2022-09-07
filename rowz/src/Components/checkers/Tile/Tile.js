@@ -20,9 +20,6 @@ const Tile = (props) => {
         moveOptions
     } = props
 
-    // const [inPlay,setInPlay] = useState(false)
-    // const [makeMove,setMakeMove] = useState(false)
-
     const prevPiece = useRef()
 
     if(moveOptions.length > 0){
@@ -46,28 +43,24 @@ const Tile = (props) => {
    
         }
     }
-
+    
     return(<div className='tile-location'  ><div className={`tile-color ${!activeLocation[1] ? 'hide-opac' : 'display-opac' } ${color -1 ? true : 'tile-color-dark'} `} onClick={() => props.selectTile(x,y,currentPiece)} >
 
-        {/* {currentPiece[0] !== undefined ? <div className={`${currentPiece[0].player === "bad" ? 'bad-player' : 'dead-piece'}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null} */}
+        {/* ------- animated deaths ------- ----*/}
+        {/* <Piece getCurrent={getCurrent}/> */}
 
-        {/* {currentPiece[0] !== undefined ? <div className={`${currentPiece[0].player === "good" ? 'good-player' : 'dead-piece'}`} > {currentPiece[0].isKing === true ? <p className='player-text'>king</p> : null} </div> : null} */}
-
-        {/* ------- animated deaths ------- original code above ----*/}
-        <Piece setMoves={props.setMoves} prevPiece={prevPiece.current} getCurrent={getCurrent} x={x} y={y} pieces={pieces} currentPiece={currentPiece}/>
-
-        {getCurrent('pendingDeath') === true && currentPiece[0].player === "bad" ? 
+        {/* {getCurrent('pendingDeath') === true && currentPiece[0].player === "bad" ? 
         
         <svg xmlns="http://www.w3.org/2000/svg" className="emo-head-bad" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-         : null}
+         : null} */}
 
-        {getCurrent('pendingDeath') === true && currentPiece[0].player === "good" ? 
+        {/* {getCurrent('pendingDeath') === true && currentPiece[0].player === "good" ? 
         <svg xmlns="http://www.w3.org/2000/svg" className="emo-head-good" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-         : null}
+         : null} */}
 
         
     </div>
