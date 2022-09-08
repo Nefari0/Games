@@ -5,12 +5,12 @@ import Piece from '../Tile/Piece/piece.component'
 import pieces from '../../pieces'
 import CurrentPlayer from '../TurnIndicator/current.component'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-// const client = new W3CWebSocket(`ws://127.0.0.1:8000`); // production
+// const client = new W3CWebSocket(`ws://127.0.0.1:8003`); // production
 const client = new W3CWebSocket(`ws://165.227.102.189:8000`); // build
 
 class CheckerBoard extends Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
 
         this.state = {
             playerGood:{},
@@ -73,10 +73,10 @@ class CheckerBoard extends Component {
                 if(this.state.chainKillAvailable === true){
                     if(this.state.chainKillData !== undefined){
                         
-                        this.checkForKill(this.state.enemyX,this.state.enemyY,this.state.chainKillData)
+                        // this.checkForKill(this.state.enemyX,this.state.enemyY,this.state.chainKillData)
                         this.setState({chainKillAvailable:false})
                     }
-                } 
+                }
                 else this.autoStartTurn()
                 this.highLightFate()                
             }
@@ -84,28 +84,37 @@ class CheckerBoard extends Component {
     }
 
         // --- this function makes all pieces king - it's purpose is strictly for testing moves in all direction --- //
-    kingAll = () => {
-        const { pieces } = this.state
-        var updatePieces = []
-        pieces.forEach(el => {
-            el.isKing = true
-            updatePieces.push(el)
-        })
-        this.setState({pieces:updatePieces})
+    // kingAll = () => {
+    //     const { pieces } = this.state
+    //     var updatePieces = []
+    //     pieces.forEach(el => {
+    //         el.isKing = true
+    //         updatePieces.push(el)
+    //     })
+    //     this.setState({pieces:updatePieces})
         
-    }
+    // }
 
     sendToSocketsSwitch = (input) => {
-        client.send(JSON.stringify({type: "checkerTurn",input}))
+        const { currentPlayer,newPieces} = input
+        const { playOnline } = this.props
+        console.log('hit send to sockets',input)
+        if (playOnline === true) {
+            client.send(JSON.stringify({type: "checkerTurn",input}))
+        } else {
+            this.switchPlayer(currentPlayer)
+            this.setState({pieces:newPieces})
+            this.highLightFate()
+        }
     };
 
     boardFactory = () => {
-    var matrix = []
-    var numOfTiles = 8
-    var M = Array.from(Array(numOfTiles)) // rows
-    for(let i = 0; i < numOfTiles; i++){ // columns
-    matrix.push(M)
-        }
+        var matrix = []
+        var numOfTiles = 8
+        var M = Array.from(Array(numOfTiles)) // rows
+
+        for(let i = 0; i < numOfTiles; i++){matrix.push(M)} // columns 
+
         this.setState({matrix:matrix})
     }
 
