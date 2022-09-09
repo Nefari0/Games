@@ -6,8 +6,8 @@ import Piece from '../Tile/Piece/piece.component'
 import pieces from '../../pieces'
 import CurrentPlayer from '../TurnIndicator/current.component'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-const client = new W3CWebSocket(`ws://127.0.0.1:8003`); // production
-// const client = new W3CWebSocket(`ws://165.227.102.189:8000`); // build
+// const client = new W3CWebSocket(`ws://127.0.0.1:8003`); // production
+const client = new W3CWebSocket(`ws://165.227.102.189:8000`); // build
 
 class CheckerBoard extends Component {
     constructor(props) {
@@ -65,8 +65,9 @@ class CheckerBoard extends Component {
             if (dataFromServer.type === 'checkerTurn' ) {
                 this.setState({
                     pieces:dataFromServer.input.newPieces,
-                    chainKillData:dataFromServer.input.chainKillData,
-                    // currentPlayer:currentPlayer
+                    // chainKillData:dataFromServer.input.chainKillData,
+                    // activeLocation:[1,0,currentPlayer]
+                    currentPlayer:currentPlayer
                 })
                 // this.autoStartTurn() // for testing / pending removal
                 this.switchPlayer(currentPlayer)
@@ -77,7 +78,8 @@ class CheckerBoard extends Component {
                         this.setState({chainKillAvailable:false})
                     }
                 }
-                else this.autoStartTurn()
+                else 
+                this.autoStartTurn()
                 this.highLightFate()                
             }
         }
@@ -96,7 +98,7 @@ class CheckerBoard extends Component {
     };
 
     sendToSocketsSwitch = (input) => {
-        // this.kingAll()
+        this.kingAll()
         const { currentPlayer,newPieces} = input
         const { playOnline } = this.props
         console.log('hit send to sockets',input)
@@ -180,12 +182,13 @@ class CheckerBoard extends Component {
 
                             this.setState({
                                 moveOptions:moveOptions,
-                                chainKillData:currentPiece,
+                                // chainKillData:currentPiece,
                                 enemyX:locatePiece.x,
                                 enemyY:locatePiece.y,
-                                chainKillAvailable:true
+                                chainKillAvailable:true,
+                                // activeLocation:[x,y,currentPiece]
                             })
-                            
+                            // this.selectTile(x,y,currentPiece)
                             this.switchPlayer(player)
                             return
                         }
@@ -253,6 +256,7 @@ class CheckerBoard extends Component {
     
                     // -- make chain attack if available -- //
                     this.chainKills(updatedPieces[pieceIndex].x,updatedPieces[pieceIndex].y,updatedPieces,[updatedPieces[pieceIndex]])
+                    // console.log('this is from setMoves',this.state.chainKillAvailable)
 
                     this.setState({
                         pieces:updatedPieces,
@@ -560,8 +564,11 @@ class CheckerBoard extends Component {
     }
 
     selectTile = (x,y,piece) => {
+        const newActiveLocation = [x,y,piece]
+        // console.log('hit select tile',newActiveLocation)
         if(piece[0] != undefined) {
-            this.handleInput('activeLocation',[x,y,piece])
+            // this.handleInput('activeLocation',[x,y,piece])
+            this.handleInput('activeLocation',newActiveLocation)
             this.handleInput('tileIsSelected',.4)
         }
         return
