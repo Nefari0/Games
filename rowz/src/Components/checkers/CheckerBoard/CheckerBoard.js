@@ -16,7 +16,8 @@ class CheckerBoard extends Component {
         this.state = {
             playerGood:{},
             playerBad:{},
-            selectedPiece:{}, // 
+            // selectedPiece:{}, // 
+            previousPiece:null,
             activeLocation:[null,null], // player selects tile
             pieces:[],
             matrix:[],
@@ -61,8 +62,10 @@ class CheckerBoard extends Component {
         
             const dataFromServer = JSON.parse(message.data);
             const { currentPlayer } = dataFromServer.input
+            console.log(dataFromServer.input)
 
             if (dataFromServer.type === 'checkerTurn' ) {
+                const { previousPiece,newPieces,currentPlayer } = dataFromServer.input
                 this.setState({
                     pieces:dataFromServer.input.newPieces,
                     // chainKillData:dataFromServer.input.chainKillData,
@@ -71,15 +74,28 @@ class CheckerBoard extends Component {
                 })
                 // this.autoStartTurn() // for testing / pending removal
                 this.switchPlayer(currentPlayer)
-                if(this.state.chainKillAvailable === true){
-                    if(this.state.chainKillData !== undefined){
-                        
-                        // this.checkForKill(this.state.enemyX,this.state.enemyY,this.state.chainKillData)
-                        this.setState({chainKillAvailable:false})
-                    }
+                // if(this.state.chainKillAvailable === true){
+                //     // if(this.state.chainKillData !== undefined){
+                //     //     const {y,x} = this.state.chainKillData[0]
+                //     //     // this.checkForKill(this.state.enemyX,this.state.enemyY,this.state.chainKillData)
+                //     //     // this.setState({chainKillAvailable:false})
+                //     //     // this.setState({
+                //     //     //     activeLocation:[x,y,this.state.chainKillData[0]],
+                //     //     //     chainKillAvailable:false
+                //     //     // })
+                //     // }
+                // }
+                // else 
+                // this.autoStartTurn()
+                // const { }
+                if (this.state.chainKillAvailable === true) {
+                    const { x,y } = previousPiece
+                    console.log('chain kil is available',previousPiece)
+                    this.setState({
+                        activeLocation:[x,y,previousPiece],
+                        chainKillAvailable:false
+                    })
                 }
-                else 
-                this.autoStartTurn()
                 this.highLightFate()                
             }
         }
@@ -101,7 +117,8 @@ class CheckerBoard extends Component {
         this.kingAll()
         const { currentPlayer,newPieces} = input
         const { playOnline } = this.props
-        console.log('hit send to sockets',input)
+        this.setState({activeLocation:[null,null]})
+        // console.log('hit send to sockets',input)
         if (playOnline === true) {
             client.send(JSON.stringify({type: "checkerTurn",input}))
         } else {
@@ -122,14 +139,15 @@ class CheckerBoard extends Component {
     }
 
     // checks for available attacks of current play at biginning of each turn
-    autoStartTurn = async () => {
-        const { pieces,currentPlayer } = this.state
-        this.handleInput('moveOptions',[])
-        var currentPieces = pieces.filter((el) => el.player === currentPlayer)
-        currentPieces.forEach(el => {
-            this.chainKills(el.x,el.y,pieces,[el],false)
-        })
-    }
+    // autoStartTurn = async () => {
+    //     const { pieces,currentPlayer } = this.state
+    //     this.handleInput('moveOptions',[])
+    //     var currentPieces = pieces.filter((el) => el.player === currentPlayer)
+    //     const newMoves = currentPieces.map(el => {
+    //         return this.chainKills(el.x,el.y,pieces,[el],false)
+    //     })
+    //     console.log('inside autoStartTurn',newMoves)
+    // }
 
     // checks for chain kills
     chainKills = async (x,y,updatedPieces,currentPiece,attack) => {
@@ -175,16 +193,17 @@ class CheckerBoard extends Component {
 
                             // --- this returns move options without making an attack --- //
                             // if(attack === false){return this.setState({moveOptions:moveOptions})}
-                            if(attack === false){
-                                if(moveOptions.length < 2){this.setState({chainKillData:currentPiece})}
-                                return this.setState({moveOptions:updateMoves})
-                            }
+                            // if(attack === false){
+                            //     console.log('attack === true')
+                            //     if(moveOptions.length < 2){this.setState({chainKillData:currentPiece})}
+                            //     return this.setState({moveOptions:updateMoves})
+                            // }
 
                             this.setState({
-                                moveOptions:moveOptions,
+                                // moveOptions:moveOptions,
                                 // chainKillData:currentPiece,
-                                enemyX:locatePiece.x,
-                                enemyY:locatePiece.y,
+                                // enemyX:locatePiece.x,
+                                // enemyY:locatePiece.y,
                                 chainKillAvailable:true,
                                 // activeLocation:[x,y,currentPiece]
                             })
@@ -204,6 +223,7 @@ class CheckerBoard extends Component {
     // --- if an attack is available: --- //
     highLightFate = () => {
         const { moveOptions,pieces,currentPlayer } = this.state
+        console.log('hit highlight fate function',moveOptions)
         pieces.forEach(el => el.pendingDeath = false)
         var enemy = pieces.filter(el => el.player !== currentPlayer)
         // var updatePieces = []
@@ -255,18 +275,19 @@ class CheckerBoard extends Component {
                     }
     
                     // -- make chain attack if available -- //
-                    this.chainKills(updatedPieces[pieceIndex].x,updatedPieces[pieceIndex].y,updatedPieces,[updatedPieces[pieceIndex]])
+                    this.chainKills(updatedPieces[pieceIndex].x,updatedPieces[pieceIndex].y,updatedPieces,[updatedPieces[pieceIndex]],true)
                     // console.log('this is from setMoves',this.state.chainKillAvailable)
 
                     this.setState({
-                        pieces:updatedPieces,
-                        activeLocation:[null,null]
+                        // pieces:updatedPieces,
+                        // activeLocation:[null,null]
                     })
                     var sendInfo = {
                         newPieces:updatedPieces,
-                        activeLocation:[null,null],
-                        tileIsSelected:1,
-                        currentPlayer:this.state.currentPlayer
+                        // activeLocation:[null,null],
+                        // tileIsSelected:1,
+                        currentPlayer:this.state.currentPlayer,
+                        previousPiece:updatedPieces[pieceIndex]
                     }
                     this.sendToSocketsSwitch(sendInfo)
                     // console.log('new attack coords',updatedPieces)
@@ -305,9 +326,10 @@ class CheckerBoard extends Component {
         } 
 
         this.setState({
-            pieces:updatePieces,
-            activeLocation:[null,null],
-            tileIsSelected:1
+            // pieces:updatePieces,
+            // previousPiece:updatePieces[pieceIndex],
+            // activeLocation:[null,null],
+            // tileIsSelected:1
         })
 
         //  --- testing auto moves - original code below this block --- //
@@ -315,7 +337,8 @@ class CheckerBoard extends Component {
         // ---- original ---- //
         var sendInfo = {
             newPieces:updatePieces,
-            currentPlayer:this.state.currentPlayer
+            currentPlayer:this.state.currentPlayer,
+            previousPiece:updatePieces[pieceIndex],
         }
         this.sendToSocketsSwitch(sendInfo)
         // ----------------- //
