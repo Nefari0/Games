@@ -1,4 +1,4 @@
-import './tile.css'
+import './tile.styles.css'
 import { TilePlate } from './tile.styles'
 import Controller from './ControlPanel/controls.component'
 

@@ -1,7 +1,7 @@
 import { SadFace, SmileFace } from './SVG'
 import { GoodPlayer,BadPlayer } from './piece.styles'
-import Crown from '../Crown/Crown'
-import '../tile.css'
+import Crown from '../Crown/crown.component'
+import '../tile.styles.css'
 
 const Piece = ({items}) => {    
 

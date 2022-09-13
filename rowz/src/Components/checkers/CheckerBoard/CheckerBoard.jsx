@@ -1,7 +1,7 @@
 import { attackLogic,chainAttacksLogic } from './attack.logic'
 import { CheckerTable,Rowz,OpacityLens } from './board.styles'
 import React, { Component } from 'react'
-import Tile from '../Tile/Tile'
+import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
 import pieces from '../../pieces'
 import CurrentPlayer from '../TurnIndicator/current.component'

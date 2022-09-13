@@ -1,5 +1,4 @@
-// const sass = require('sass');
-import './crown.scss'
+import './crown.styles.scss'
 
 const Crown = () => {
 
