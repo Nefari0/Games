@@ -12,10 +12,10 @@ const Tile = (props) => {
         currentPiece,
         activeLocation,
         currentPlayer,
-        tileIsSelected,
+
         pieces,
-        chainKillAvailable,
-        moveOptions,
+
+   
         setMoves
     } = props
     
