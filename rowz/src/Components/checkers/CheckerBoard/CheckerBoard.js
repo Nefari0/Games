@@ -20,38 +20,27 @@ class CheckerBoard extends Component {
         super(props)
 
         this.state = {
-            playerGood:{},
-            playerBad:{},
-            selectedPiece:null, 
             previousPiece:null,
-            activeLocation:[null,null], // player selects tile
+            activeLocation:[null,null], // --- Player selects tile
             pieces:[],
             matrix:[],
-            setPermission:true,
             currentPlayer:'good',
-            tileIsSelected:1,
-            wasKillMade:false,
-            chainKillData:null,
+            tileIsSelected:1, // --- Changes opacity
             chainKillAvailable:false,
-            attackCoords:null,
+            moveOptions:[],
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
         this.getConnected = this.getConnected.bind(this)
-        // this.checkForKill = this.checkForKill.bind(this)
         this.sendToSocketsSwitch = this.sendToSocketsSwitch.bind(this)
-        // this.chainKills = this.chainKills.bind(this)
         this.setMoves = this.setMoves.bind(this)
         this.executeMovePiece = this.executeMovePiece.bind(this)
         this.killPiece = this.killPiece.bind(this)
         this.checkPieceLocations = this.checkPieceLocations.bind(this)
         this.switchPlayer = this.switchPlayer.bind(this)
-        this.selectTile = this.selectTile.bind(this)
         this.unselectTile = this.unselectTile.bind(this)
         this.handleInput = this.handleInput.bind(this)
         this.kingAll = this.kingAll.bind(this)
-
-        // this.autoStartTurn = this.autoStartTurn.bind(this)
     };
 
     componentDidMount() {
@@ -60,58 +49,40 @@ class CheckerBoard extends Component {
         this.getConnected()
     };
     
-    getConnected = (input) => {
+    getConnected = () => {
         client.onopen = () => {
             console.log('client connected')
         }
         client.onmessage = (message) => {
         
             const dataFromServer = JSON.parse(message.data);
-            // const { currentPlayer } = dataFromServer.input
-            // console.log(dataFromServer.input)
 
             if (dataFromServer.type === 'checkerTurn' ) {
-                const { previousPiece,newPieces,currentPlayer } = dataFromServer.input
+                const { previousPiece,newPieces,currentPlayer,autoTurn } = dataFromServer.input
+                newPieces.forEach(el => el.pendingDeath = false)
                 this.setState({
-                    pieces:dataFromServer.input.newPieces,
+                    pieces:newPieces,
                     previousPiece:previousPiece,
-                    // chainKillData:dataFromServer.input.chainKillData,
-                    // activeLocation:[1,0,currentPlayer]
                     currentPlayer:currentPlayer
                 })
-                // this.autoStartTurn() // for testing / pending removal
+
                 this.switchPlayer(currentPlayer)
-                // if(this.state.chainKillAvailable === true){
-                //     // if(this.state.chainKillData !== undefined){
-                //     //     const {y,x} = this.state.chainKillData[0]
-                //     //     // this.checkForKill(this.state.enemyX,this.state.enemyY,this.state.chainKillData)
-                //     //     // this.setState({chainKillAvailable:false})
-                //     //     // this.setState({
-                //     //     //     activeLocation:[x,y,this.state.chainKillData[0]],
-                //     //     //     chainKillAvailable:false
-                //     //     // })
-                //     // }
-                // }
-                // else 
-                // this.autoStartTurn()
-                // const { }
+
                 if (this.state.chainKillAvailable === true) {
                     const { x,y } = previousPiece
-                    // console.log('chain kil is available',previousPiece)
                     this.setState({
                         activeLocation:[x,y,previousPiece],
-                        chainKillAvailable:false
+                        chainKillAvailable:false,
+                        previousPiece:null
                     })
-                // } else {this.autoStartTurn()}
-            } else {
-                // this.initializeTurn()
-            }
-                // this.highLightFate()                
+                } else {
+                    if (!autoTurn) {this.mandatoryAttack()}
+                }           
             }
         }
     };
 
-        // --- this function makes all pieces king - it's purpose is strictly for testing moves in all direction --- //
+    // --- this function makes all pieces king - it's purpose is strictly for testing moves in all direction --- //
     kingAll = () => {
         const { pieces } = this.state
         var updatePieces = []
@@ -124,17 +95,15 @@ class CheckerBoard extends Component {
     };
 
     sendToSocketsSwitch = (input) => {
-        // this.kingAll()
+        // this.kingAll() // --- For testing
         const { currentPlayer,newPieces} = input
         const { playOnline } = this.props
         this.setState({activeLocation:[null,null]})
-        // console.log('hit send to sockets',input)
         if (playOnline === true) {
             client.send(JSON.stringify({type: "checkerTurn",input}))
         } else {
             this.switchPlayer(currentPlayer)
             this.setState({pieces:newPieces})
-            // this.highLightFate()
         }
     };
 
@@ -148,92 +117,53 @@ class CheckerBoard extends Component {
         this.setState({matrix:matrix})
     }
 
-    // checks for available attacks of current play at biginning of each turn
-    // autoStartTurn = async () => {
-    //     const { pieces,currentPlayer } = this.state
-    //     this.handleInput('moveOptions',[])
-    //     var currentPieces = pieces.filter((el) => el.player === currentPlayer)
-    //     currentPieces.forEach(el => {
-    //         return this.chainKills(el.x,el.y,pieces,[el],false)
-    //     })
-    //     // console.log('inside autoStartTurn',newMoves)
-    // }
+    smile = (x,y) => { // Display frown on piece when it's about to be attacked
+        const { pieces } = this.state
+        pieces.forEach(el => {if (el.x === x && el.y === y) {el.pendingDeath = true}})
+        this.setState({piece:pieces})
+    }
 
-    initializeTurn  = async () => {
-        // console.log(this.state.attackCoords)
-        // const { attackCoords } = this.state
-        await this.mandatoryAttack().then(res => {
-            console.log('hiting init turn',res)
-        })
-        // await console.log(this.state.attackCoords)
+    garbageRemoval = async (param) => {
+        const { nextX,nextY,id,enemyX,enemyY } = param
+        const updatedPieces = await this.killPiece(enemyX,enemyY)
+        const pieceIndex = await updatedPieces.findIndex(el => el.id === id)
+        updatedPieces[pieceIndex].x = nextX
+        updatedPieces[pieceIndex].y = nextY
+        this.chainKills(updatedPieces,updatedPieces[pieceIndex],true)
+        
+        const sendInfo = {
+            newPieces:updatedPieces,
+            currentPlayer:this.state.currentPlayer,
+            previousPiece:updatedPieces[pieceIndex],
+            autoTurn:true
+        }
+        return this.sendToSocketsSwitch(sendInfo)
     }
 
     mandatoryAttack = async () => {
-        const { pieces,currentPlayer,previousPiece } = this.state
-        // this.handleInput('moveOptions',[])
+        const { pieces,currentPlayer } = this.state
+        pieces.forEach(el => el.pendingDeath = false)
         var currentPieces = pieces.filter((el) => el.player === currentPlayer)
         var enemyPieces = pieces.filter((el) => el.player != currentPlayer)
-        // console.log('currentPieces',typeof(currentPieces))
 
-        // var newBoard = []
-        var updatedPieces = null
-        await currentPieces.forEach(el => {
+        await currentPieces.forEach((el,i,arr) => {
             enemyPieces.forEach(enemy => {
                 attackLogic(enemy.x,enemy.y,[el],this.state,this.checkPieceLocations).then(res => {
                     if (res != null) {
-                        const { nextX,nextY,id,enemyX,enemyY } = res
-                        const { currentPlayer,pieces,currentPiece } = this.state
-                        // this.setMoves(enemyX,enemyY,id,enemyY,false,currentPlayer,pieces,this.state,[currentPiece])
-                        this.killPiece(enemyX,enemyY).then(board => {
-                            // console.log('first checking state val',this.state.pieces)
-                            return this.setState({
-                                pieces:board,
-                                selectedPiece:el
-                            }, () => {
-                                const { pieces,currentPlayer } = this.state
-                                const pieceIndex = this.state.pieces.findIndex((piece) => piece.id === id)
-                                pieces[pieceIndex].x = nextX
-                                pieces[pieceIndex].y = nextY
-
-                                                    // -- make chain attack if available -- //
-                                this.chainKills(updatedPieces[pieceIndex].x,updatedPieces[pieceIndex].y,updatedPieces,[updatedPieces[pieceIndex]],true)
-                                
-                                var sendInfo = {
-                                    newPieces:pieces,
-                                    currentPlayer:currentPlayer
-                                }
-                                this.sendToSocketsSwitch(sendInfo)
-                                // var updatedPieces = 
-                                
-                            })
-                        })
-                        // console.log(updatedPieces)
-                        // updatedPieces.forEach(e => console.log(e))
-                        // const pieceIndex = updatedPieces.findIndex((piece) => piece.id === id)
-                        // updatedPieces[pieceIndex].x = res.nextX
-                        // updatedPieces[pieceIndex].y = res.nextY
+                        // this.garbageRemoval(res) // Still working out bugs
+                        return this.smile(res.enemyX,res.enemyY)
                     }
                 })
-
             })
         })
-        return
-
     }
 
-    // checks for chain kills
-    chainKills = (x,y,updatedPieces,currentPiece,attack) => {
-        // --- the "attack" parameter is a boolean used for checking whether or not an attack is available, without executing attack --- //
+    // --- Checks for chained attacks
+    chainKills = (updatedPieces,currentPiece) => {
         const { matrix } = this.state
-        const { player } = currentPiece[0]
-        // var updateMoves = [...moveOptions]
+        const { player,x,y,isKing } = currentPiece
         var updateMoves = []
-        console.log('hitting chained acctack func')
-        // const upLeft = [-1,-1]
-        // const upRight = [1,-1]
-        // const downLeft = [-1,1]
-        // const downRight = [1,1]
-        // const moves = [upLeft,upRight,downLeft,downRight]
+
         moves.forEach(e => {
             var locatePiece = this.checkPieceLocations(x+e[0],y+e[1],updatedPieces)
             
@@ -253,51 +183,21 @@ class CheckerBoard extends Component {
 
                             // --- can move be made if isKing === false ? --- //
                             // --- "good" non-kings
-                            if(player === "good" && nextY < currentPiece[0].y){
-                                if(currentPiece[0].isKing === false){return}
+                            if(player === "good" && nextY < y){
+                                if(isKing === false){return}
                             }
                             
                             // --- "bad" non-kings
-                            if(player === "bad" && nextY > currentPiece[0].y){
-                                if(currentPiece[0].isKing === false){return}
+                            if(player === "bad" && nextY > y){
+                                if(isKing === false){return}
                             }
 
-                            // moveOptions.push([locatePiece.x,locatePiece.y])
                             updateMoves.push([locatePiece.x,locatePiece.y])
 
-                            // --- this returns move options without making an attack --- //
-                            // if(attack === false){return this.setState({moveOptions:moveOptions})}
-                            // if(attack === false){
-                            //     const { state } = this
-                            //     const checkPieceLocations = this.checkPieceLocations
-                            //     console.log('attack == true',updateMoves[0][0])
-                            //     if(updateMoves.length > 0){
-                            //         attackLogic(updateMoves[0][0],updateMoves[0][1],currentPiece,state,checkPieceLocations).then(res1 => {
-                            //             this.killPiece(res1.enemyX,res1.enemyY,res1.id).then(res2 => {
-                            //                 const pieceIndex = res2.findIndex(el => el.id === currentPiece[0].id)
-                            //                 console.log(updatedPieces[pieceIndex])
-                            //                 updatedPieces[pieceIndex].x = res1.nextX
-                            //                 updatedPieces[pieceIndex].y = res1.nextY
-                            //                 this.setState({pieces:updatedPieces})
-                            //                 return
-                            //             }).catch(err => {console.log('error in first promise',err)})
-                                        
-                            //         }).catch(err2 => {console.log('error in second promise',err2)})
-                
-                            //         // this.setState({chainKillData:currentPiece})
-                            //     }
-                            //     return this.setState({moveOptions:updateMoves})
-                            // }
-
                             this.setState({
-                                // moveOptions:moveOptions,
-                                // chainKillData:currentPiece,
-                                // enemyX:locatePiece.x,
-                                // enemyY:locatePiece.y,
+                                moveOptions:updateMoves,
                                 chainKillAvailable:true,
-                                // activeLocation:[x,y,currentPiece]
                             })
-                            // this.selectTile(x,y,currentPiece)
                             this.switchPlayer(player)
                             return
                         }
@@ -309,27 +209,6 @@ class CheckerBoard extends Component {
             return
         })
     }
-
-    // --- if an attack is available: --- //
-    // highLightFate = () => {
-    //     const { moveOptions,pieces,currentPlayer } = this.state
-    //     console.log('hit highlight fate function',moveOptions)
-    //     pieces.forEach(el => el.pendingDeath = false)
-    //     var enemy = pieces.filter(el => el.player !== currentPlayer)
-    //     // var updatePieces = []
-    //     var targetPieces = []
-        
-    //     enemy.forEach(el => {
-    //         moveOptions.forEach(el2 => {
-    //             if(el.x === el2[0] && el.y === el2[1]){
-    //                 targetPieces.push(pieces.findIndex(el3 => el3.id === el.id))}
-    //         })
-    //     })
-    //     targetPieces.forEach(el  => {
-    //         pieces[el].pendingDeath = true
-    //     })
-    //     this.handleInput("pieces",pieces)
-    // }
 
     setMoves = async (x,y,id,activeLocation,manualControl,currentPlayer,pieces,isKing,currentPiece) => { // gets all move options based on active location
         const { matrix } = this.state
@@ -344,10 +223,12 @@ class CheckerBoard extends Component {
             if(pieces[key].x === x && pieces[key].y === y){
                 if(pieces[key].player !== currentPlayer){
                     const { state } = this
+                    
                     // if the chosen move already contains a piece, check if friend or foe
                     const checkPieceLocations = this.checkPieceLocations
                     const attackCoordinates = await attackLogic(pieces[key].x,pieces[key].y,currentPiece,state,checkPieceLocations)
                     const { nextX,nextY,enemyX,enemyY,id } = attackCoordinates
+
                     // --- Make attack --- //
                     const updatedPieces = await this.killPiece(enemyX,enemyY)
                     pieceIndex = updatedPieces.findIndex((el) => el.id === id)
@@ -365,22 +246,13 @@ class CheckerBoard extends Component {
                     }
     
                     // -- make chain attack if available -- //
-                    this.chainKills(updatedPieces[pieceIndex].x,updatedPieces[pieceIndex].y,updatedPieces,[updatedPieces[pieceIndex]],true)
-                    // console.log('this is from setMoves',this.state.chainKillAvailable)
-
-                    // this.setState({
-                        // pieces:updatedPieces,
-                        // activeLocation:[null,null]
-                    // })
+                    this.chainKills(updatedPieces,updatedPieces[pieceIndex],true)
                     var sendInfo = {
                         newPieces:updatedPieces,
-                        // activeLocation:[null,null],
-                        // tileIsSelected:1,
                         currentPlayer:this.state.currentPlayer,
                         previousPiece:updatedPieces[pieceIndex]
                     }
                     this.sendToSocketsSwitch(sendInfo)
-                    // console.log('new attack coords',updatedPieces)
                     return 
                     } else {return}
             }
@@ -422,201 +294,6 @@ class CheckerBoard extends Component {
         }
         this.sendToSocketsSwitch(sendInfo)
     }
-
-    // -- looks for and executes available attacks -- //
-    // checkForKill = async (enemyX,enemyY,currentPiece) => {
-    //     const { pieces,matrix } = this.state
-    //     const { player,isKing,id,x,y } = currentPiece[0]
-    //     var currentX = x
-    //     var currentY = y
-    //     var pieceIndex = pieces.findIndex((el) => el.id === id)
-
-    //     // -- LOWER LEFT ATTACK -- //
-    //     if(currentX > enemyX && currentY < enemyY){
-
-    //         // -- non-kings can only attack one direction on the y-axis -- //
-    //         if(player === 'bad' && isKing === false){return}
-
-    //         // -- check if location is available -- //
-    //         if(await this.checkPieceLocations(enemyX-1,enemyY+1,null) === undefined) {
-
-    //             // -- is location on the board? -- //
-    //             if(enemyX-1 >= 0 && enemyY+1 <= matrix.length-1){
-
-    //                 // -- update pieces -- //
-    //                 var updatePieces = await this.killPiece(enemyX,enemyY,id)
-    //                 var pieceIndex = updatePieces.findIndex((el) => el.id === id)
-    //                 updatePieces[pieceIndex].x = enemyX-1
-    //                 updatePieces[pieceIndex].y = enemyY+1
-
-    //                 // -- piece becomes king if "good" AND at max-y location -- //
-    //                 if (updatePieces[pieceIndex].player === 'good' && updatePieces[pieceIndex].y === matrix.length-1) {
-    //                     updatePieces[pieceIndex].isKing = true
-    //                 }
-    //                 // --- reset currentPiece for chainKills() parameter --- //
-    //                 var currentPiece = [updatePieces[pieceIndex]]
-    //                 // -- make chain attack if available -- //
-    //                 this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,updatePieces,currentPiece)
-    //                 currentPiece[0].x = updatePieces[pieceIndex].x
-    //                 currentPiece[0].y = updatePieces[pieceIndex].y
-
-    //                 // -- update info -- //
-    //                 this.setState({
-    //                     pieces:updatePieces,
-    //                     activeLocation:[null,null],
-    //                     tileIsSelected:1,
-    //                 })
-    
-    //                 // -- info sent to server -- //
-    //                 var sendInfo = {
-    //                     chainKillData:this.state.chainKillData,
-    //                     newPieces:updatePieces,
-    //                     currentPlayer:this.state.currentPlayer
-    //                 }
-    //                 // -- sends updates to server -- //
-    //                 return await this.sendToSocketsSwitch(sendInfo)
-                    
-    //             }
-    //         }
-
-    //     // -- UPPER LEFT ATTACK -- //
-    //     } else if (currentX > enemyX && currentY > enemyY) {
-    //         // -- non-kings can only attack one direction on the y-axis -- //
-    //         if(player === 'good' && isKing === false){return}
-
-    //         // -- check if location is available -- //
-    //         if( await this.checkPieceLocations(enemyX-1,enemyY-1,null) === undefined) {
-
-    //             // -- is location on the board? -- //
-    //             if(enemyX-1 >= 0 && enemyY-1 >= 0) {
-    //                 // -- update piece -- //
-    //                 var updatePieces = await this.killPiece(enemyX,enemyY,id)
-    //                 var pieceIndex = updatePieces.findIndex((el) => el.id === id)
-    //                 updatePieces[pieceIndex].x = enemyX-1
-    //                 updatePieces[pieceIndex].y = enemyY-1
-
-    //                 // -- piece becomes king if "bad" AND at min-y location -- //
-    //                 if(updatePieces[pieceIndex].player === 'bad' && updatePieces[pieceIndex].y === 0 ){
-    //                     updatePieces[pieceIndex].isKing = true
-    //                 }
-    //                 // --- reset currentPiece for chainKills() parameter --- //
-    //                 var currentPiece = [updatePieces[pieceIndex]]
-    //                 // -- make chain attack if available -- //
-    //                 this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,updatePieces,currentPiece)
-    //                 currentPiece[0].x = updatePieces[pieceIndex].x
-    //                 currentPiece[0].y = updatePieces[pieceIndex].y
-                    
-    //                 // -- update info -- //
-    //                 this.setState({
-    //                     pieces:updatePieces,
-    //                     activeLocation:[null,null],
-    //                     tileIsSelected:1
-    //                 })
-
-    //                 // -- info sent to server -- //
-    //                 var sendInfo = {
-    //                     chainKillData:this.state.chainKillData,
-    //                     newPieces:updatePieces,
-    //                     currentPlayer:this.state.currentPlayer
-    //                 }
-    //                 // -- send updates to server -- //
-    //                 return await this.sendToSocketsSwitch(sendInfo)
-    //             }
-                
-    //         }
-
-    //     // -- UPPER RIGHT ATTACK -- /
-    //     } else if (currentX < enemyX && currentY > enemyY) {
-
-    //         // -- non-kings can only attack one direction on the y-axis -- //
-    //         if(player === 'good' && isKing === false){return}
-
-    //         // -- check if location is available -- //
-    //         if(await this.checkPieceLocations(enemyX+1,enemyY-1,null) === undefined) {
-                
-    //             // -- is location on the board? -- //
-    //             if(enemyX+1 <= matrix.length-1 && enemyY-1 >= 0){
-
-    //                 // -- update pieces -- //
-    //                 var updatePieces = await this.killPiece(enemyX,enemyY,id)
-    //                 var pieceIndex = updatePieces.findIndex((el) => el.id === id)
-    //                 updatePieces[pieceIndex].x = enemyX+1
-    //                 updatePieces[pieceIndex].y = enemyY-1
-
-    //                 // -- piece becomes king if "bad" AND at min-y location -- //
-    //                 if(updatePieces[pieceIndex].player === 'bad' && updatePieces[pieceIndex].y === 0 ){
-    //                     updatePieces[pieceIndex].isKing = true
-    //                 }
-    //                 // --- reset currentPiece for chainKills() parameter --- //
-    //                 var currentPiece = [updatePieces[pieceIndex]]
-    //                 // await this.autoStartTurn(currentPlayer,updatePieces[pieceIndex],activeLocation,updatePieces)
-
-    //                 // -- make chain attack if available -- //
-    //                 this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,updatePieces,currentPiece)
-    //                 currentPiece[0].x = updatePieces[pieceIndex].x
-    //                 currentPiece[0].y = updatePieces[pieceIndex].y
-
-    //                 // -- update info -- //
-    //                 this.setState({
-    //                     activeLocation:[null,null],
-    //                     tileIsSelected:1
-    //                 })
-
-    //                 //  -- info sent to server -- //
-    //                 var sendInfo = {
-    //                     chainKillData:this.state.chainKillData,
-    //                     newPieces:updatePieces,
-    //                     currentPlayer:this.state.currentPlayer
-    //                 }
-    //                 // -- send info to server -- //
-    //                 return await this.sendToSocketsSwitch(sendInfo)
-    //             }
-                
-    //         }
-
-    //     // -- LOWER RIGHT ATTACK -- //
-    //     } else if (currentX < enemyX && currentY < enemyY) {
-    //         // -- non-kings can only attack one direction on the y-axis -- //
-    //         if(player === 'bad' && isKing === false){return}
-            
-    //         // -- check if location is available -- //
-    //         if(await this.checkPieceLocations(enemyX+1,enemyY+1,null) === undefined) {
-            
-    //             // -- is location on the board? -- //
-    //             if(enemyX+1 >= 0 && enemyY+1 <= matrix.length-1) {
-    //                 var updatePieces = await this.killPiece(enemyX,enemyY,id)
-    //                 var pieceIndex = updatePieces.findIndex((el) => el.id === id)
-    //                 updatePieces[pieceIndex].x = enemyX+1
-    //                 updatePieces[pieceIndex].y = enemyY+1
-
-    //                 if (updatePieces[pieceIndex].player === 'good' && updatePieces[pieceIndex].y === matrix.length-1) {
-                        
-    //                     updatePieces[pieceIndex].isKing = true
-    //                 }
-    //                 // --- reset currentPiece for chainKills() parameter --- //
-    //                 var currentPiece = [updatePieces[pieceIndex]]
-
-    //                 // -- make chain attack if available -- //
-    //                 this.chainKills(updatePieces[pieceIndex].x,updatePieces[pieceIndex].y,updatePieces,currentPiece)
-    //                 currentPiece[0].x = updatePieces[pieceIndex].x
-    //                 currentPiece[0].y = updatePieces[pieceIndex].y
-
-    //                 this.setState({
-    //                     pieces:updatePieces,
-    //                     activeLocation:[null,null],
-    //                     tileIsSelected:1
-    //                 })
-    //                 var sendInfo = {
-    //                     chainKillData:this.state.chainKillData,
-    //                     newPieces:updatePieces,
-    //                     currentPlayer:this.state.currentPlayer
-    //                 }
-    //                 return await this.sendToSocketsSwitch(sendInfo)
-    //             }
-
-    //         }
-    //     }
-    // }
 
     // --- attacks and removes piece from play --- //
     killPiece = async (enemyX,enemyY,id) => {
@@ -667,9 +344,7 @@ class CheckerBoard extends Component {
 
     selectTile = (x,y,piece) => {
         const newActiveLocation = [x,y,piece]
-        // console.log('hit select tile',newActiveLocation)
         if(piece[0] != undefined) {
-            // this.handleInput('activeLocation',[x,y,piece])
             this.handleInput('activeLocation',newActiveLocation)
             this.handleInput('tileIsSelected',.4)
         }
