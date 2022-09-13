@@ -146,7 +146,7 @@ class CheckerBoard extends Component {
         var currentPieces = pieces.filter((el) => el.player === currentPlayer)
         var enemyPieces = pieces.filter((el) => el.player != currentPlayer)
 
-        await currentPieces.forEach((el,i,arr) => {
+        await currentPieces.forEach(el => {
             enemyPieces.forEach(enemy => {
                 attackLogic(enemy.x,enemy.y,[el],this.state,this.checkPieceLocations).then(res => {
                     if (res != null) {
@@ -222,11 +222,9 @@ class CheckerBoard extends Component {
         for (let key in pieces){
             if(pieces[key].x === x && pieces[key].y === y){
                 if(pieces[key].player !== currentPlayer){
-                    const { state } = this
                     
                     // if the chosen move already contains a piece, check if friend or foe
-                    const checkPieceLocations = this.checkPieceLocations
-                    const attackCoordinates = await attackLogic(pieces[key].x,pieces[key].y,currentPiece,state,checkPieceLocations)
+                    const attackCoordinates = await attackLogic(pieces[key].x,pieces[key].y,currentPiece,this.state,this.checkPieceLocations)
                     const { nextX,nextY,enemyX,enemyY,id } = attackCoordinates
 
                     // --- Make attack --- //
@@ -299,7 +297,7 @@ class CheckerBoard extends Component {
     killPiece = async (enemyX,enemyY,id) => {
         const { pieces } = this.state
         var updatedPieces = [...pieces]
-        var pieceIndex = pieces.findIndex((el) => el.id === id)
+        // var pieceIndex = pieces.findIndex((el) => el.id === id)
         var pieceId = await this.checkPieceLocations(enemyX,enemyY).id
         var killIndex = pieces.findIndex((el) => el.id === pieceId)
         updatedPieces.splice(killIndex,1)
@@ -333,11 +331,9 @@ class CheckerBoard extends Component {
         switch (input) {
             case 'good':
                 this.setState({currentPlayer:'bad'})
-                // this.autoStartTurn(this.state.currentPlayer,pieces) // for testing / pending removal
                 break;
             case 'bad':
                 this.setState({currentPlayer:'good'})
-                // this.autoStartTurn(this.state.currentPlayer,pieces) // for testing / pending removal
         }
         return
     }
