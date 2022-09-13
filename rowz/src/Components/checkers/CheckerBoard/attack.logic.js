@@ -80,7 +80,7 @@ export const attackLogic = async (enemyX,enemyY,currentPiece,state,checkPieceLoc
         if(await checkPieceLocations(enemyX+1,enemyY+1,null) === undefined) {
         
             // -- is location on the board? -- //
-            if(enemyX+1 >= 0 && enemyY+1 <= matrix.length-1) {
+            if(enemyX+1 <= matrix.length-1 && enemyY+1 <= matrix.length-1) {
 
                 // -- Update pieces -- //
                 const nextX = enemyX+1
