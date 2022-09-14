@@ -24,7 +24,7 @@ class CheckerBoard extends Component {
             activeLocation:[null,null], // --- Player selects tile
             pieces:[],
             matrix:[],
-            currentPlayer:'good',
+            currentPlayer:'bad',
             tileIsSelected:1, // --- Changes opacity
             chainKillAvailable:false,
             moveOptions:[],
@@ -225,6 +225,7 @@ class CheckerBoard extends Component {
                     
                     // if the chosen move already contains a piece, check if friend or foe
                     const attackCoordinates = await attackLogic(pieces[key].x,pieces[key].y,currentPiece,this.state,this.checkPieceLocations)
+                    if (!attackCoordinates) {return console.log('This move is not allowed')}
                     const { nextX,nextY,enemyX,enemyY,id } = attackCoordinates
 
                     // --- Make attack --- //
@@ -266,12 +267,12 @@ class CheckerBoard extends Component {
 
         // --- non-kings can only move one direction --- //
         if (landingY > y && currentPlayer === 'good'){
-            if(isKing === false){
+            if(!isKing){
                 return console.log('this move is not allowed')
             } 
         }
         if (landingY < y && currentPlayer === 'bad'){
-            if(isKing === false){
+            if(!isKing){
                 return console.log('this move is not allowed')
             } 
         }
