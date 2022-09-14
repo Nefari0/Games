@@ -21,11 +21,13 @@ const Piece = ({items}) => {
             <GoodPlayer>
                 {isKing && <Crown />}
                 {pendingDeath && SadFace('#fff')}
+                {isKing && !pendingDeath ? SmileFace('#fff') : null}
             </GoodPlayer>
             :
             <BadPlayer>
                 {pendingDeath && SadFace('#555')}
                 {isKing && <Crown />}
+                {isKing && !pendingDeath ? SmileFace('#555') : null}
             </BadPlayer>
             }
             

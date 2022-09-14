@@ -12,9 +12,10 @@ const Tile = (props) => {
         currentPiece,
         activeLocation,
         currentPlayer,
-
+        chainKillAvailable,
+        moveOptions,
         pieces,
-
+        previousPiece,
    
         setMoves
     } = props
@@ -56,6 +57,9 @@ const Tile = (props) => {
             pieces={pieces}
             activeLocation={activeLocation}
             unselectTile={props.unselectTile}
+            chainKillAvailable={chainKillAvailable}
+            moveOptions={moveOptions}
+            previousPiece={previousPiece}
         />
         :
         null
