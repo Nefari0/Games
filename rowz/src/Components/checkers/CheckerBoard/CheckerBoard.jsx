@@ -27,7 +27,7 @@ class CheckerBoard extends Component {
             currentPlayer:'bad',
             tileIsSelected:1, // --- Changes opacity
             chainKillAvailable:false,
-            moveOptions:[],
+            moveOptions:null,
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
@@ -72,8 +72,8 @@ class CheckerBoard extends Component {
                     const { x,y } = previousPiece
                     this.setState({
                         activeLocation:[x,y,previousPiece],
-                        chainKillAvailable:false,
-                        previousPiece:null
+                        // chainKillAvailable:false,
+                        // previousPiece:null
                     })
                 } else {
                     if (!autoTurn) {this.mandatoryAttack()}
@@ -120,7 +120,10 @@ class CheckerBoard extends Component {
     smile = (x,y) => { // Display frown on piece when it's about to be attacked
         const { pieces } = this.state
         pieces.forEach(el => {if (el.x === x && el.y === y) {el.pendingDeath = true}})
-        this.setState({piece:pieces})
+        this.setState({
+            piece:pieces,
+            moveOptions:[x,y]
+        })
     }
 
     garbageRemoval = async (param) => {
@@ -162,7 +165,7 @@ class CheckerBoard extends Component {
     chainKills = (updatedPieces,currentPiece) => {
         const { matrix } = this.state
         const { player,x,y,isKing } = currentPiece
-        var updateMoves = []
+        var moveOptions = null
 
         moves.forEach(e => {
             var locatePiece = this.checkPieceLocations(x+e[0],y+e[1],updatedPieces)
@@ -192,10 +195,10 @@ class CheckerBoard extends Component {
                                 if(isKing === false){return}
                             }
 
-                            updateMoves.push([locatePiece.x,locatePiece.y])
+                            moveOptions = [locatePiece.x,locatePiece.y]
 
                             this.setState({
-                                moveOptions:updateMoves,
+                                moveOptions:moveOptions,
                                 chainKillAvailable:true,
                             })
                             this.switchPlayer(player)
@@ -213,6 +216,11 @@ class CheckerBoard extends Component {
     setMoves = async (x,y,id,activeLocation,manualControl,currentPlayer,pieces,isKing,currentPiece) => { // gets all move options based on active location
         const { matrix } = this.state
         var pieceIndex = pieces.findIndex((el) => el.id === id)
+        this.setState({
+            chainKillAvailable:false,
+            previousPiece:null,
+            moveOptions:null
+        })
 
         if(currentPlayer !== pieces[pieceIndex].player){
             return
@@ -360,7 +368,16 @@ class CheckerBoard extends Component {
 
     render() {
 
-        const { matrix,pieces,activeLocation,currentPlayer,tileIsSelected,moveOptions,chainKillAvailable } = this.state
+        const {
+            matrix,
+            pieces,
+            activeLocation,
+            currentPlayer,
+            tileIsSelected,
+            moveOptions,
+            chainKillAvailable,
+            previousPiece
+        } = this.state
 
         const mappedMatrix = matrix.map((row,id) => {
             return row.map((col,id2) => {
@@ -381,6 +398,7 @@ class CheckerBoard extends Component {
                     pieces={pieces}
                     moveOptions={moveOptions}
                     chainKillAvailable={chainKillAvailable}
+                    previousPiece={previousPiece}
                 />
                 )
             })
