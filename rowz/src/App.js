@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import Home from './Components/Home/home.component';
-import CheckerBoard from './Components/checkers/CheckerBoard/CheckerBoard';
+import CheckerBoard from './Components/Rowz/CheckerBoard/CheckerBoard'
 
 function App() {
 
