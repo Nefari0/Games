@@ -6,31 +6,32 @@ import CheckerBoard from './Components/Rowz/CheckerBoard/CheckerBoard'
 function App() {
 
   const [state,setState] = useState({
-    playOnline:true,
+    // playOnline:true,
     playCheckers:true
   })
 
   const { playCheckers,playOnline } = state
 
-  const handleCheck = () => {
-    setState({...state,playOnline:!playOnline})
-  }
+  // const handleCheck = () => {
+  //   setState({...state,playOnline:!playOnline})
+  // }
 
   const tic = 'tic-tac-toe'
   const check = 'checkers'
+  const currentGame = 123456789
 
   return (
     <div className="App">
 
-      <label>
+      {/* <label>
         <input type="checkbox"
           checked={playOnline}
           onChange={handleCheck}
         />
         Play Online?
-      </label>
+      </label> */}
 
-      {playCheckers === true ? <CheckerBoard playOnline={playOnline} /> : <Home />}
+      {playCheckers === true ? <CheckerBoard currentGame={currentGame} /> : <Home />}
 
       {
       playCheckers === false ?
