@@ -1,20 +1,15 @@
 import { useState } from 'react';
 import './App.css';
-import Home from './Components/Home/home.component';
+import TicTacToe from './Components/TicTacToe/tictactoe.component';
 import CheckerBoard from './Components/Rowz/CheckerBoard/CheckerBoard'
 
 function App() {
 
   const [state,setState] = useState({
-    // playOnline:true,
     playCheckers:true
   })
 
-  const { playCheckers,playOnline } = state
-
-  // const handleCheck = () => {
-  //   setState({...state,playOnline:!playOnline})
-  // }
+  const { playCheckers } = state
 
   const tic = 'tic-tac-toe'
   const check = 'checkers'
@@ -23,15 +18,7 @@ function App() {
   return (
     <div className="App">
 
-      {/* <label>
-        <input type="checkbox"
-          checked={playOnline}
-          onChange={handleCheck}
-        />
-        Play Online?
-      </label> */}
-
-      {playCheckers === true ? <CheckerBoard currentGame={currentGame} /> : <Home />}
+      {playCheckers === true ? <CheckerBoard currentGame={currentGame} /> : <TicTacToe />}
 
       {
       playCheckers === false ?
