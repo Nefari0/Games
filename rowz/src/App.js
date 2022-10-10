@@ -2,6 +2,9 @@ import { useState } from 'react';
 import './App.css';
 import TicTacToe from './Components/TicTacToe/tictactoe.component';
 import CheckerBoard from './Components/Rowz/CheckerBoard/CheckerBoard'
+import { size } from './Components/rowz.plugin'
+
+const { multiplier } = size
 
 function App() {
 
@@ -26,7 +29,7 @@ function App() {
         <h4 className='App-h4' >play {check}</h4>
       </div>
       :
-      <div className='choose-button-checkers' onClick={() => setState({...state,playCheckers:false})} >
+      <div style={{top:`${390 * multiplier}px`,left:`${200 * multiplier}px`}} className='choose-button-checkers' onClick={() => setState({...state,playCheckers:false})} >
         <h4 className='App-h4' >play {tic}</h4>
       </div>
       }

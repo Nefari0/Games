@@ -51,7 +51,7 @@ class TicTacToe extends Component {
             var horizontalWinner = null
             var diagonalWinner = null
             var verticalWinner = null
-            var inComplete = -1
+            // var inComplete = -1
             for (let i = 0; i < board.length; i++){
                 for (let j = 0; j < board.length; j++){
                     var isSame = board[i].filter(element => element === currentPlayer)
