@@ -3,8 +3,7 @@
     position: absolute;
     height: 320px;
     width: 300px;
-    /* background-color: yellow; */
-    background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0)),url(white-backround1.jpg);
+    /* background-image: linear-gradient(rgba(0,0,0,0),rgba(0,0,0,0)),url(white-backround1.jpg); */
     background-size: cover; 
     background-position: center bottom;
 

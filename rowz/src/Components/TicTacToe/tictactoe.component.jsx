@@ -2,7 +2,9 @@ import './tictactoe.styles.css'
 import React, { Component } from 'react'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 // const client = new W3CWebSocket(`ws://127.0.0.1:8000`); // production
+import { TicTacToeConctaner } from './tictactoe.styles';
 const client = new W3CWebSocket(`ws://165.227.102.189:8000`); // build
+
 
 class TicTacToe extends Component {
     constructor() {
@@ -136,7 +138,8 @@ class TicTacToe extends Component {
 
 
         return(
-            <div className='home-container'>
+            // <div className='home-container'>
+            <TicTacToeConctaner>
                 <div className='columns'>
 
                     <div className='rows'>
@@ -159,8 +162,9 @@ class TicTacToe extends Component {
                     <div className='reset-button' onClick={() => this.flipBoard()} ><h1 className='selected-h1'>reset</h1></div>
                     
                 </div>
+            </TicTacToeConctaner>
 
-            </div>
+            // </div>
         )
     }
 }

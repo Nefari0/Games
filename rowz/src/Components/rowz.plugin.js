@@ -20,9 +20,14 @@ export const openMenu = css`
 `
 
 export const boardPlacement = css`
-    margin-top: ${70 * size.multiplier}px;
+    margin-top: ${30 * size.multiplier}px;
 `
 
 export const playerStatusPlacement = css`
     top: ${450 * size.multiplier}px;
+
+    @media (max-width:400px) {
+        top:${350 * size.multiplier}px;
+        width:130px;
+    }
 `

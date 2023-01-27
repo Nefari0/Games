@@ -2,7 +2,9 @@ import { useState } from 'react';
 import './App.css';
 import TicTacToe from './Components/TicTacToe/tictactoe.component';
 import CheckerBoard from './Components/Rowz/CheckerBoard/CheckerBoard'
+import Nav from './Components/Nav/nav.component';
 import { size } from './Components/rowz.plugin'
+import { AppContainer,Adapter,Header,BaseButton } from './App.styles';
 
 const { multiplier } = size
 
@@ -19,22 +21,23 @@ function App() {
   const currentGame = 123456789
 
   return (
-    <div className="App">
+    <AppContainer>
+      <Header>
+        <Nav />
+        <h1>Rowz</h1>
+      </Header>
+      <Adapter>
 
-      {playCheckers === true ? <CheckerBoard currentGame={currentGame} /> : <TicTacToe />}
+        {playCheckers === true ? <CheckerBoard currentGame={currentGame} /> : <TicTacToe />}
 
-      {
-      playCheckers === false ?
-      <div className='choose-button' onClick={() => setState({...state,playCheckers:true})} >
-        <h4 className='App-h4' >play {check}</h4>
-      </div>
-      :
-      <div style={{top:`${390 * multiplier}px`,left:`${200 * multiplier}px`}} className='choose-button-checkers' onClick={() => setState({...state,playCheckers:false})} >
-        <h4 className='App-h4' >play {tic}</h4>
-      </div>
-      }
+        <BaseButton
+          onClick={() => {setState({...state, playCheckers:!playCheckers})}}
+        >
+          play {!playCheckers ? check : tic}
+        </BaseButton>
 
-    </div>
+      </Adapter>
+    </AppContainer>
   );
 }
 
