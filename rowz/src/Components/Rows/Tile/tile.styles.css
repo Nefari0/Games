@@ -1,0 +1,46 @@
+.tile-location {
+    position: relative;
+    height: 42px;
+    width: 42px;
+    margin: none;
+}
+
+.tile-color-dark,
+.tile-color {
+    position: relative;
+    height: 40px;
+    width: 40px;
+    background-color: coral;
+    margin: 1px;
+}
+
+.tile-color-dark {
+    background-color: wheat;
+}
+
+.hidden {
+    visibility: hidden;
+    opacity: 0;
+    transition: visibility 0s 1s, opacity 1s linear;
+
+}
+
+.move-low-left {
+    transform: translate(42px, 42px);
+}
+
+.display-opac {
+    opacity: .4;
+    transition: visibility 0s .25s, opacity .25s linear;
+}
+.hide-opac {
+    opacity: 1;
+    transition: visibility 0s .25s, opacity .25s linear;
+}
+
+.player-text {
+    position: absolute;
+    color: white;
+    margin: none;
+}
+/* // ${({activeLocation}) => (!activeLocation[1] ? hideOpac : displayOpac) } */

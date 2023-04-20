@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import TicTacToe from './Components/TicTacToe/tictactoe.component';
-import CheckerBoard from './Components/Rowz/CheckerBoard/CheckerBoard'
+import CheckerBoard from './Components/Rows/CheckerBoard/CheckerBoard'
 import Nav from './Components/Nav/nav.component';
 import { size } from './Components/rowz.plugin'
 import { AppContainer,Adapter,Header,BaseButton } from './App.styles';
