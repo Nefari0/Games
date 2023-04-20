@@ -1,10 +1,11 @@
 import styled from 'styled-components'
-import { size,playerStatusPlacement } from '../../rowz.plugin'
+import { size,playerStatusPlacement,colors } from '../../rowz.plugin'
 
 const {multiplier } = size
+const {baseColor} = colors
 
 export const TurnIndicator = styled.main`
-    position: absolute;
+    // position: absolute;
     color: #555;
     z-index: 100000;
     height: ${50 * multiplier}px;
@@ -12,9 +13,14 @@ export const TurnIndicator = styled.main`
     margin-left: ${20 * multiplier}px;
     display: flex;
     align-items: center;
-    background: rgba(165, 165, 165, 0.116);
-    box-shadow: 5px 5px 20px -7px #000000;
-    backdrop-filter: blur(12px);
+    // background: rgba(165, 165, 165, 0.116);
+    
+    // box-shadow: 5px 5px 20px -7px #000000;
+    box-shadow: 5px 5px 20px -17px #000000;
+    box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+    // -webkit-transform: rotateX(50deg);
+    // backdrop-filter: blur(12px);
+    background-color:${baseColor};
     border-radius: 10px;
     ${playerStatusPlacement}
 `

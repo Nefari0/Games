@@ -7,9 +7,12 @@ export const CheckerMenu = styled.header`
     position:absolute;
     height: ${50 * multiplier}px;
     width: ${350 * multiplier}px;
+    left:100px;
     display:flex;
     justify-content:center;
     z-index:10;
+    // transform: rotateX(-20deg) rotateY(10deg) rotateZ(0deg); 
+    // transform: rotateZ(-20deg); 
     
     button {
         margin:5px;

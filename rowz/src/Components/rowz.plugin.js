@@ -6,8 +6,10 @@ export const colors = {
 }
 
 export const size  = {
-    multiplier:1
+    multiplier:1,
+    dimensions:350
 }
+// export const dimensions = 450
 
 export const  menuStyling = css`
     position:absolute;
@@ -20,7 +22,9 @@ export const openMenu = css`
 `
 
 export const boardPlacement = css`
-    margin-top: ${30 * size.multiplier}px;
+// margin:auto;
+    margin-top: ${70 * size.multiplier}px;
+    margin-left:30px;
 `
 
 export const playerStatusPlacement = css`

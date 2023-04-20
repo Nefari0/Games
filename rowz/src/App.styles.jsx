@@ -63,28 +63,31 @@ export const AppContainer = styled.main`
     display:flex;
     flex-direction:column;
     align-items: center;
+    background-color: rgb(240, 240, 240);
     // background-color:blue;
+    -webkit-perspective: 1600px;
+    -webkit-perspective-origin: 50% -240px;
 `
 
 
-export const Adapter = styled.section`
-    position:relative;
-    // margin:auto;
-    // background-color:blue;
-    margin-top:50px;
-    // width:500px;
-    width:${dimensions*multiplier}px;
-    height:700px;
+// export const Adapter = styled.section`
+//     position:relative;
+//     // margin:auto;
+//     // background-color:blue;
+//     margin-top:50px;
+//     // width:500px;
+//     width:${dimensions*multiplier}px;
+//     height:700px;
 
-    @media (max-width:620px) {
-        width:350px;
-    }
+//     @media (max-width:620px) {
+//         width:350px;
+//     }
     
-    @media (max-width:400px) {
-        width:300px;
-        margin-top:0px;
-    }
-`
+//     @media (max-width:400px) {
+//         width:300px;
+//         margin-top:0px;
+//     }
+// `
 
 export const BaseButton = styled.button`
     position:absolute;
