@@ -49,7 +49,9 @@ function App() {
       </Adapter> */}
 
         <GameBoard state={state}/>
-      <div 
+
+      {/* CONTROLS ROTATION OF BOARD FOR DEVELOPEMENT */}
+      {/* <div 
         style={{
           position:'absolute',
           top:'0px'
@@ -57,7 +59,7 @@ function App() {
       >
         <button onClick={() => stateManager('yRotation',yRotation+90)}>prev</button>
         <button onClick={() => stateManager('yRotation',yRotation-90)}>next</button>
-      </div>
+      </div> */}
     </AppContainer>
   );
 }

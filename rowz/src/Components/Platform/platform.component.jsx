@@ -9,7 +9,6 @@ import {
     Right
   } from "./platform.styles";
   import CheckerBoard from "../Rows/CheckerBoard/CheckerBoard";
-//   import { GoodPlayer } from "./peice.styles";
   
   const GameBoard = ({ state }) => {
     const { yRotation, xRotation, currentIndex } = state;

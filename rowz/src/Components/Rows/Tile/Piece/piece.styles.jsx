@@ -9,13 +9,15 @@ const Player = css`
     width: ${35 * multiplier}px;
     border-radius: 50%;
     background: linear-gradient(0turn,#555,rgb(143, 143, 143));
-    box-shadow: 5px 5px 20px -7px #000000;
+    // box-shadow: 5px 5px 20px -7px #000000;
+    box-shadow: rgba(143, 143, 143, 1) 0px 3px, rgba(143, 143, 143, 1) 0px 4px, rgba(0, 0, 0, 1) 0px 4.5px;
     border: .1px solid #fff;
     visibility: visible;
     opacity: 1;
     transition: opacity .2s linear;
     z-index: 3;
     pointer-events: none;
+    transform: rotateX(45deg);
 `
 
 export const GoodPlayer = styled.div`${Player}`
