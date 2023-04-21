@@ -74,7 +74,7 @@ export const Cube = styled.div`
 
   transition: all 1000ms;
   height:${cubeHeight}px;
-  background-color:red;
+  // background-color:red;
   // z-index:0;
   pointer-events:none;
 `;
@@ -85,7 +85,7 @@ const tableEdge = styled.figure`
     display: block;
     position: absolute;
     width: ${cubeWidth}px;
-    border: 0.1px solid #555;
+    border: 1px solid gray;
     left:-41px;
     top:-18px;
 `
@@ -121,11 +121,11 @@ export const Bottom = styled(tableEdge)`
 export const Left = styled(tableEdge)`
   background-color: purple;
   height: ${cubeHeight}px;
-  -webkit-transform: rotateY(-90deg) translateZ(230px);
+  -webkit-transform: rotateY(-90deg) translateZ(228px);
 `;
 
 export const Right = styled(tableEdge)`
   background-color: orange;
   height: ${cubeHeight}px;
-  -webkit-transform: rotateY(90deg) translateZ(230px);
+  -webkit-transform: rotateY(90deg) translateZ(228px);
 `;

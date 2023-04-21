@@ -21,7 +21,7 @@ export const CheckerTable = styled.main`
     align-content: stretch;
     // box-shadow: 0px 5px 20px -7px #000000;
     box-shadow: 0px 5px 20px -17px #000000;
-    transform: rotateZ(3deg);
+    transform: rotateZ(2deg);
     z-index: 0;
     pointer-events:auto;
     // -webkit-transform-style: preserve-3d;

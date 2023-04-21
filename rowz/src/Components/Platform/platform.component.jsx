@@ -18,16 +18,28 @@ import {
     return (
       <CubeContainer>
         <Cube xRotatuin={xRotation} yRotation={yRotation}>
-          <Top>
-            {/* top */}
-            <CheckerBoard />
-          </Top>
-          <Bottom></Bottom>
-          <Left>left</Left>
-          <Front>front</Front>
-          <Right>right</Right>
-          {/* <figure></figure> */}
-          <Back>back</Back>
+            <Top>
+                {/* top */}
+                <CheckerBoard />
+            </Top>
+            <Bottom></Bottom>
+
+            <Left>
+                {/* left */}
+            </Left>
+
+            <Front>
+                {/* front */}
+            </Front>
+
+            <Right>
+                {/* right */}
+            </Right>
+
+            {/* <figure></figure> */}
+            <Back>
+                {/* back */}
+            </Back>
         </Cube>
       </CubeContainer>
     );
