@@ -14,7 +14,7 @@ function App() {
   const [state,setState] = useState({
     playCheckers:true,
     yRotation: 0,
-    xRotation: 100,
+    xRotation: 0,
   })
 
   const { playCheckers,xRotation,yRotation } = state

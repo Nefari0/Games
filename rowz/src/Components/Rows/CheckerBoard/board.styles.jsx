@@ -23,7 +23,8 @@ export const CheckerTable = styled.main`
     box-shadow: 0px 5px 20px -17px #000000;
     transform: rotateZ(3deg);
     z-index: 0;
-    -webkit-transform-style: preserve-3d;
+    pointer-events:auto;
+    // -webkit-transform-style: preserve-3d;
 
     @media (max-width:400px) {
         -webkit-transform: scale(.8);

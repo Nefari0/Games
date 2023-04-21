@@ -393,6 +393,7 @@ class CheckerBoard extends Component {
     };
     
     unselectTile = () => {
+        console.log('hit UNselect tile')
         this.handleInput('activeLocation',[null,null])
     };
 

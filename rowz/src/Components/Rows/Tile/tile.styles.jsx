@@ -11,6 +11,7 @@ export const TilePlate = styled.main`
     width: ${42 * multiplier}px;
     margin: none;
     // margin-top:10px;
+    //   -webkit-transform-style: preserve-3d;
     
 `
 
@@ -35,4 +36,5 @@ export const TileStyles = styled.div`
     ${({color}) => tileColor(color === -1)}
     margin: ${1 * multiplier}px;
     ${({activeLocation}) => (!activeLocation[1] ? hideOpac : displayOpac) }
+    pointer-events:auto;
 `

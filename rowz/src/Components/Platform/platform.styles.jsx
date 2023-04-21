@@ -34,16 +34,15 @@ export const CubeContainer = styled.div`
 export const Cube = styled.div`
   -webkit-transform-style: preserve-3d;
   margin:auto; 
-  transform:
-  rotateX(-50deg)
-  rotateY(${({ yRotation }) => yRotation}deg)
-  rotateZ(0deg)
-  ; 
+  transform: rotateX(-50deg)  rotateY(${({ yRotation }) => yRotation}deg); 
+  // transform:rotateY(${({ yRotation }) => yRotation}deg); 
 
   transition: all 1000ms;
   width:${cubeWidth}px;
   height:${cubeHeight}px;
   background-color:blue;
+  // z-index:0;
+  pointer-events:none;
 
 `;
 
@@ -56,11 +55,11 @@ const tableEdge = styled.figure`
     border: 0.1px solid #555;
     left:-41px;
     top:-18px;
+    // z-index:0;
 `
 
 export const Front = styled(tableEdge)`
   height: ${cubeHeight}px;
-// height:100px;
   background-color: yellow;
   -webkit-transform: translateZ(${cubeWidth/2}px);
 `;
@@ -75,7 +74,7 @@ export const Top = styled(tableEdge)`
     -webkit-transform-style: preserve-3d;
     background-color: green;
     height: ${cubeWidth}px;
-
+    // pointer-events:none;
     -webkit-transform: rotateX(90deg) translateZ(228px);
 `;
 
