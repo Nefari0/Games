@@ -10,6 +10,7 @@ const {
 // const cubeWidth = 300;
 const cubeWidth = dimensions*1.3
 const cubeHeight = 25;
+const top = 250
 
 // const Rotate = keyframes`
 // from {
@@ -23,11 +24,45 @@ const cubeHeight = 25;
 export const CubeContainer = styled.div`
     width: ${cubeWidth}px;
     height: ${cubeHeight}px;
-    top: 300px;
-    left: 100px;
+    top: ${top}px;
     position:relative;
     -webkit-perspective: 1600px;
     -webkit-perspective-origin: 50% -240px;
+    background-color:blue;
+
+    @media (max-width:550px) {
+      -webkit-transform: scale(.8);
+      -ms-transform: scale(.8);
+      transform: scale(.8);
+      top:${top*.8}px;
+  }
+
+  
+  @media (max-width:450px) {
+    -webkit-transform: scale(.6);
+    -ms-transform: scale(.6);
+    transform: scale(.6);
+    top:${top*.6}px;
+  }
+
+  @media (max-width:400px) {
+    -webkit-transform: scale(.5);
+    -ms-transform: scale(.5);
+    transform: scale(.5);
+    top:${top*.5}px;
+}
+
+@media (max-width:350px) {
+  -webkit-transform: scale(.45);
+  -ms-transform: scale(.45);
+  transform: scale(.45);
+}
+
+@media (max-width:290px) {
+  -webkit-transform: scale(.4);
+  -ms-transform: scale(.4);
+  transform: scale(.4);
+}
 
 `;
 
@@ -38,12 +73,10 @@ export const Cube = styled.div`
   // transform:rotateY(${({ yRotation }) => yRotation}deg); 
 
   transition: all 1000ms;
-  width:${cubeWidth}px;
   height:${cubeHeight}px;
-  background-color:blue;
+  background-color:red;
   // z-index:0;
   pointer-events:none;
-
 `;
 
 const tableEdge = styled.figure`
@@ -55,7 +88,6 @@ const tableEdge = styled.figure`
     border: 0.1px solid #555;
     left:-41px;
     top:-18px;
-    // z-index:0;
 `
 
 export const Front = styled(tableEdge)`

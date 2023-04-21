@@ -31,9 +31,9 @@ export const Header = styled.header`
         }
     }
     
-    @media (max-width:300px) {
-        width:300px;
-    }
+    // @media (max-width:300px) {
+    //     width:300px;
+    // }
 `
 
 export const ImageContainer = styled.div`

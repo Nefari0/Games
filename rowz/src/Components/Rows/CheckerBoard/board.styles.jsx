@@ -25,20 +25,6 @@ export const CheckerTable = styled.main`
     z-index: 0;
     pointer-events:auto;
     // -webkit-transform-style: preserve-3d;
-
-    @media (max-width:400px) {
-        -webkit-transform: scale(.8);
-        -ms-transform: scale(.8);
-        transform: scale(.8);
-        margin-left:-30px;
-    }
-
-    @media (max-width:350px) {
-        -webkit-transform: scale(.7);
-        -ms-transform: scale(.7);
-        transform: scale(.7);
-        // margin-left:-0px;
-    }
 `
 
 export const Rowz = styled.span`
