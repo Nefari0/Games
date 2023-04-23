@@ -4,21 +4,31 @@ import TicTacToe from './Components/TicTacToe/tictactoe.component';
 import CheckerBoard from './Components/Rows/CheckerBoard/CheckerBoard'
 import Nav from './Components/Nav/nav.component';
 import { size } from './Components/rowz.plugin'
-import { AppContainer,Adapter,Header,BaseButton } from './App.styles';
+import { AppContainer,Header,BaseButton } from './App.styles';
+import GameBoard from './Components/Platform/platform.component';
 
-const { multiplier } = size
+// const { multiplier } = size
 
 function App() {
 
   const [state,setState] = useState({
-    playCheckers:true
+    playCheckers:true,
+    yRotation: 0,
+    xRotation: 0,
   })
 
-  const { playCheckers } = state
+  const { playCheckers,xRotation,yRotation } = state
 
   const tic = 'tic-tac-toe'
   const check = 'checkers'
   const currentGame = 123456789
+
+  const stateManager = (prop,val) => {
+    setState({
+      ...state,
+      [prop]:val
+    })
+  }
 
   return (
     <AppContainer>
@@ -26,7 +36,7 @@ function App() {
         <Nav />
         <h1>Rowz</h1>
       </Header>
-      <Adapter>
+      {/* <Adapter>
 
         {playCheckers === true ? <CheckerBoard currentGame={currentGame} /> : <TicTacToe />}
 
@@ -36,7 +46,20 @@ function App() {
           play {!playCheckers ? check : tic}
         </BaseButton>
 
-      </Adapter>
+      </Adapter> */}
+
+        <GameBoard state={state}/>
+
+      {/* CONTROLS ROTATION OF BOARD FOR DEVELOPEMENT */}
+      {/* <div 
+        style={{
+          position:'absolute',
+          top:'0px'
+        }}
+      >
+        <button onClick={() => stateManager('yRotation',yRotation+90)}>prev</button>
+        <button onClick={() => stateManager('yRotation',yRotation-90)}>next</button>
+      </div> */}
     </AppContainer>
   );
 }

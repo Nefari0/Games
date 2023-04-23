@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { size,boardPlacement } from "./Components/rowz.plugin";
+import { size,boardPlacement,colors } from "./Components/rowz.plugin";
 
+const { backgroundColor } = colors 
 const { multiplier } = size
 const dimensions = 350
 
@@ -31,9 +32,9 @@ export const Header = styled.header`
         }
     }
     
-    @media (max-width:300px) {
-        width:300px;
-    }
+    // @media (max-width:300px) {
+    //     width:300px;
+    // }
 `
 
 export const ImageContainer = styled.div`
@@ -63,28 +64,31 @@ export const AppContainer = styled.main`
     display:flex;
     flex-direction:column;
     align-items: center;
-    // background-color:blue;
+    background-color: rgb(240, 240, 240);
+    // background-color:${backgroundColor};
+    -webkit-perspective: 1600px;
+    -webkit-perspective-origin: 50% -240px;
 `
 
 
-export const Adapter = styled.section`
-    position:relative;
-    // margin:auto;
-    // background-color:blue;
-    margin-top:50px;
-    // width:500px;
-    width:${dimensions*multiplier}px;
-    height:700px;
+// export const Adapter = styled.section`
+//     position:relative;
+//     // margin:auto;
+//     // background-color:blue;
+//     margin-top:50px;
+//     // width:500px;
+//     width:${dimensions*multiplier}px;
+//     height:700px;
 
-    @media (max-width:620px) {
-        width:350px;
-    }
+//     @media (max-width:620px) {
+//         width:350px;
+//     }
     
-    @media (max-width:400px) {
-        width:300px;
-        margin-top:0px;
-    }
-`
+//     @media (max-width:400px) {
+//         width:300px;
+//         margin-top:0px;
+//     }
+// `
 
 export const BaseButton = styled.button`
     position:absolute;
