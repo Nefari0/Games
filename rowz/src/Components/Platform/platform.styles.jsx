@@ -117,7 +117,7 @@ export const Top = styled(tableEdge)`
 export const Bottom = styled(tableEdge)`
   height: ${cubeWidth}px;
   width: ${cubeWidth}px;
-  -webkit-transform: rotateX(-90deg) translateZ(${-200}px);
+  -webkit-transform: rotateX(-90deg) translateZ(${-203}px);
   // -webkit-box-shadow: 0 10px 100px rgba(0, 0, 0, 0.7);
   // -webkit-box-shadow: 0 10px 100px rgba(0, 0, 0, 0.7);
   box-shadow: 0px 5px 20px -1px #000000;
