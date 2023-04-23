@@ -1,8 +1,9 @@
 import { css } from 'styled-components'
 
 export const colors = {
-    secondaryColor:'#FF7F50',//coral
-    baseColor:'#F5DEB3'//wheat
+    secondaryColor:'#FF8B5C',//coral
+    baseColor:'#F5DEB3',//wheat
+    backgroundColor:'#BCA6AA'
 }
 
 export const size  = {

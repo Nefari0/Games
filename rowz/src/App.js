@@ -7,7 +7,7 @@ import { size } from './Components/rowz.plugin'
 import { AppContainer,Header,BaseButton } from './App.styles';
 import GameBoard from './Components/Platform/platform.component';
 
-const { multiplier } = size
+// const { multiplier } = size
 
 function App() {
 

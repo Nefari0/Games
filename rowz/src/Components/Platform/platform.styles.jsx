@@ -10,7 +10,7 @@ const {
 // const cubeWidth = 300;
 const cubeWidth = dimensions*1.3
 const cubeHeight = 25;
-const top = 250
+const top = 200
 
 // const Rotate = keyframes`
 // from {
@@ -28,7 +28,7 @@ export const CubeContainer = styled.div`
     position:relative;
     -webkit-perspective: 1600px;
     -webkit-perspective-origin: 50% -240px;
-    background-color:blue;
+    // background-color:blue;
 
     @media (max-width:550px) {
       -webkit-transform: scale(.8);
@@ -69,7 +69,11 @@ export const CubeContainer = styled.div`
 export const Cube = styled.div`
   -webkit-transform-style: preserve-3d;
   margin:auto; 
-  transform: rotateX(-45deg)  rotateY(${({ yRotation }) => yRotation}deg); 
+  transform:
+  rotateX(-45deg)  
+  // rotateX(-20deg)
+  rotateY(${({ yRotation }) => yRotation}deg)
+  ; 
   // transform:rotateY(${({ yRotation }) => yRotation}deg); 
 
   transition: all 1000ms;
@@ -114,8 +118,10 @@ export const Bottom = styled(tableEdge)`
   height: ${cubeWidth}px;
   width: ${cubeWidth}px;
   -webkit-transform: rotateX(-90deg) translateZ(${-200}px);
-  -webkit-box-shadow: 0 10px 100px rgba(0, 0, 0, 0.7);
-  background-color: rgba(0, 0, 0, 0);
+  // -webkit-box-shadow: 0 10px 100px rgba(0, 0, 0, 0.7);
+  // -webkit-box-shadow: 0 10px 100px rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 5px 20px -1px #000000;
+  // background-color: rgba(0, 0, 0, 0);
 `;
 
 export const Left = styled(tableEdge)`

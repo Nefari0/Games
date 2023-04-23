@@ -1,3 +1,5 @@
+import { updatePlayer } from '../../../redux/checkerReducer'
+import {connect} from 'react-redux'
 import { ErrorMsg } from '../Error/error.component'
 import { attackLogic } from './attack.logic'
 import { CheckerTable,Rowz } from './board.styles'
@@ -71,7 +73,7 @@ class CheckerBoard extends Component {
                     previousPiece:previousPiece,
                     currentPlayer:currentPlayer
                 })
-
+                
                 this.switchPlayer(currentPlayer)
 
                 if (this.state.chainKillAvailable === true) {
@@ -375,9 +377,11 @@ class CheckerBoard extends Component {
         switch (input) {
             case 'good':
                 this.setState({currentPlayer:'bad'})
+                this.props.updatePlayer({currentPlayer:"bad"})
                 break;
             case 'bad':
                 this.setState({currentPlayer:'good'})
+                this.props.updatePlayer({currentPlayer:"good"})
                 break;
             default:
                 return
@@ -459,10 +463,16 @@ class CheckerBoard extends Component {
                         {mappedMatrix}
                     </Rowz>
                 </CheckerTable>
-                <CurrentPlayer currentPlayer={currentPlayer} />
+                {/* <CurrentPlayer currentPlayer={currentPlayer} /> */}
             </div>
         );
     }
 }
 
-export default CheckerBoard
+function mapStateToProps(reduxState){
+    return reduxState
+}
+
+export default connect(mapStateToProps, {updatePlayer})(CheckerBoard)
+
+// export default CheckerBoard

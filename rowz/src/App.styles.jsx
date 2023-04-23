@@ -1,6 +1,7 @@
 import styled from "styled-components";
-import { size,boardPlacement } from "./Components/rowz.plugin";
+import { size,boardPlacement,colors } from "./Components/rowz.plugin";
 
+const { backgroundColor } = colors 
 const { multiplier } = size
 const dimensions = 350
 
@@ -64,7 +65,7 @@ export const AppContainer = styled.main`
     flex-direction:column;
     align-items: center;
     background-color: rgb(240, 240, 240);
-    // background-color:blue;
+    // background-color:${backgroundColor};
     -webkit-perspective: 1600px;
     -webkit-perspective-origin: 50% -240px;
 `

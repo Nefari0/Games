@@ -1,3 +1,5 @@
+import {connect} from 'react-redux'
+import { updatePlayer } from '../../redux/checkerReducer';
 import {
     CubeContainer,
     Cube,
@@ -8,17 +10,20 @@ import {
     Left,
     Right
   } from "./platform.styles";
+  import CurrentPlayer from '../Rows/TurnIndicator/current.component';
   import CheckerBoard from "../Rows/CheckerBoard/CheckerBoard";
   
-  const GameBoard = ({ state }) => {
+  const GameBoard = ({state,currentPlayer}) => {
     const { yRotation, xRotation, currentIndex } = state;
-    console.log("CURRENT IN LOWER GAME COMPOENT", xRotation);
   
     return (
       <CubeContainer>
         <Cube xRotatuin={xRotation} yRotation={yRotation}>
             <Top>
                 {/* top */}
+                <CurrentPlayer 
+                  currentPlayer={currentPlayer.currentPlayer.currentPlayer}
+                />
                 <CheckerBoard />
             </Top>
             <Bottom></Bottom>
@@ -43,6 +48,12 @@ import {
       </CubeContainer>
     );
   };
+
+function mapStateToProps(reduxState){
+    return reduxState
+}
+
+export default connect(mapStateToProps, {updatePlayer})(GameBoard)
   
-  export default GameBoard;
+  // export default GameBoard;
   
