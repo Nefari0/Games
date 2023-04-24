@@ -11,6 +11,7 @@ export const ControlBox = styled.main`
     top: ${-55 * multiplier}px;
     z-index: 99;
     pointer-events: auto;
+    transform: rotateX(45deg);
 `;
 
 export const ArrowButton = styled.span`
