@@ -4,6 +4,7 @@ import { size } from "../../../rowz.plugin";
 const { multiplier } = size
 
 const Player = css`
+    opacity:${({activeLocation}) => activeLocation? '.5' : '1'};
     position: absolute;
     height: ${35 * multiplier}px;
     width: ${35 * multiplier}px;
@@ -14,11 +15,12 @@ const Player = css`
     
     border: .1px solid #fff;
     visibility: visible;
-    opacity: 1;
+    // opacity: 1;
     transition: opacity .2s linear;
     z-index: 3;
     pointer-events: none;
     transform: rotateX(45deg);
+    // opacity:.5;
 
     &:after{
         content: '';

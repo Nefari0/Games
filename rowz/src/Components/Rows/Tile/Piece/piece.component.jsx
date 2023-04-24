@@ -6,7 +6,7 @@ import '../tile.styles.css'
 
 const { multiplier } = size
 
-const Piece = ({items}) => {    
+const Piece = ({items,activeLocation}) => {    
 
     const {isKing,player,x,y,pendingDeath} = items
 
@@ -21,13 +21,13 @@ const Piece = ({items}) => {
         <div style={engine}>
 
             {player ==='good' ? 
-            <GoodPlayer>
+            <GoodPlayer activeLocation={activeLocation[0]}>
                 {isKing && <Crown />}
                 {pendingDeath && SadFace('#fff')}
                 {isKing && !pendingDeath ? SmileFace('#fff') : null}
             </GoodPlayer>
             :
-            <BadPlayer>
+            <BadPlayer activeLocation={activeLocation[0]}>
                 {pendingDeath && SadFace('#555')}
                 {isKing && <Crown />}
                 {isKing && !pendingDeath ? SmileFace('#555') : null}

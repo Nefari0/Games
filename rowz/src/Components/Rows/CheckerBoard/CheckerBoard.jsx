@@ -447,7 +447,7 @@ class CheckerBoard extends Component {
 
         const mappedPieces = pieces.map(el => {
             return (
-                <Piece key={el.id} items={el} />
+                <Piece key={el.id} items={el} activeLocation={activeLocation} />
             )
         });
 
