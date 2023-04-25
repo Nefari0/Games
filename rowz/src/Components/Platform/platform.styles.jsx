@@ -1,4 +1,4 @@
-import styled, { keyframes } from "styled-components";
+import styled, { css,keyframes } from "styled-components";
 import { size,boardPlacement } from "../rowz.plugin";
 import walnut from "./American_walnut_pxr128_jpg.jpg"
 
@@ -21,6 +21,16 @@ const top = 200
 // }
 // `;
 
+const changSize = (scale) => {
+    const newStyle = css`
+      -webkit-transform: scale(${scale});
+      -ms-transform: scale(${scale});
+      transform: scale(${scale});
+      top:${top*scale}px;
+    `
+    return (newStyle)
+}
+
 export const CubeContainer = styled.div`
     width: ${cubeWidth}px;
     height: ${cubeHeight}px;
@@ -31,38 +41,65 @@ export const CubeContainer = styled.div`
     // background-color:blue;
 
     @media (max-width:550px) {
-      -webkit-transform: scale(.8);
-      -ms-transform: scale(.8);
-      transform: scale(.8);
-      top:${top*.8}px;
+      ${changSize(.9)}
+      // -webkit-transform: scale(.8);
+      // -ms-transform: scale(.8);
+      // transform: scale(.8);
+      // top:${top*.8}px;
   }
 
   
   @media (max-width:450px) {
-    -webkit-transform: scale(.6);
-    -ms-transform: scale(.6);
-    transform: scale(.6);
-    top:${top*.6}px;
+    // -webkit-transform: scale(.6);
+    // -ms-transform: scale(.6);
+    // transform: scale(.6);
+    // top:${top*.6}px;
+    ${changSize(.85)}
   }
 
   @media (max-width:400px) {
-    -webkit-transform: scale(.5);
-    -ms-transform: scale(.5);
-    transform: scale(.5);
-    top:${top*.5}px;
+    // -webkit-transform: scale(.5);
+    // -ms-transform: scale(.5);
+    // transform: scale(.5);
+    // top:${top*.5}px;
+    ${changSize(.8)}
+}
+
+@media (max-width:370px) {
+  // -webkit-transform: scale(.45);
+  // -ms-transform: scale(.45);
+  // transform: scale(.45);
+  ${changSize(.75)}
 }
 
 @media (max-width:350px) {
-  -webkit-transform: scale(.45);
-  -ms-transform: scale(.45);
-  transform: scale(.45);
+  ${changSize(.7)}
+  // -webkit-transform: scale(.4);
+  // -ms-transform: scale(.4);
+  // transform: scale(.4);
 }
 
-@media (max-width:290px) {
-  -webkit-transform: scale(.4);
-  -ms-transform: scale(.4);
-  transform: scale(.4);
+@media (max-width:330px) {
+  ${changSize(.65)}
+  // -webkit-transform: scale(.4);
+  // -ms-transform: scale(.4);
+  // transform: scale(.4);
 }
+
+@media (max-width:310px) {
+  ${changSize(.6)}
+  // -webkit-transform: scale(.4);
+  // -ms-transform: scale(.4);
+  // transform: scale(.4);
+}
+
+@media (max-width:280px) {
+  ${changSize(.55)}
+  // -webkit-transform: scale(.4);
+  // -ms-transform: scale(.4);
+  // transform: scale(.4);
+}
+
 
 `;
 
