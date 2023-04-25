@@ -70,9 +70,9 @@ export const Cube = styled.div`
   -webkit-transform-style: preserve-3d;
   margin:auto; 
   transform:
-  rotateX(-45deg)  
-  // rotateX(-20deg)
-  rotateY(${({ yRotation }) => yRotation}deg)
+    rotateX(-45deg)  
+    // rotateX(-20deg)
+    rotateY(${({ yRotation }) => yRotation}deg)
   ; 
   // transform:rotateY(${({ yRotation }) => yRotation}deg); 
 
