@@ -133,19 +133,19 @@ const tableEdge = styled.figure`
 
 export const Front = styled(tableEdge)`
   height: ${cubeHeight}px;
-  background-color: yellow;
+  // background-color: yellow;
   -webkit-transform: translateZ(${cubeWidth/2}px);
 `;
 
 export const Back = styled(tableEdge)`
   height: ${cubeHeight}px;
-  background-color: pink;
+  // background-color: pink;
   -webkit-transform: rotateY(180deg) translateZ(${cubeWidth / 2}px);
 `;
 
 export const Top = styled(tableEdge)`
     -webkit-transform-style: preserve-3d;
-    background-color: green;
+    // background-color: green;
     height: ${cubeWidth}px;
     // pointer-events:none;
     -webkit-transform: rotateX(90deg) translateZ(228px);
@@ -162,13 +162,13 @@ export const Bottom = styled(tableEdge)`
 `;
 
 export const Left = styled(tableEdge)`
-  background-color: purple;
+  // background-color: purple;
   height: ${cubeHeight}px;
   -webkit-transform: rotateY(-90deg) translateZ(228px);
 `;
 
 export const Right = styled(tableEdge)`
-  background-color: orange;
+  // background-color: orange;
   height: ${cubeHeight}px;
   -webkit-transform: rotateY(90deg) translateZ(228px);
 `;
