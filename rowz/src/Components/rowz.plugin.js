@@ -1,9 +1,11 @@
 import { css } from 'styled-components'
 
+// --- Natural Palette --- //
 export const colors = {
-    baseColor:'#F5DEB3',//wheat
+    baseColor:'#EDE9D0',//wheat
     secondaryColor:'#FF8B5C',//coral
-    tertiary:'#CDB6BA',
+    tertiary:'#FFF6EF',
+    dark:'#B88571',
     backgroundColor:'#BCA6AA'
 }
 
