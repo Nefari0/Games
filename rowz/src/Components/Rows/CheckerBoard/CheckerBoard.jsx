@@ -62,7 +62,7 @@ class CheckerBoard extends Component {
             const { gameID,input,type } = dataFromServer
 
             if (type === 'checkerTurn' && gameID === currentGame ) {
-                console.log(dataFromServer)
+                // console.log(dataFromServer)
                 // --- Save game on browsers --- //
                 this.saveGame(message.data)
                 // ----------------------- //
@@ -347,7 +347,8 @@ class CheckerBoard extends Component {
         // var pieceIndex = pieces.findIndex((el) => el.id === id)
         var pieceId = await this.checkPieceLocations(enemyX,enemyY).id
         var killIndex = pieces.findIndex((el) => el.id === pieceId)
-        updatedPieces.splice(killIndex,1)
+        updatedPieces[killIndex].x = this.state.matrix.length
+        // updatedPieces.splice(killIndex,1)
         
         return updatedPieces
     }
