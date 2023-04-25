@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import { size } from '../../../rowz.plugin'
+import { size,colors } from '../../../rowz.plugin'
 
 const { multiplier } = size
+const  { tertiary,baseColor } = colors
 
 export const ControlBox = styled.main`
     position: absolute;
@@ -12,6 +13,26 @@ export const ControlBox = styled.main`
     z-index: 99;
     pointer-events: auto;
     transform: rotateX(45deg);
+    border: solid ${tertiary} 1px;
+    margin:0px;
+
+    // box-shadow:
+    //     rgba(255, 139, 92, 0.6) -1px 5px, 
+    //     rgba(255, 139, 92, 0.5) -2px 10px, 
+    //     rgba(255, 139, 92, 0.4) -3px 15px, 
+    //     rgba(255, 139, 92, 0.3) -4px 20px, 
+    //     rgba(255, 139, 92, 0.2) -5px 25px
+    // ;
+
+        box-shadow:
+        rgba(255, 139, 92, 0.6) -.5px 5px, 
+        rgba(255, 139, 92, 0.5) -1.5px 10px, 
+        rgba(255, 139, 92, 0.4) -2px 15px, 
+        rgba(255, 139, 92, 0.3) -2.5px 20px, 
+        rgba(255, 139, 92, 0.2) -3px 25px
+    ;
+
+    border-radius:10px;
 `;
 
 export const ArrowButton = styled.span`
@@ -24,6 +45,14 @@ export const ArrowButton = styled.span`
     z-index: 1000;
     pointer-events: auto;
     z-index:1;
+    
+    animation: blinker 1s linear infinite;
+    
+    @keyframes blinker {
+        50% {
+          opacity: .3;
+        }
+      }
 `;
 
 export const LowRight = styled(ArrowButton)`
@@ -64,4 +93,5 @@ export const CloseController = styled.span`
     align-items: center;
     align-content: center;
     pointer-events: auto;
+    // box-shadow: 0px 5px 20px -1px #000000;
 `;
