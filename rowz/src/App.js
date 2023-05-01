@@ -6,6 +6,8 @@ import Nav from './Components/Nav/nav.component';
 import { size } from './Components/rowz.plugin'
 import { AppContainer,Header,BaseButton } from './App.styles';
 import GameBoard from './Components/Platform/platform.component';
+import { NoticeContainer } from './Components/Notice/notice.styles';
+import { OverLay } from './Components/Styles/global.styles';
 
 // const { multiplier } = size
 
@@ -36,6 +38,10 @@ function App() {
         <Nav />
         <h1>Rowz</h1>
       </Header>
+      <OverLay>
+
+      <NoticeContainer></NoticeContainer>
+      </OverLay>
       {/* <Adapter>
 
         {playCheckers === true ? <CheckerBoard currentGame={currentGame} /> : <TicTacToe />}
