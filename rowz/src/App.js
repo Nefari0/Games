@@ -36,12 +36,6 @@ function App(props) {
       </OverLay>
 
         <GameBoard state={state}/>
-        <button
-          onClick={() => props.updateNotice('here is some text')}
-          style={{position:'absolute',top:'600px'}}
-        >
-          button
-        </button>
 
       {/* CONTROLS ROTATION OF BOARD FOR DEVELOPEMENT */}
       {/* <div 

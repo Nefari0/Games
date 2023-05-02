@@ -1,4 +1,5 @@
 import { updatePlayer } from '../../../redux/checkerReducer'
+import { updateNotice } from '../../../redux/globalReducer'
 import {connect} from 'react-redux'
 import { ErrorMsg } from '../Error/error.component'
 import { attackLogic } from './attack.logic'
@@ -387,15 +388,17 @@ class CheckerBoard extends Component {
     };
 
     selectTile = (x,y,piece) => {
+        const { currentPlayer } = this.state
         const newActiveLocation = [x,y,piece]
-        if(piece[0] !== undefined) {
+        if(piece[0] !== undefined && piece[0].player === currentPlayer) {
             this.handleInput('activeLocation',newActiveLocation)
+        } else {
+            this.props.updateNotice('NOT YOUR TURN!')
         }
         return
     };
     
     unselectTile = () => {
-        console.log('hit UNselect tile')
         this.handleInput('activeLocation',[null,null])
     };
 
@@ -461,7 +464,6 @@ class CheckerBoard extends Component {
                         {mappedMatrix}
                     </Rowz>
                 </CheckerTable>
-                {/* <CurrentPlayer currentPlayer={currentPlayer} /> */}
             </div>
         );
     }
@@ -471,6 +473,4 @@ function mapStateToProps(reduxState){
     return reduxState
 }
 
-export default connect(mapStateToProps, {updatePlayer})(CheckerBoard)
-
-// export default CheckerBoard
+export default connect(mapStateToProps, {updatePlayer,updateNotice})(CheckerBoard)
