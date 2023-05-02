@@ -1,4 +1,5 @@
 import { updatePlayer } from '../../../redux/checkerReducer'
+import { updateNotice } from '../../../redux/globalReducer'
 import {connect} from 'react-redux'
 import { ErrorMsg } from '../Error/error.component'
 import { attackLogic } from './attack.logic'
@@ -8,7 +9,6 @@ import React, { Component } from 'react'
 import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
 import pieces from '../pieces'
-import CurrentPlayer from '../TurnIndicator/current.component'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 // const client = new W3CWebSocket(`ws://127.0.0.1:8003`); // production
 const client = new W3CWebSocket(`ws://165.227.102.189:8000`); // build
@@ -62,7 +62,6 @@ class CheckerBoard extends Component {
             const { gameID,input,type } = dataFromServer
 
             if (type === 'checkerTurn' && gameID === currentGame ) {
-                console.log(dataFromServer)
                 // --- Save game on browsers --- //
                 this.saveGame(message.data)
                 // ----------------------- //
@@ -389,15 +388,17 @@ class CheckerBoard extends Component {
     };
 
     selectTile = (x,y,piece) => {
+        const { currentPlayer } = this.state
         const newActiveLocation = [x,y,piece]
         if(piece[0] !== undefined) {
-            this.handleInput('activeLocation',newActiveLocation)
-        }
+            if (piece[0].player === currentPlayer) {
+                this.handleInput('activeLocation',newActiveLocation)
+            } else {this.props.updateNotice('NOT YOUR TURN!')}
+        } else {this.unselectTile()}
         return
     };
     
     unselectTile = () => {
-        console.log('hit UNselect tile')
         this.handleInput('activeLocation',[null,null])
     };
 
@@ -463,7 +464,6 @@ class CheckerBoard extends Component {
                         {mappedMatrix}
                     </Rowz>
                 </CheckerTable>
-                {/* <CurrentPlayer currentPlayer={currentPlayer} /> */}
             </div>
         );
     }
@@ -473,6 +473,4 @@ function mapStateToProps(reduxState){
     return reduxState
 }
 
-export default connect(mapStateToProps, {updatePlayer})(CheckerBoard)
-
-// export default CheckerBoard
+export default connect(mapStateToProps, {updatePlayer,updateNotice})(CheckerBoard)
