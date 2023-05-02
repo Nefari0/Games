@@ -37,8 +37,8 @@ export const ControlBox = styled.main`
 
 export const ArrowButton = styled.span`
     position: absolute;
-    height: ${20 * multiplier}px;
-    width: ${20 * multiplier}px;
+    height: ${30 * multiplier}px;
+    width: ${30 * multiplier}px;
     border: solid green;
     border-width: 0 ${6 * multiplier}px ${6 * multiplier}px 0;
     display: inline-block;
