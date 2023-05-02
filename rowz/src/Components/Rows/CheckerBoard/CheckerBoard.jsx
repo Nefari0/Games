@@ -305,7 +305,7 @@ class CheckerBoard extends Component {
 
         // --- Is location on the board? --- //
         if (x >= 0 && x <= matrix.length-1) {
-            if (y >= 0 && 7 <= matrix.length-1) {
+            if (y >= 0 && y <= matrix.length-1) {
                 
                 // --- non-kings can only move one direction --- //
                 if (landingY > y && currentPlayer === 'good'){
