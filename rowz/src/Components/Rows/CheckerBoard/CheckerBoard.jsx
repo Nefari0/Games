@@ -390,10 +390,10 @@ class CheckerBoard extends Component {
     selectTile = (x,y,piece) => {
         const { currentPlayer } = this.state
         const newActiveLocation = [x,y,piece]
-        if(piece[0] !== undefined && piece[0].player === currentPlayer) {
-            this.handleInput('activeLocation',newActiveLocation)
-        } else {
-            this.props.updateNotice('NOT YOUR TURN!')
+        if(piece[0] !== undefined) {
+            if (piece[0].player === currentPlayer) {
+                this.handleInput('activeLocation',newActiveLocation)
+            } else {this.props.updateNotice('NOT YOUR TURN!')}
         }
         return
     };
