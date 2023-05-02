@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/static/css/main.3eff8d5a.css",
-    "main.js": "/static/js/main.b86dd961.js",
+    "main.css": "/static/css/main.8622763d.css",
+    "main.js": "/static/js/main.2debdd7c.js",
     "static/js/787.ab731c2c.chunk.js": "/static/js/787.ab731c2c.chunk.js",
     "static/media/American_walnut_pxr128_jpg.jpg": "/static/media/American_walnut_pxr128_jpg.745df99bb19db5dcffe8.jpg",
     "index.html": "/index.html",
-    "main.3eff8d5a.css.map": "/static/css/main.3eff8d5a.css.map",
-    "main.b86dd961.js.map": "/static/js/main.b86dd961.js.map",
+    "main.8622763d.css.map": "/static/css/main.8622763d.css.map",
+    "main.2debdd7c.js.map": "/static/js/main.2debdd7c.js.map",
     "787.ab731c2c.chunk.js.map": "/static/js/787.ab731c2c.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.3eff8d5a.css",
-    "static/js/main.b86dd961.js"
+    "static/css/main.8622763d.css",
+    "static/js/main.2debdd7c.js"
   ]
 }
