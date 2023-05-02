@@ -1,17 +1,16 @@
 import { useState } from 'react';
+import { connect } from 'react-redux';
+import { updateNotice } from './redux/globalReducer';
 import './App.css';
-import TicTacToe from './Components/TicTacToe/tictactoe.component';
-import CheckerBoard from './Components/Rows/CheckerBoard/CheckerBoard'
 import Nav from './Components/Nav/nav.component';
-import { size } from './Components/rowz.plugin'
-import { AppContainer,Header,BaseButton } from './App.styles';
+import { AppContainer,Header } from './App.styles';
 import GameBoard from './Components/Platform/platform.component';
-import { NoticeContainer } from './Components/Notice/notice.styles';
 import { OverLay } from './Components/Styles/global.styles';
+import Notice from './Components/Notice/notice.component';
 
 // const { multiplier } = size
 
-function App() {
+function App(props) {
 
   const [state,setState] = useState({
     playCheckers:true,
@@ -19,18 +18,12 @@ function App() {
     xRotation: 0,
   })
 
-  const { playCheckers,xRotation,yRotation } = state
+  const {notice} = props.globalReducer
+  // const { playCheckers,xRotation,yRotation } = state
 
   const tic = 'tic-tac-toe'
   const check = 'checkers'
   const currentGame = 123456789
-
-  const stateManager = (prop,val) => {
-    setState({
-      ...state,
-      [prop]:val
-    })
-  }
 
   return (
     <AppContainer>
@@ -39,22 +32,16 @@ function App() {
         <h1>Rowz</h1>
       </Header>
       <OverLay>
-
-      <NoticeContainer></NoticeContainer>
+        {notice && <Notice />}
       </OverLay>
-      {/* <Adapter>
-
-        {playCheckers === true ? <CheckerBoard currentGame={currentGame} /> : <TicTacToe />}
-
-        <BaseButton
-          onClick={() => {setState({...state, playCheckers:!playCheckers})}}
-        >
-          play {!playCheckers ? check : tic}
-        </BaseButton>
-
-      </Adapter> */}
 
         <GameBoard state={state}/>
+        <button
+          onClick={() => props.updateNotice('here is some text')}
+          style={{position:'absolute',top:'600px'}}
+        >
+          button
+        </button>
 
       {/* CONTROLS ROTATION OF BOARD FOR DEVELOPEMENT */}
       {/* <div 
@@ -70,4 +57,8 @@ function App() {
   );
 }
 
-export default App;
+function mapStateToProps(reduxState) {
+  return reduxState
+}
+
+export default connect(mapStateToProps, {updateNotice})(App)
