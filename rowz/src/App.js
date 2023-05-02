@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
-import { updateNotice } from './redux/globalReducer';
+import { updateNotice,updateAlert } from './redux/globalReducer';
 import './App.css';
 import Nav from './Components/Nav/nav.component';
 import { AppContainer,Header } from './App.styles';
 import GameBoard from './Components/Platform/platform.component';
 import { OverLay } from './Components/Styles/global.styles';
-import Notice from './Components/Notice/notice.component';
+import Alert from './Components/Notice/notice.component';
 
 // const { multiplier } = size
 
@@ -18,7 +18,7 @@ function App(props) {
     xRotation: 0,
   })
 
-  const {notice} = props.globalReducer
+  const {notice,alert} = props.globalReducer
   // const { playCheckers,xRotation,yRotation } = state
 
   const tic = 'tic-tac-toe'
@@ -32,7 +32,7 @@ function App(props) {
         <h1>Rowz</h1>
       </Header>
       <OverLay>
-        {notice && <Notice />}
+        <Alert/>
       </OverLay>
 
         <GameBoard state={state}/>
@@ -55,4 +55,4 @@ function mapStateToProps(reduxState) {
   return reduxState
 }
 
-export default connect(mapStateToProps, {updateNotice})(App)
+export default connect(mapStateToProps, {updateNotice,updateAlert})(App)

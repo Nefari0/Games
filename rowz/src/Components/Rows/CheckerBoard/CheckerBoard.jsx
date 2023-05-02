@@ -1,5 +1,5 @@
 import { updatePlayer } from '../../../redux/checkerReducer'
-import { updateNotice } from '../../../redux/globalReducer'
+import { updateNotice,updateAlert } from '../../../redux/globalReducer'
 import {connect} from 'react-redux'
 import { ErrorMsg } from '../Error/error.component'
 import { attackLogic } from './attack.logic'
@@ -262,7 +262,7 @@ class CheckerBoard extends Component {
                     
                     // if the chosen move already contains a piece, check if friend or foe
                     const attackCoordinates = await attackLogic(pieces[key].x,pieces[key].y,currentPiece,this.state,this.checkPieceLocations)
-                    if (!attackCoordinates) {return console.log('This move is not allowed')}
+                    if (!attackCoordinates) {return this.props.updateNotice('This move is not allowed')}
                     const { nextX,nextY,enemyX,enemyY,id } = attackCoordinates
 
                     // --- Make attack --- //
@@ -310,12 +310,12 @@ class CheckerBoard extends Component {
                 // --- non-kings can only move one direction --- //
                 if (landingY > y && currentPlayer === 'good'){
                     if(!isKing){
-                        return console.log('this move is not allowed')
+                        return this.props.updateNotice('This move is not allowed')
                     }
                 };
                 if (landingY < y && currentPlayer === 'bad'){
                     if(!isKing){
-                        return console.log('this move is not allowed')
+                        return this.props.updateNotice('This move is not allowed')
                     } 
                 };
                 updatePieces[pieceIndex].x = x
@@ -478,4 +478,4 @@ function mapStateToProps(reduxState){
     return reduxState
 }
 
-export default connect(mapStateToProps, {updatePlayer,updateNotice})(CheckerBoard)
+export default connect(mapStateToProps, {updatePlayer,updateNotice,updateAlert})(CheckerBoard)
