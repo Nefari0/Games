@@ -4,23 +4,19 @@ import { size } from "../../../rowz.plugin";
 const { multiplier } = size
 
 const Player = css`
-    opacity:${({activeLocation}) => activeLocation? '.5' : '1'};
     position: absolute;
     height: ${35 * multiplier}px;
     width: ${35 * multiplier}px;
     border-radius: 50%;
     background: linear-gradient(0turn,#555,rgb(143, 143, 143));
-    // box-shadow: 5px 5px 20px -7px #000000;
     box-shadow: rgba(143, 143, 143, 1) 0px 3px, rgba(143, 143, 143, 1) 0px 4px, rgba(0, 0, 0, 1) 0px 4.5px;
     
     border: .1px solid #fff;
     visibility: visible;
-    // opacity: 1;
     transition: opacity .2s linear;
     z-index: 3;
     pointer-events: none;
     transform: rotateX(45deg);
-    // opacity:.5;
 
     &:after{
         content: '';
@@ -35,8 +31,12 @@ const Player = css`
       }
 `
 
-export const GoodPlayer = styled.div`${Player}`
+export const GoodPlayer = styled.div`
+    ${Player}
+    svg {color:#fff}
+`
 export const BadPlayer = styled(GoodPlayer)`
     background: linear-gradient(0turn,rgb(160, 158, 158),rgb(226, 226, 226));
     border: .1px solid #555;
+    svg {color:#555}
 `

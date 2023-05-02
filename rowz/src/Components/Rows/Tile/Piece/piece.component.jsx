@@ -6,9 +6,22 @@ import '../tile.styles.css'
 
 const { multiplier } = size
 
+export const PIECE_CLASSES = {
+    good:'good',
+    bad:'bad'
+};
+
+const getPieceClass = (pieceClass = PIECE_CLASSES.good) => 
+ ({
+    [PIECE_CLASSES.good]:GoodPlayer,
+    [PIECE_CLASSES.bad]:BadPlayer 
+ }[pieceClass]);
+
 const Piece = ({items,activeLocation}) => {    
 
     const {isKing,player,x,y,pendingDeath} = items
+    
+    const PieceClass = getPieceClass(player)
 
     const engine = {
         left:`${5+(x*(43 * multiplier))}px`,
@@ -19,21 +32,11 @@ const Piece = ({items,activeLocation}) => {
 
     return (
         <div style={engine}>
-
-            {player ==='good' ? 
-            <GoodPlayer activeLocation={activeLocation[0]}>
+            <PieceClass>
+                {pendingDeath && SadFace()}
                 {isKing && <Crown />}
-                {pendingDeath && SadFace('#fff')}
-                {isKing && !pendingDeath ? SmileFace('#fff') : null}
-            </GoodPlayer>
-            :
-            <BadPlayer activeLocation={activeLocation[0]}>
-                {pendingDeath && SadFace('#555')}
-                {isKing && <Crown />}
-                {isKing && !pendingDeath ? SmileFace('#555') : null}
-            </BadPlayer>
-            }
-            
+                {isKing && !pendingDeath && SmileFace()}
+            </PieceClass>
         </div>
     )
 }
