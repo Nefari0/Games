@@ -394,7 +394,7 @@ class CheckerBoard extends Component {
             if (piece[0].player === currentPlayer) {
                 this.handleInput('activeLocation',newActiveLocation)
             } else {this.props.updateNotice('NOT YOUR TURN!')}
-        }
+        } else {this.unselectTile()}
         return
     };
     
