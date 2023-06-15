@@ -6,9 +6,14 @@ require('dotenv').config({ path: __dirname + '/../.env'})
 const http = require('http')
 const boardController = require('./controllers/boardController')
 const webSocketServer = require('websocket').server;
+const nexmoController = require('./controllers/nexmoController')
 
 // server
-const { SESSION_SECRET, CONNECTION_STRING, SERVER_PORT } = process.env
+const { 
+    SESSION_SECRET, 
+    CONNECTION_STRING, 
+    SERVER_PORT 
+} = process.env
 
 const app = express();
 
@@ -22,11 +27,12 @@ app.use(
         cookie: { maxAge: 1000 * 60 * 5 },
     }),
     )
-    
-    app.use( express.static( __dirname + '/../build'));
-    app.get('*', (req,res) => {
-        res.send(path.join(__dirname, '../build/index.html'))
-    })
+
+    // -- ENDPOINTS -- //
+    // board
+    app.get('/api/board/get',boardController.getBoard)
+    // nexmo
+    app.get('/api/nexmo/get', nexmoController.sendUserConfirm)
     
     // websocket //
     const webSocketsServerPort = 8003;
@@ -64,8 +70,16 @@ app.use(
         
     });
 
-    // endpoints
-    app.get('/api/board/get',boardController.getBoard)
+    app.use( express.static( __dirname + '/../build'));
+    app.get('*', (req,res) => {
+        res.send(path.join(__dirname, '../build/index.html'))
+    })
+
+    // // -- ENDPOINTS -- //
+    // // board
+    // app.get('/api/board/get',boardController.getBoard)
+    // // nexmo
+    // app.get('/api/nexmo/get', nexmoController.sendUserConfirm)
     
     // massive
     massive({
@@ -76,5 +90,7 @@ app.use(
 }).then((dbInstance) => {
     app.set('db',dbInstance);
     console.log('db connected');
-    app.listen(SERVER_PORT, () => console.log(`server ready on ${SERVER_PORT}`))
+    app.listen(SERVER_PORT, () => {
+        console.log(`server ready on ${SERVER_PORT}`)
+    })
 });

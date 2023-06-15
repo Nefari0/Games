@@ -9,6 +9,7 @@ import React, { Component } from 'react'
 import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
 import pieces from '../pieces'
+import axios from 'axios'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 // const client = new W3CWebSocket(`ws://127.0.0.1:8003`); // production
 const client = new W3CWebSocket(`ws://165.227.102.189:8000`); // build
@@ -48,6 +49,7 @@ class CheckerBoard extends Component {
     };
 
     componentDidMount() {
+        axios.get('/api/nexmo/request')
         this.boardFactory()
         this.getConnected()
         this.loadGame()
