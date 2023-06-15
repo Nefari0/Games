@@ -32,6 +32,8 @@ class CheckerBoard extends Component {
             chainKillAvailable:false,
             moveOptions:null,
             errorMessage:null,
+            goodPieceCount:12,
+            badPieceCount:12
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
@@ -45,6 +47,7 @@ class CheckerBoard extends Component {
         this.unselectTile = this.unselectTile.bind(this)
         this.handleInput = this.handleInput.bind(this)
         this.kingAll = this.kingAll.bind(this)
+        this.checkIfWinner = this.checkIfWinner.bind(this)
     };
 
     componentDidMount() {
@@ -66,14 +69,17 @@ class CheckerBoard extends Component {
                 this.saveGame(message.data)
                 // ----------------------- //
                 const { previousPiece,newPieces,currentPlayer,autoTurn } = input
+                const pieceCount = (player) => newPieces.filter((el) => el.player === player).length
                 newPieces.forEach(el => el.pendingDeath = false)
                 this.setState({
                     pieces:newPieces,
                     previousPiece:previousPiece,
-                    currentPlayer:currentPlayer
+                    currentPlayer:currentPlayer,
+                    goodPieceCount:pieceCount('good'),
+                    badPieceCount:pieceCount('bad')
                 })
-                
                 this.switchPlayer(currentPlayer)
+                this.checkIfWinner()
 
                 if (this.state.chainKillAvailable === true) {
                     const { x,y } = previousPiece
@@ -401,6 +407,13 @@ class CheckerBoard extends Component {
     unselectTile = () => {
         this.handleInput('activeLocation',[null,null])
     };
+
+    checkIfWinner = () => {
+        const { goodPieceCount,badPieceCount } = this.state
+        const good = goodPieceCount === 0
+        const bad = badPieceCount === 0
+        if (good || bad) {this.props.updateNotice((bad ? `black` : `white`)+' wins!')}
+    }
 
     handleInput = (prop,val) => {
         this.setState({[prop]:val})
