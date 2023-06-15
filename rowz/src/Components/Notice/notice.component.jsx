@@ -29,7 +29,7 @@ const Alert = (props) => {
 
     return (
         <PopupContainer notice={notice} alert={alert}>
-            <p>{text}{alert}</p>
+            <h1>{text}{alert}</h1>
             {alert && <button onClick={() => props.updateAlert(null)}>close</button>}
         </PopupContainer>
     )
