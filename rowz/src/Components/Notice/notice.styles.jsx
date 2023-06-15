@@ -15,8 +15,12 @@ export const PopupContainer = styled.section`
     top:200px;
     z-index:1;
     pointer-events:auto;
-    background-color: rgb(240, 240, 240);
-    box-shadow: 0px 5px 20px -7px #000000;
+
+    h1 {
+        font-weight:400;
+        color:red;
+        text-transform: uppercase;
+    }
 
     ${({notice,alert}) => !notice && !alert && hidden}
 `
