@@ -11,7 +11,7 @@ const Player = css`
     background: linear-gradient(0turn,#555,rgb(143, 143, 143));
     box-shadow: rgba(143, 143, 143, 1) 0px 3px, rgba(143, 143, 143, 1) 0px 4px, rgba(0, 0, 0, 1) 0px 4.5px;
     
-    border: .1px solid #fff;
+    border: 1px solid rgb(143, 143, 143);
     visibility: visible;
     transition: opacity .2s linear;
     z-index: 3;
@@ -37,6 +37,6 @@ export const GoodPlayer = styled.div`
 `
 export const BadPlayer = styled(GoodPlayer)`
     background: linear-gradient(0turn,rgb(160, 158, 158),rgb(226, 226, 226));
-    border: .1px solid #555;
+    border: 1px solid rgb(226, 226, 226);
     svg {color:#555}
 `
