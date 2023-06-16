@@ -1,12 +1,21 @@
 const initialState = {
-    notice:null
+    notice:null,
+    alert:null,
   };
 
   const UPDATE_NOTICE = "UPDATE_NOTICE"
+  const UPDATE_ALERT = "UPDATE_ALERT"
 
   export function updateNotice(param) { // Parameter may be text or null
     return {
         type:UPDATE_NOTICE,
+        payload:param
+    }
+  }
+
+  export function updateAlert(param) { // Parameter may be text or null
+    return {
+        type:UPDATE_ALERT,
         payload:param
     }
   }
@@ -18,7 +27,11 @@ const initialState = {
                 ...state,
                 notice:action.payload
             };
-
+          case UPDATE_ALERT:
+            return {
+              ...state,
+              alert:action.payload
+            }
         default:
             return state;
     }

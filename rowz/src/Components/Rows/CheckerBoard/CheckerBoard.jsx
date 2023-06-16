@@ -1,5 +1,5 @@
 import { updatePlayer } from '../../../redux/checkerReducer'
-import { updateNotice } from '../../../redux/globalReducer'
+import { updateNotice,updateAlert } from '../../../redux/globalReducer'
 import {connect} from 'react-redux'
 import { ErrorMsg } from '../Error/error.component'
 import { attackLogic } from './attack.logic'
@@ -32,6 +32,8 @@ class CheckerBoard extends Component {
             chainKillAvailable:false,
             moveOptions:null,
             errorMessage:null,
+            goodPieceCount:12,
+            badPieceCount:12
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
@@ -45,6 +47,7 @@ class CheckerBoard extends Component {
         this.unselectTile = this.unselectTile.bind(this)
         this.handleInput = this.handleInput.bind(this)
         this.kingAll = this.kingAll.bind(this)
+        this.checkIfWinner = this.checkIfWinner.bind(this)
     };
 
     componentDidMount() {
@@ -66,14 +69,17 @@ class CheckerBoard extends Component {
                 this.saveGame(message.data)
                 // ----------------------- //
                 const { previousPiece,newPieces,currentPlayer,autoTurn } = input
+                const pieceCount = (player) => newPieces.filter((el) => el.player === player).length
                 newPieces.forEach(el => el.pendingDeath = false)
                 this.setState({
                     pieces:newPieces,
                     previousPiece:previousPiece,
-                    currentPlayer:currentPlayer
+                    currentPlayer:currentPlayer,
+                    goodPieceCount:pieceCount('good'),
+                    badPieceCount:pieceCount('bad')
                 })
-                
                 this.switchPlayer(currentPlayer)
+                this.checkIfWinner()
 
                 if (this.state.chainKillAvailable === true) {
                     const { x,y } = previousPiece
@@ -262,7 +268,7 @@ class CheckerBoard extends Component {
                     
                     // if the chosen move already contains a piece, check if friend or foe
                     const attackCoordinates = await attackLogic(pieces[key].x,pieces[key].y,currentPiece,this.state,this.checkPieceLocations)
-                    if (!attackCoordinates) {return console.log('This move is not allowed')}
+                    if (!attackCoordinates) {return this.props.updateNotice('This move is not allowed')}
                     const { nextX,nextY,enemyX,enemyY,id } = attackCoordinates
 
                     // --- Make attack --- //
@@ -305,17 +311,17 @@ class CheckerBoard extends Component {
 
         // --- Is location on the board? --- //
         if (x >= 0 && x <= matrix.length-1) {
-            if (y >= 0 && 7 <= matrix.length-1) {
+            if (y >= 0 && y <= matrix.length-1) {
                 
                 // --- non-kings can only move one direction --- //
                 if (landingY > y && currentPlayer === 'good'){
                     if(!isKing){
-                        return console.log('this move is not allowed')
+                        return this.props.updateNotice('This move is not allowed')
                     }
                 };
                 if (landingY < y && currentPlayer === 'bad'){
                     if(!isKing){
-                        return console.log('this move is not allowed')
+                        return this.props.updateNotice('This move is not allowed')
                     } 
                 };
                 updatePieces[pieceIndex].x = x
@@ -402,6 +408,13 @@ class CheckerBoard extends Component {
         this.handleInput('activeLocation',[null,null])
     };
 
+    checkIfWinner = () => {
+        const { goodPieceCount,badPieceCount } = this.state
+        const good = goodPieceCount === 0
+        const bad = badPieceCount === 0
+        if (good || bad) {this.props.updateNotice((bad ? `black` : `white`)+' wins!')}
+    }
+
     handleInput = (prop,val) => {
         this.setState({[prop]:val})
         return
@@ -478,4 +491,4 @@ function mapStateToProps(reduxState){
     return reduxState
 }
 
-export default connect(mapStateToProps, {updatePlayer,updateNotice})(CheckerBoard)
+export default connect(mapStateToProps, {updatePlayer,updateNotice,updateAlert})(CheckerBoard)
