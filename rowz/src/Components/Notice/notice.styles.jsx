@@ -17,10 +17,11 @@ export const PopupContainer = styled.section`
     pointer-events:auto;
 
     h1 {
-        font-weight:400;
-        color:red;
+        font-weight:600;
+        color:#ff3300;
         text-transform: uppercase;
+        text-shadow: #fff 1px 1px 10px;
     }
 
     ${({notice,alert}) => !notice && !alert && hidden}
-`
+    `
