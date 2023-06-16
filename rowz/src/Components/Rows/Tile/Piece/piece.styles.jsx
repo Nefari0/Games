@@ -8,10 +8,11 @@ const Player = css`
     height: ${35 * multiplier}px;
     width: ${35 * multiplier}px;
     border-radius: 50%;
-    background: linear-gradient(0turn,#555,rgb(143, 143, 143));
+    background-color:#555;
+    
     box-shadow: rgba(143, 143, 143, 1) 0px 3px, rgba(143, 143, 143, 1) 0px 4px, rgba(0, 0, 0, 1) 0px 4.5px;
     
-    border: .1px solid #fff;
+    border: 1px solid #555;
     visibility: visible;
     transition: opacity .2s linear;
     z-index: 3;
@@ -21,13 +22,13 @@ const Player = css`
     &:after{
         content: '';
         position: absolute;
-        height: 80%;
-        width: 80%;
-        left:4px;
-        top:4px;
+        height: 90%;
+        width: 90%;
+        left:2px;
+        top:2px;
         background-color: transparent;
         border-radius: 50%;
-        box-shadow: inset -5px -5px 9px rgba(255,255,255,0.45), inset 5px 5px 9px rgba(94,104,121,0.3);
+        box-shadow: inset -9px -5px 9px rgba(255,255,255,0.15), inset 5px 5px 19px rgba(94,104,121,0.6);
       }
 `
 
@@ -36,7 +37,9 @@ export const GoodPlayer = styled.div`
     svg {color:#fff}
 `
 export const BadPlayer = styled(GoodPlayer)`
-    background: linear-gradient(0turn,rgb(160, 158, 158),rgb(226, 226, 226));
-    border: .1px solid #555;
+    background-color:rgb(204, 204, 204);
+    border: 1px solid rgb(226, 226, 226);
     svg {color:#555}
+
+    box-shadow: rgba(143, 143, 143, 1) 0px 3px, rgba(143, 143, 143, 1) 0px 4px, rgba(0, 0, 0, 1) 0px 4.5px;
 `
