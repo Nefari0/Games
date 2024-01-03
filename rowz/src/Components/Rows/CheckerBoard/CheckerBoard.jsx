@@ -126,8 +126,13 @@ class CheckerBoard extends Component {
     newGame = () => {
         this.setState({pieces:pieces})
         this.saveGame('')
+        const gameObject = {
+            newPieces:pieces,
+            currentPlayer:this.state.currentPlayer,
+        }
+        this.sendToSocketsSwitch(gameObject)
     }
-
+    
     sendToSocketsSwitch = (input) => {
         // this.kingAll()
         const { currentGame } = this.props
