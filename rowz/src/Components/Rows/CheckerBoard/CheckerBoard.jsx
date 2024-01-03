@@ -111,16 +111,22 @@ class CheckerBoard extends Component {
 
     loadGame = () => {
         const pieces = localStorage.getItem('savedGame')
-        try {if (pieces !== undefined) {
-            const data = JSON.parse(pieces)
-            const { input } = data
-            const { currentPlayer,previousPiece } = input
-            this.switchPlayer(currentPlayer)
-            this.setState({
-                pieces:data.input.newPieces,
-                previousPiece:previousPiece,
-            })
-        }} catch (err) {this.newGame()}
+        try {
+            if (pieces) {
+                const data = JSON.parse(pieces)
+                const { input } = data
+                const { currentPlayer,previousPiece } = input
+                this.switchPlayer(currentPlayer)
+                this.setState({
+                    pieces:data.input.newPieces,
+                    previousPiece:previousPiece,
+                })
+            } else {
+                this.newGame()
+            }
+        } catch (err) {
+            return
+        }
     }
 
     newGame = () => {
