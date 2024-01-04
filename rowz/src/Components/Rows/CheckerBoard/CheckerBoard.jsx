@@ -67,7 +67,7 @@ class CheckerBoard extends Component {
             const dataFromServer = JSON.parse(message.data);
             const { gameID,input,type } = dataFromServer
             if (type === 'ping') {
-                setInterval(this.ping(), 3000);
+                setInterval(this.ping(), 30000);
             }
             
             if (type === 'checkerTurn' && gameID === currentGame ) {
@@ -113,6 +113,7 @@ class CheckerBoard extends Component {
     };
 
     ping = () => {
+        if (this.props.globalReducer.devToolsOn) {console.log('SERVER PING')}
         var pingObject = {type:'ping'}
         client.send(JSON.stringify(pingObject));
     }

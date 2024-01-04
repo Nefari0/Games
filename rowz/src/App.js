@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
-import { updateNotice,updateAlert } from './redux/globalReducer';
+import { updateNotice,updateAlert,updateDevTools } from './redux/globalReducer';
 import './App.css';
 import Nav from './Components/Nav/nav.component';
 import { AppContainer,Header } from './App.styles';
@@ -18,12 +18,12 @@ function App(props) {
     xRotation: 0,
   })
 
-  const {notice,alert} = props.globalReducer
+  const {devToolsOn} = props.globalReducer
   // const { playCheckers,xRotation,yRotation } = state
 
-  const tic = 'tic-tac-toe'
-  const check = 'checkers'
-  const currentGame = 123456789
+  // const tic = 'tic-tac-toe'
+  // const check = 'checkers'
+  // const currentGame = 123456789
 
   return (
     <AppContainer>
@@ -47,6 +47,12 @@ function App(props) {
         <button onClick={() => stateManager('yRotation',yRotation+90)}>prev</button>
         <button onClick={() => stateManager('yRotation',yRotation-90)}>next</button>
       </div> */}
+      <button 
+        style={{position:'absolute',bottom:'10px',opacity:'.2'}}
+        onClick={() => {props.updateDevTools(devToolsOn)}}
+      >
+        dev monitoring on: {`${devToolsOn}`}
+      </button>
     </AppContainer>
   );
 }
@@ -55,4 +61,4 @@ function mapStateToProps(reduxState) {
   return reduxState
 }
 
-export default connect(mapStateToProps, {updateNotice,updateAlert})(App)
+export default connect(mapStateToProps, {updateNotice,updateAlert,updateDevTools})(App)
