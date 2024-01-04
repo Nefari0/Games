@@ -11,7 +11,7 @@ import Piece from '../Tile/Piece/piece.component'
 import pieces from '../pieces'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 // const client = new W3CWebSocket(`ws://127.0.0.1:8003`); // production
-const client = new W3CWebSocket(`ws://165.227.102.189:8000`); // build
+const client = new W3CWebSocket(`ws://165.227.102.189:8003`); // build
 
 const upLeft = [-1,-1]
 const upRight = [1,-1]
@@ -48,6 +48,7 @@ class CheckerBoard extends Component {
         this.handleInput = this.handleInput.bind(this)
         this.kingAll = this.kingAll.bind(this)
         this.checkIfWinner = this.checkIfWinner.bind(this)
+        this.ping = this.ping.bind(this)
     };
 
     componentDidMount() {
@@ -55,15 +56,20 @@ class CheckerBoard extends Component {
         this.getConnected()
         this.loadGame()
     };
+
     getConnected = () => {
         client.onopen = () => {
             console.log('client connected')
+            this.ping()
         }
         client.onmessage = (message) => {
             const { currentGame } = this.props
             const dataFromServer = JSON.parse(message.data);
             const { gameID,input,type } = dataFromServer
-
+            if (type === 'ping') {
+                setInterval(this.ping(), 3000);
+            }
+            
             if (type === 'checkerTurn' && gameID === currentGame ) {
                 // --- Save game on browsers --- //
                 this.saveGame(message.data)
@@ -92,6 +98,42 @@ class CheckerBoard extends Component {
             }
         }
     };
+
+    sendToSocketsSwitch = (input) => {
+        // this.kingAll()
+        const { currentGame } = this.props
+        this.setState({activeLocation:[null,null]})
+        var gameObject = {
+            type:"checkerTurn",
+            input,
+            gameID:currentGame
+        }
+        gameObject = JSON.stringify(gameObject)
+        client.send(gameObject)
+    };
+
+    ping = () => {
+        var pingObject = {type:'ping'}
+        client.send(JSON.stringify(pingObject));
+    }
+
+    // pong = () => {
+    //     // clearTimeout(300);
+    //     this.ping()
+
+    //     // client.onopen = function () {
+    //     //     setInterval(this.ping(), 300);
+    //     // }
+    //     client.onmessage = function (evt) {
+    //         var msg = JSON.parse(evt.data);
+    //         if (msg.type == 'ping') {
+    //             console.log('HITTING PONG',msg)
+    //             // this.ping();
+    //             return;
+    //         }
+    //         //////-- other operation --//
+    //     }
+    // }
 
     // --- this function makes all pieces king - it's purpose is strictly for testing moves in all direction --- //
     kingAll = () => {
@@ -138,19 +180,6 @@ class CheckerBoard extends Component {
         }
         this.sendToSocketsSwitch(gameObject)
     }
-    
-    sendToSocketsSwitch = (input) => {
-        // this.kingAll()
-        const { currentGame } = this.props
-        this.setState({activeLocation:[null,null]})
-        var gameObject = {
-            type:"checkerTurn",
-            input,
-            gameID:currentGame
-        }
-        gameObject = JSON.stringify(gameObject)
-        client.send(gameObject)
-    };
 
     boardFactory = () => {
         var matrix = []

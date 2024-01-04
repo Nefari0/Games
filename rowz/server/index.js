@@ -45,24 +45,36 @@ app.use(
     };
     
     wsServer.on('request', function(request) {
-        console.log('here are your clients',clients['fb5450f3-12da'])
-        var userID = getUniqueID();
+        const userID = getUniqueID();
         const connection = request.accept(null, request.origin);
+
         clients[userID] = connection;
+
         connection.on('message', function(message) {
-            console.log('here is message',message)
-            if (message.type === 'utf8') {
-                console.log('Recieved Message: ',message.utf8Data);
-            }
             
-            for(key in clients) {
-                console.log('in backend funtion',clients[key])
-                // clients[key].sendUTF(message.utf8Data);
-                clients[key].sendUTF(message.utf8Data);
-            }
+            const { utf8Data } = message
+            const data = JSON.parse(utf8Data)
+            const { type } = data
+
+            if (type === 'checkerTurn') {sendToClients(utf8Data)} // Send game info
+
+            if (type === 'ping') {pingpong()} // Staying connected to websocket
         })
         
     });
+
+    const sendToClients = (message) => {
+        for(key in clients) {
+            clients[key].sendUTF(message);
+        }
+    }
+
+    const pingpong = () => { // Staying connected to websockets
+        const pingObject = {type:'ping'}
+        setTimeout(function () {
+            sendToClients(JSON.stringify(pingObject))
+        }, 1000*58 );
+    }
 
     // endpoints
     app.get('/api/board/get',boardController.getBoard)
