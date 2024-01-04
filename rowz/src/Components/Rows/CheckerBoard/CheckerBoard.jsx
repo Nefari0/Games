@@ -33,7 +33,8 @@ class CheckerBoard extends Component {
             moveOptions:null,
             errorMessage:null,
             goodPieceCount:12,
-            badPieceCount:12
+            badPieceCount:12,
+            clientId:null,
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
@@ -51,23 +52,35 @@ class CheckerBoard extends Component {
         this.ping = this.ping.bind(this)
     };
 
-    componentDidMount() {
-        this.boardFactory()
-        this.getConnected()
-        this.loadGame()
+    async componentDidMount() {
+        await this.getUniqueID()
+        await this.boardFactory()
+        await this.getConnected()
+        await this.loadGame()
+    };
+
+    getUniqueID = () => {
+        const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        const id = s4() + s4() + '-' + s4();
+        if (!this.state.clientId) {
+            this.setState({
+                clientId:id
+            })
+        }
+        return 
     };
 
     getConnected = () => {
         client.onopen = () => {
             console.log('client connected')
-            this.ping()
+            if (this.state.clientId) {this.ping()}
         }
         client.onmessage = (message) => {
             const { currentGame } = this.props
             const dataFromServer = JSON.parse(message.data);
             const { gameID,input,type } = dataFromServer
             if (type === 'ping') {
-                setInterval(this.ping(), 30000);
+                if (dataFromServer.clientId === this.state.clientId) {this.ping()}
             }
             
             if (type === 'checkerTurn' && gameID === currentGame ) {
@@ -114,7 +127,7 @@ class CheckerBoard extends Component {
 
     ping = () => {
         if (this.props.globalReducer.devToolsOn) {console.log('SERVER PING')}
-        var pingObject = {type:'ping'}
+        var pingObject = {type:'ping',clientId:this.state.clientId}
         client.send(JSON.stringify(pingObject));
     }
 

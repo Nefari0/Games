@@ -51,14 +51,13 @@ app.use(
         clients[userID] = connection;
 
         connection.on('message', function(message) {
-            
             const { utf8Data } = message
             const data = JSON.parse(utf8Data)
             const { type } = data
 
             if (type === 'checkerTurn') {sendToClients(utf8Data)} // Send game info
 
-            if (type === 'ping') {pingpong()} // Staying connected to websocket
+            if (type === 'ping') {pingpong(utf8Data)} // Staying connected to websocket
         })
         
     });
@@ -69,11 +68,13 @@ app.use(
         }
     }
 
-    const pingpong = () => { // Staying connected to websockets
-        const pingObject = {type:'ping'}
+    const pingpong = (data) => { // Staying connected to websockets
+
         setTimeout(function () {
-            sendToClients(JSON.stringify(pingObject))
-        }, 1000*58 );
+            idCounter = []
+            sendToClients(data)
+        }, 1000*50 );
+        
     }
 
     // endpoints
