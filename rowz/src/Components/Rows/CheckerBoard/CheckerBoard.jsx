@@ -10,8 +10,9 @@ import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
 import pieces from '../pieces'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-// const client = new W3CWebSocket(`ws://127.0.0.1:8003`); // production
-const client = new W3CWebSocket(`ws://165.227.102.189:8003`); // build
+import { AI } from './ai.logic'
+const client = new W3CWebSocket(`ws://127.0.0.1:8003`); // production
+// const client = new W3CWebSocket(`ws://165.227.102.189:8003`); // build
 
 const upLeft = [-1,-1]
 const upRight = [1,-1]
@@ -28,7 +29,7 @@ class CheckerBoard extends Component {
             activeLocation:[null,null], // --- Player selects tile
             pieces:[],
             matrix:[],
-            currentPlayer:'bad',
+            currentPlayer:'good',
             chainKillAvailable:false,
             moveOptions:null,
             errorMessage:null,
@@ -72,6 +73,7 @@ class CheckerBoard extends Component {
 
     getConnected = () => {
         client.onopen = () => {
+            console.log('GET CONNECTED')
             console.log('client connected')
             if (this.state.clientId) {this.ping()}
         }
@@ -89,6 +91,12 @@ class CheckerBoard extends Component {
                 // ----------------------- //
                 const { previousPiece,newPieces,currentPlayer,autoTurn } = input
                 const pieceCount = (player) => newPieces.filter((el) => el.player === player).length
+                // console.log(currentPlayer)
+                AI(newPieces,this.checkPieceLocations)
+                // if (currentPlayer === 'bad') {
+                //     return AI(newPieces,this.checkPieceLocations)
+                // }
+
                 newPieces.forEach(el => el.pendingDeath = false)
                 this.setState({
                     pieces:newPieces,
@@ -97,7 +105,7 @@ class CheckerBoard extends Component {
                     goodPieceCount:pieceCount('good'),
                     badPieceCount:pieceCount('bad')
                 })
-                this.switchPlayer(currentPlayer)
+                // this.switchPlayer(currentPlayer,newPieces,currentPlayer)
                 this.checkIfWinner()
 
                 if (this.state.chainKillAvailable === true) {
@@ -113,7 +121,7 @@ class CheckerBoard extends Component {
     };
 
     sendToSocketsSwitch = (input) => {
-        // this.kingAll()
+        this.kingAll()
         const { currentGame } = this.props
         this.setState({activeLocation:[null,null]})
         var gameObject = {
@@ -302,6 +310,7 @@ class CheckerBoard extends Component {
     }
 
     setMoves = async (x,y,currentPiece) => { // gets all move options based on active location
+        // console.log('READY STATE',currentPiece)
         const { matrix,pieces,currentPlayer } = this.state
         const { isKing,id } = currentPiece[0]
         var pieceIndex = pieces.findIndex((el) => el.id === id)
@@ -310,6 +319,10 @@ class CheckerBoard extends Component {
             previousPiece:null,
             moveOptions:null
         })
+
+        if (client.readyState != client.OPEN) {    
+            return (this.getConnected())
+        }
 
         if(currentPlayer !== pieces[pieceIndex].player){
             return
@@ -353,7 +366,7 @@ class CheckerBoard extends Component {
                     } else {return}
             }
         }
-        return await this.executeMovePiece(x,y,id,currentPlayer,isKing)
+        return await this.executeMovePiece(x,y,id,currentPlayer,isKing) 
     }
 
     // --- makes actual movements --- //
@@ -432,11 +445,14 @@ class CheckerBoard extends Component {
         }   
     };
 
-    switchPlayer = async (input) => {
+    switchPlayer = async (input,newPieces,currentPlayer) => {
         switch (input) {
             case 'good':
                 this.setState({currentPlayer:'bad'})
                 this.props.updatePlayer({currentPlayer:"bad"})
+                
+                // AI(newPieces,this.checkPieceLocations)
+                
                 break;
             case 'bad':
                 this.setState({currentPlayer:'good'})
