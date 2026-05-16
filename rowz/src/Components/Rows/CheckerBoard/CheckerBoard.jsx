@@ -91,22 +91,21 @@ class CheckerBoard extends Component {
                 // ----------------------- //
                 const { previousPiece,newPieces,currentPlayer,autoTurn } = input
                 const pieceCount = (player) => newPieces.filter((el) => el.player === player).length
-                // console.log(currentPlayer)
-                AI(newPieces,this.checkPieceLocations)
-                // if (currentPlayer === 'bad') {
-                //     return AI(newPieces,this.checkPieceLocations)
-                // }
 
                 newPieces.forEach(el => el.pendingDeath = false)
                 this.setState({
                     pieces:newPieces,
                     previousPiece:previousPiece,
-                    currentPlayer:currentPlayer,
+                    // currentPlayer:currentPlayer,
                     goodPieceCount:pieceCount('good'),
                     badPieceCount:pieceCount('bad')
                 })
                 // this.switchPlayer(currentPlayer,newPieces,currentPlayer)
                 this.checkIfWinner()
+
+                if (currentPlayer === 'good') {
+                    return AI(newPieces,this.checkPieceLocations,this.setMoves)
+                }
 
                 if (this.state.chainKillAvailable === true) {
                     const { x,y } = previousPiece
@@ -309,8 +308,8 @@ class CheckerBoard extends Component {
         })
     }
 
-    setMoves = async (x,y,currentPiece) => { // gets all move options based on active location
-        // console.log('READY STATE',currentPiece)
+    setMoves = async (x,y,currentPiece,score) => { // gets all move options based on active location
+        // console.log('READY STATE',x,y,currentPiece)
         const { matrix,pieces,currentPlayer } = this.state
         const { isKing,id } = currentPiece[0]
         var pieceIndex = pieces.findIndex((el) => el.id === id)
@@ -325,6 +324,7 @@ class CheckerBoard extends Component {
         }
 
         if(currentPlayer !== pieces[pieceIndex].player){
+            // console.log('not your turn')
             return
         }
 
@@ -335,7 +335,10 @@ class CheckerBoard extends Component {
                     
                     // if the chosen move already contains a piece, check if friend or foe
                     const attackCoordinates = await attackLogic(pieces[key].x,pieces[key].y,currentPiece,this.state,this.checkPieceLocations)
-                    if (!attackCoordinates) {return this.props.updateNotice('This move is not allowed')}
+                    if (!attackCoordinates) {
+                        this.props.updateNotice(`This move is not allowed`)
+                        return 
+                    }
                     const { nextX,nextY,enemyX,enemyY,id } = attackCoordinates
 
                     // --- Make attack --- //
@@ -383,14 +386,27 @@ class CheckerBoard extends Component {
                 // --- non-kings can only move one direction --- //
                 if (landingY > y && currentPlayer === 'good'){
                     if(!isKing){
-                        return this.props.updateNotice('This move is not allowed')
+                        this.props.updateNotice('This move is not allowed')
+                        return
                     }
                 };
+                // if (landingY < y && currentPlayer === 'bad'){
+                //     if(!isKing){
+                //         this.props.updateNotice('02 This move is not allowed')
+                //         return
+                //     } 
+                // };
+
+                
                 if (landingY < y && currentPlayer === 'bad'){
                     if(!isKing){
-                        return this.props.updateNotice('This move is not allowed')
+                        // updatePieces[pieceIndex].y = pieces[pieceIndex].y
+                        // updatePieces[pieceIndex].x = pieces[pieceIndex].x
+                        this.props.updateNotice('This move is not allowed')
+                        return 
                     } 
                 };
+                
                 updatePieces[pieceIndex].x = x
                 updatePieces[pieceIndex].y = y
                 
@@ -430,6 +446,7 @@ class CheckerBoard extends Component {
 
         // -- this is for chain kills -- //
         if(updatedPieces != null){
+            console.log('hitting 1')
             for (let key in updatedPieces){
                 if(updatedPieces[key].x === x && updatedPieces[key].y === y){
                     return updatedPieces[key]
@@ -437,6 +454,7 @@ class CheckerBoard extends Component {
             }
             // -- this is for manual kills -- //
         } else {
+            console.log('hitting 2')
             for (let key in pieces){
                 if(pieces[key].x === x && pieces[key].y === y){
                     return pieces[key]

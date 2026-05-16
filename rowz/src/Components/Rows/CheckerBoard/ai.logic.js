@@ -1,70 +1,205 @@
 // current turn moves
-var availableMoves = []
+// var availableMoves = []
 
 // next turn moves
-const adjascentMoves = []
-const attackMoves = []
-var availableAttacks = []
+// const adjascentMoves = []
+// const attackMoves = []
+// var availableAttacks = []
 
-export const AI = async (board,checkPieceLocations,setMoves) => {
+export const AI = (board,checkPieceLocations,setMoves,props) => {
+    // console.log('hitting ai',props)
+    // current turn moves
+    var availableMoves = []
+
+    // next turn moves
+    const adjascentMoves = []
+
     var moves = []
-    await board.forEach(e => {
-        if (e.player === 'bad')
-        moves.push(initialMoves(e.x,e.y,board,checkPieceLocations,1))
+    board.forEach(piece => {
+        if (piece.player === 'bad') {
+            availableMoves.push(initialMoves(piece,board,checkPieceLocations,setMoves))
+        }
+
+        
     });
-    // console.log(moves)
+
+    // --- AVOID SINGLE ENAMY PIECES --- //
+    const evalSingleThreat = findThreats(availableMoves,board,checkPieceLocations)
+    // console.log(evalMoves)
+
+    // --- HUNT FOR SINGLE PIECE --- //
+    const huntingSingleItem = hunting(evalSingleThreat,board,checkPieceLocations)
+    // console.log(huntingSingleItem)
+    // --- MOVE BETWEEN TWO PIECES --- //
+    // const getNonKings = await nonKingMoves(huntingSingleItem,board,checkPieceLocations)
+    // console.log(getNonKings)
+
+    const orderByHighestScore = getHighestScore(huntingSingleItem)
+
+        // remove illegal non-king moves
+    // console.log(orderByHighestScore)
+    // for (const move in orderByHighestScore) {
+    //     const {piece,y} = orderByHighestScore[move]
+    //     // console.log(orderByHighestScore[move])
+    //     if (piece.y < y && piece.isKing === false) {
+    //         orderByHighestScore.pop(move)
+    //     }
+    // }
+    // console.log(orderByHighestScore)
+
+
+    // orderByHighestScore.forEach(e => {
+    //     const { x,y,piece,score } = e
+    //     setMoves(x,y,[piece],score)
+    // })
+    const nonIllegalMoves = orderByHighestScore.filter(e => !(e.piece.y < e.y && e.piece.isKing === false))
+    // console.log(orderByHighestScore)
+    // console.log(nonIllegalMoves)
+
+    for (const e of nonIllegalMoves) {
+
+    const { x, y, piece, score } = e;
+    // if (piece.y > y && piece.isKing === true) {
+        // setMoves(x, y, [piece], score);
+    // }
+    }
+    // console.log('HIGHEST SCORE',orderByHighestScore)
 }
 
+// --- non-kings cannot move backwards --- //
+const removeIllegal = (moves) => {
+    // console.log(moves)
+    for (const move of moves) {
+        if (move.piece.y < move.y) {
+            moves.pop(move)
+        }
+    // console.log(moves)
+    return moves
+    }
+}
 
+const getHighestScore = (allMoves) => {
+    // console.log(allMoves)
+    return allMoves.flat().sort((a, b) => b.score - a.score)
+}
 
-const getCoords = (counter) => {
+const getCoords = (counter, x = 0, y = 0) => {
     const moves = [
-        [counter,counter],
-        [-counter,counter],
-        [-counter,-counter],
-        [counter,-counter],
+        [x+counter,y+counter],
+        [x-counter,y+counter],
+        [x-counter,y-counter],
+        [x+counter,y-counter],
     ]
+    // console.log(moves)
 
     return(moves)
 }
 
-export const initialMoves = (x,y,currentBoard,checkPieceLocations) => {
-    const moves = getCoords(3)
-    const nextMoves = []
-    const generatedMoves = []
-    const occupied = []
+export const initialMoves = (piece,currentBoard,checkPieceLocations,setMoves) => {
 
-    
+    var availableMoves = []
+
+    const { x,y } = piece
+    const moves = getCoords(1,x,y)
+
     // find available spots
-    for (let move in moves) {
-        // console.log(moves[move][0])
-        nextMoves.push([x+moves[move][0],y+moves[move][1]])
-    }
-
     // search for adjascent pieces
-    for (let nextMove in nextMoves) {
-        var nextPiece = checkPieceLocations(nextMoves[nextMove][0],nextMoves[nextMove][1],currentBoard)
-        // console.log(nextPiece)
-        if (nextPiece === undefined) {
-            var move = {
-                x:nextMoves[nextMove][0],
-                y:nextMoves[nextMove][1],
-                score:2
-            }
-            generatedMoves.push(move)
-        } else {console.log(nextPiece)}
-    }
 
-    adjascentMoves.push(generatedMoves)
+    for (let move in moves) {
+    // var nextPiece = checkPieceLocations(moves[move][0],moves[move][1],currentBoard)
+        var moveObj = {
+            piece:piece,
+            x:moves[move][0],
+            y:moves[move][1],
+            score:2
+        }
+        availableMoves.push(moveObj)
+    }
+    // console.log(availableMoves)
+    // for (let move in moves) {
+    //     var nextPiece = checkPieceLocations(moves[move][0],moves[move][1],currentBoard)
+    //     if (nextPiece === undefined) {
+    //         var moveObj = {
+    //             x:moves[move][0],
+    //             y:moves[move][1],
+    //             score:2
+    //         }
+    //         generatedMoves.push(moveObj)
+
+    //     } else {return setMoves(nextPiece.x,nextPiece.y,[piece])}
+    // }
+
+    // adjascentMoves.push(generatedMoves)
    
     const options = {
-        adjascentMoves:adjascentMoves,
-        attackMoves:attackMoves
+        // adjascentMoves:adjascentMoves,
+        // attackMoves:attackMoves
     }
 
-    return options
+    return availableMoves
 };
 
+const findThreats = (initialMoves,board,checkPieceLocations) => {
+    initialMoves.forEach((moveData) => {
+        moveData.forEach((el2) => {
+            const nextSteps = getCoords(1, el2.x, el2.y)
+            nextSteps.forEach((el3) => {
+                const checkCoords = checkPieceLocations(el3[0],el3[1],board)
+                if (checkCoords !== undefined) {
+                    if (checkCoords.player === 'good') {
+                        el2.score-=1
+                        console.log('WE SHOULD BE LOSING A POINT',el2.score)
+                    }
+                }
+            })
+        })
+    })
+    return initialMoves
+}
+
+const hunting = (moveOptions,board,checkPieceLocations) => {
+        // moveOptions.forEach((moveData) => {
+        moveOptions.flat().forEach((el2) => {
+            const nextSteps = getCoords(2, el2.x, el2.y)
+            nextSteps.forEach((el3) => {
+                const checkCoords = checkPieceLocations(el3[0],el3[1],board)
+                if (checkCoords !== undefined) {
+                    if (checkCoords.player === 'good') {
+                        el2.score+=1
+                    }
+                }
+            })
+        })
+    // })
+    return moveOptions
+}
+
+const nonKingMoves = (moveOptions,board,checkPieceLocations) => {
+    // console.log('mnon-kings 1',moveOptions)
+    moveOptions.flat().forEach((e) => {
+        const {y} = e.piece
+        console.log(e.piece.y,e.y)
+        if (e.y > y) {
+            moveOptions.pop(e)
+        }
+
+        // console.log('mnon-kings 2',moveOptions)
+        return moveOptions
+        // moveData.forEach((el2) => {
+        //     const nextSteps = getCoords(1, el2.x, el2.y)
+        //     nextSteps.forEach((el3) => {
+        //         const checkCoords = checkPieceLocations(el3[0],el3[1],board)
+        //         if (checkCoords !== undefined) {
+        //             if (checkCoords.player === 'good') {
+        //                 el2.score+=1
+        //             }
+        //         }
+        //     })
+        // })
+    })
+}
+
+// console.log(availableMoves)
 const getAttackmoves = () => {
     var nextMove = []
     // const moves = getCoords(2)

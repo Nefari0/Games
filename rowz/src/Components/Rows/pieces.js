@@ -146,15 +146,15 @@ const pieces = [
     //     isKing:false,
     //     pendingDeath:false,
     // },
-    {
-        id:16,
-        player:'bad',
-        x:6,
-        y:7,
-        isInGame:true,
-        isKing:false,
-        pendingDeath:false,
-    },
+    // {
+    //     id:16,
+    //     player:'bad',
+    //     x:6,
+    //     y:7,
+    //     isInGame:true,
+    //     isKing:false,
+    //     pendingDeath:false,
+    // },
     // // ---2
     // {
     //     id:17,

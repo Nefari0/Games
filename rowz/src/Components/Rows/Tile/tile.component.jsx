@@ -43,7 +43,8 @@ const Tile = (props) => {
             activeLocation={activeLocation}
             color={color}
         >
-
+            <p style={{position:'absolute'}}>{x}</p>
+            <p style={{position:'absolute',left:'12px'}}>{y}</p>
             <TileStyles
                 onClick={() => props.selectTile(x,y,currentPiece)}
                 activeLocation={activeLocation}
