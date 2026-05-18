@@ -12,7 +12,8 @@ import pieces from '../pieces'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { AI } from './ai.logic'
 // const client = new W3CWebSocket(`ws://127.0.0.1:8004`); // production
-const client = new W3CWebSocket(`ws://165.227.102.189:8004`); // build
+const client = new W3CWebSocket(`ws://165.227.102.189:8003`); // build
+// const singlePlayerClient = new W3CWebSocket(`ws://165.227.102.189:8000`)// build
 
 const upLeft = [-1,-1]
 const upRight = [1,-1]
@@ -36,7 +37,7 @@ class CheckerBoard extends Component {
             goodPieceCount:12,
             badPieceCount:12,
             clientId:null,
-            singlePlayer:true
+            singlePlayer:false
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
@@ -104,7 +105,7 @@ class CheckerBoard extends Component {
                 this.switchPlayer(currentPlayer,newPieces,currentPlayer)
                 this.checkIfWinner()
 
-                if (currentPlayer === 'good') {
+                if (currentPlayer === 'good' && this.state.singlePlayer === true) {
                     return AI(newPieces,this.checkPieceLocations,this.setMoves,this.state)
                 }
 
@@ -562,6 +563,15 @@ class CheckerBoard extends Component {
                     <Menu
                         newGame={this.newGame}
                     />
+                    <button
+                        style={{
+                            position:'absolute',
+                            left:'50%',
+                            bottom:'-70px',
+                            zIndex:'100'
+                        }}
+                        onClick={() => this.setState({singlePlayer:!this.state.singlePlayer})}
+                    >single player{this.state.singlePlayer ? ' on' : ' off'}</button>
                     {errorMessage && <ErrorMsg />}
                     <Rowz>
                         {mappedPieces}
