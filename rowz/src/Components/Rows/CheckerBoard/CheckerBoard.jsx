@@ -36,6 +36,7 @@ class CheckerBoard extends Component {
             goodPieceCount:12,
             badPieceCount:12,
             clientId:null,
+            singlePlayer:true
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
@@ -100,11 +101,11 @@ class CheckerBoard extends Component {
                     goodPieceCount:pieceCount('good'),
                     badPieceCount:pieceCount('bad')
                 })
-                // this.switchPlayer(currentPlayer,newPieces,currentPlayer)
+                this.switchPlayer(currentPlayer,newPieces,currentPlayer)
                 this.checkIfWinner()
 
                 if (currentPlayer === 'good') {
-                    return AI(newPieces,this.checkPieceLocations,this.setMoves)
+                    return AI(newPieces,this.checkPieceLocations,this.setMoves,this.state)
                 }
 
                 if (this.state.chainKillAvailable === true) {
@@ -120,7 +121,7 @@ class CheckerBoard extends Component {
     };
 
     sendToSocketsSwitch = (input) => {
-        this.kingAll()
+        // this.kingAll()
         const { currentGame } = this.props
         this.setState({activeLocation:[null,null]})
         var gameObject = {
@@ -309,7 +310,6 @@ class CheckerBoard extends Component {
     }
 
     setMoves = async (x,y,currentPiece,score) => { // gets all move options based on active location
-        // console.log('READY STATE',x,y,currentPiece)
         const { matrix,pieces,currentPlayer } = this.state
         const { isKing,id } = currentPiece[0]
         var pieceIndex = pieces.findIndex((el) => el.id === id)
@@ -369,7 +369,7 @@ class CheckerBoard extends Component {
                     } else {return}
             }
         }
-        return await this.executeMovePiece(x,y,id,currentPlayer,isKing) 
+        return await this.executeMovePiece(x,y,id,currentPlayer,isKing,score) 
     }
 
     // --- makes actual movements --- //
@@ -400,10 +400,10 @@ class CheckerBoard extends Component {
                 
                 if (landingY < y && currentPlayer === 'bad'){
                     if(!isKing){
-                        // updatePieces[pieceIndex].y = pieces[pieceIndex].y
-                        // updatePieces[pieceIndex].x = pieces[pieceIndex].x
-                        this.props.updateNotice('This move is not allowed')
-                        return 
+                        if (this.state.singlePlayer===false) {
+                            this.props.updateNotice('This move is not allowed')
+                            return
+                        }
                     } 
                 };
                 
@@ -446,7 +446,6 @@ class CheckerBoard extends Component {
 
         // -- this is for chain kills -- //
         if(updatedPieces != null){
-            console.log('hitting 1')
             for (let key in updatedPieces){
                 if(updatedPieces[key].x === x && updatedPieces[key].y === y){
                     return updatedPieces[key]
@@ -454,7 +453,6 @@ class CheckerBoard extends Component {
             }
             // -- this is for manual kills -- //
         } else {
-            console.log('hitting 2')
             for (let key in pieces){
                 if(pieces[key].x === x && pieces[key].y === y){
                     return pieces[key]
