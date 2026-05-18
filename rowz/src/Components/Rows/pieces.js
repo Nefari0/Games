@@ -155,7 +155,7 @@ const pieces = [
         isKing:false,
         pendingDeath:false,
     },
-    // ---2
+    // // ---2
     {
         id:17,
         player:'bad',
@@ -192,7 +192,7 @@ const pieces = [
         isKing:false,
     pendingDeath:false,
     },
-    // // ---- 3
+    // // // ---- 3
     {
         id:21,
         player:'bad',

@@ -10,8 +10,10 @@ import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
 import pieces from '../pieces'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
-// const client = new W3CWebSocket(`ws://127.0.0.1:8003`); // production
+import { AI } from './ai.logic'
+// const client = new W3CWebSocket(`ws://127.0.0.1:8004`); // production
 const client = new W3CWebSocket(`ws://165.227.102.189:8003`); // build
+// const singlePlayerClient = new W3CWebSocket(`ws://165.227.102.189:8000`)// build
 
 const upLeft = [-1,-1]
 const upRight = [1,-1]
@@ -28,13 +30,14 @@ class CheckerBoard extends Component {
             activeLocation:[null,null], // --- Player selects tile
             pieces:[],
             matrix:[],
-            currentPlayer:'bad',
+            currentPlayer:'good',
             chainKillAvailable:false,
             moveOptions:null,
             errorMessage:null,
             goodPieceCount:12,
             badPieceCount:12,
             clientId:null,
+            singlePlayer:false
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
@@ -72,6 +75,7 @@ class CheckerBoard extends Component {
 
     getConnected = () => {
         client.onopen = () => {
+            console.log('GET CONNECTED')
             console.log('client connected')
             if (this.state.clientId) {this.ping()}
         }
@@ -89,16 +93,21 @@ class CheckerBoard extends Component {
                 // ----------------------- //
                 const { previousPiece,newPieces,currentPlayer,autoTurn } = input
                 const pieceCount = (player) => newPieces.filter((el) => el.player === player).length
+
                 newPieces.forEach(el => el.pendingDeath = false)
                 this.setState({
                     pieces:newPieces,
                     previousPiece:previousPiece,
-                    currentPlayer:currentPlayer,
+                    // currentPlayer:currentPlayer,
                     goodPieceCount:pieceCount('good'),
                     badPieceCount:pieceCount('bad')
                 })
-                this.switchPlayer(currentPlayer)
+                this.switchPlayer(currentPlayer,newPieces,currentPlayer)
                 this.checkIfWinner()
+
+                if (currentPlayer === 'good' && this.state.singlePlayer === true) {
+                    return AI(newPieces,this.checkPieceLocations,this.setMoves,this.state)
+                }
 
                 if (this.state.chainKillAvailable === true) {
                     const { x,y } = previousPiece
@@ -301,7 +310,7 @@ class CheckerBoard extends Component {
         })
     }
 
-    setMoves = async (x,y,currentPiece) => { // gets all move options based on active location
+    setMoves = async (x,y,currentPiece,score) => { // gets all move options based on active location
         const { matrix,pieces,currentPlayer } = this.state
         const { isKing,id } = currentPiece[0]
         var pieceIndex = pieces.findIndex((el) => el.id === id)
@@ -311,7 +320,12 @@ class CheckerBoard extends Component {
             moveOptions:null
         })
 
+        if (client.readyState != client.OPEN) {    
+            return (this.getConnected())
+        }
+
         if(currentPlayer !== pieces[pieceIndex].player){
+            // console.log('not your turn')
             return
         }
 
@@ -322,7 +336,10 @@ class CheckerBoard extends Component {
                     
                     // if the chosen move already contains a piece, check if friend or foe
                     const attackCoordinates = await attackLogic(pieces[key].x,pieces[key].y,currentPiece,this.state,this.checkPieceLocations)
-                    if (!attackCoordinates) {return this.props.updateNotice('This move is not allowed')}
+                    if (!attackCoordinates) {
+                        this.props.updateNotice(`This move is not allowed`)
+                        return 
+                    }
                     const { nextX,nextY,enemyX,enemyY,id } = attackCoordinates
 
                     // --- Make attack --- //
@@ -353,7 +370,7 @@ class CheckerBoard extends Component {
                     } else {return}
             }
         }
-        return await this.executeMovePiece(x,y,id,currentPlayer,isKing)
+        return await this.executeMovePiece(x,y,id,currentPlayer,isKing,score) 
     }
 
     // --- makes actual movements --- //
@@ -370,14 +387,27 @@ class CheckerBoard extends Component {
                 // --- non-kings can only move one direction --- //
                 if (landingY > y && currentPlayer === 'good'){
                     if(!isKing){
-                        return this.props.updateNotice('This move is not allowed')
+                        this.props.updateNotice('This move is not allowed')
+                        return
                     }
                 };
+                // if (landingY < y && currentPlayer === 'bad'){
+                //     if(!isKing){
+                //         this.props.updateNotice('02 This move is not allowed')
+                //         return
+                //     } 
+                // };
+
+                
                 if (landingY < y && currentPlayer === 'bad'){
                     if(!isKing){
-                        return this.props.updateNotice('This move is not allowed')
+                        if (this.state.singlePlayer===false) {
+                            this.props.updateNotice('This move is not allowed')
+                            return
+                        }
                     } 
                 };
+                
                 updatePieces[pieceIndex].x = x
                 updatePieces[pieceIndex].y = y
                 
@@ -432,11 +462,14 @@ class CheckerBoard extends Component {
         }   
     };
 
-    switchPlayer = async (input) => {
+    switchPlayer = async (input,newPieces,currentPlayer) => {
         switch (input) {
             case 'good':
                 this.setState({currentPlayer:'bad'})
                 this.props.updatePlayer({currentPlayer:"bad"})
+                
+                // AI(newPieces,this.checkPieceLocations)
+                
                 break;
             case 'bad':
                 this.setState({currentPlayer:'good'})
@@ -530,6 +563,15 @@ class CheckerBoard extends Component {
                     <Menu
                         newGame={this.newGame}
                     />
+                    <button
+                        style={{
+                            position:'absolute',
+                            left:'50%',
+                            bottom:'-70px',
+                            zIndex:'100'
+                        }}
+                        onClick={() => this.setState({singlePlayer:!this.state.singlePlayer})}
+                    >single player{this.state.singlePlayer ? ' on' : ' off'}</button>
                     {errorMessage && <ErrorMsg />}
                     <Rowz>
                         {mappedPieces}

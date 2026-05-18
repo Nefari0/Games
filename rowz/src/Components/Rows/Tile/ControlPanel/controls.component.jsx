@@ -21,7 +21,9 @@ export const Controller = (props) => {
         previousPiece,
     } = props
 
+    // --- prevents non-captureable moves from being available after an attack has already been made -- \\
     const selectionConstraint = (coords) => {
+        console.log('hitting constraint')
         if (activeLocation[2] !== undefined && previousPiece !== null) {
             if (currentPiece[0].id === previousPiece.id && moveOptions[0] !== undefined) {
                 if (coords[0] === x+1 && coords[1] === y-1) {
