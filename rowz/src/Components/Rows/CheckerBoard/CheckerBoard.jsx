@@ -11,8 +11,8 @@ import Piece from '../Tile/Piece/piece.component'
 import pieces from '../pieces'
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { AI } from './ai.logic'
-const client = new W3CWebSocket(`ws://127.0.0.1:8003`); // production
-// const client = new W3CWebSocket(`ws://165.227.102.189:8003`); // build
+// const client = new W3CWebSocket(`ws://127.0.0.1:8004`); // production
+const client = new W3CWebSocket(`ws://165.227.102.189:8004`); // build
 
 const upLeft = [-1,-1]
 const upRight = [1,-1]
