@@ -22,7 +22,7 @@ export const  menuStyling = css`
 `
 
 export const openMenu = css`
-    top:${-50 * (size.multiplier)}px;
+    // top:${-50 * (size.multiplier)}px;
 `
 
 export const boardPlacement = css`

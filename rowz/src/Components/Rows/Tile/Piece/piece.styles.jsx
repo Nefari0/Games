@@ -18,8 +18,9 @@ const Player = css`
     transition: opacity .2s linear;
     z-index: 3;
     pointer-events: none;
-    transform: rotateX(45deg);
-    // transform: rotateX(35deg);
+    transform:
+        rotateX(45deg)
+        rotateZ(${({boardRotation}) => boardRotation}deg);
 
     &:after{
         content: '';

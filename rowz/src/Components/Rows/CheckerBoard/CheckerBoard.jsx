@@ -37,7 +37,8 @@ class CheckerBoard extends Component {
             goodPieceCount:12,
             badPieceCount:12,
             clientId:null,
-            singlePlayer:false
+            singlePlayer:false,
+            boardRotation:180
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
@@ -553,31 +554,35 @@ class CheckerBoard extends Component {
                     items={el} 
                     activeLocation={activeLocation}
                     pieceClass={el.player}
+                    checkerBoardState={this.state}
                 />
             )
         });
 
         return(
-            <div>
-                <CheckerTable>
-                    <Menu
-                        newGame={this.newGame}
-                    />
-                    <button
-                        style={{
-                            position:'absolute',
-                            left:'50%',
-                            bottom:'-70px',
-                            zIndex:'100'
-                        }}
-                        onClick={() => this.setState({singlePlayer:!this.state.singlePlayer})}
-                    >single player{this.state.singlePlayer ? ' on' : ' off'}</button>
+            <div style={{pointerEvents:'auto'}}>
+                <Menu
+                    newGame={this.newGame}
+                />
+                <CheckerTable boardRotation={this.state.boardRotation}>
+                    
                     {errorMessage && <ErrorMsg />}
+                    {/* <ErrorMsg /> */}
                     <Rowz>
                         {mappedPieces}
                         {mappedMatrix}
                     </Rowz>
                 </CheckerTable>
+                    <button
+                        style={{
+                            position:'absolute',
+                            left:'50%',
+                            bottom:'-50px',
+                            zIndex:'100',
+                            // transform: 'rotate(180deg)'
+                        }}
+                        onClick={() => this.setState({singlePlayer:!this.state.singlePlayer})}
+                    >single player{this.state.singlePlayer ? ' on' : ' off'}</button>
             </div>
         );
     }

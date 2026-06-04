@@ -7,7 +7,8 @@ export const CheckerMenu = styled.header`
     position:absolute;
     height: ${50 * multiplier}px;
     width: ${350 * multiplier}px;
-    left:100px;
+    right:0px;
+    // bottom:100px;
     display:flex;
     justify-content:center;
     z-index:10;

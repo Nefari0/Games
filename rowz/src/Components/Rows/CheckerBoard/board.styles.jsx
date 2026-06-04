@@ -13,6 +13,7 @@ export const CheckerTable = styled.main`
     background-color: rgb(240, 240, 240);
     // background-color:red;
     // opacity:.5;
+    transform: rotate(${({boardRotation}) => boardRotation}deg);
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
