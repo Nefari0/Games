@@ -8,6 +8,7 @@ import { Menu } from '../Menu/menu.component'
 import React, { Component } from 'react'
 import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
+// import pieces from '../pieces'
 import pieces from '../pieces' // For production
 // import pieces from '../test_pieces' // Testing only
 import { w3cwebsocket as W3CWebSocket } from "websocket";
@@ -38,7 +39,7 @@ class CheckerBoard extends Component {
             goodPieceCount:12,
             badPieceCount:12,
             clientId:null,
-            singlePlayer:true,
+            singlePlayer:false,
             boardRotation:180
         }
         this.selectTile = this.selectTile.bind(this)
@@ -84,13 +85,12 @@ class CheckerBoard extends Component {
         client.onmessage = (message) => {
             const { currentGame } = this.props
             const dataFromServer = JSON.parse(message.data);
-            console.log(dataFromServer)
-            const { gameID,input,type,clienId } = dataFromServer
+            const { gameID,input,type } = dataFromServer
             if (type === 'ping') {
                 if (dataFromServer.clientId === this.state.clientId) {this.ping()}
             }
             
-            if (type === 'checkerTurn' && clienId === this.state.clientId ) {
+            if (type === 'checkerTurn' && gameID === currentGame ) {
                 // --- Save game on browsers --- //
                 this.saveGame(message.data)
                 // ----------------------- //
@@ -127,13 +127,11 @@ class CheckerBoard extends Component {
     sendToSocketsSwitch = (input) => {
         // this.kingAll()
         const { currentGame } = this.props
-        const { clientId } = this.state
         this.setState({activeLocation:[null,null]})
         var gameObject = {
             type:"checkerTurn",
             input,
-            gameID:currentGame,
-            clienId:clientId
+            gameID:currentGame
         }
         gameObject = JSON.stringify(gameObject)
         client.send(gameObject)
