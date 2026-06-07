@@ -84,7 +84,6 @@ class CheckerBoard extends Component {
         client.onmessage = (message) => {
             const { currentGame } = this.props
             const dataFromServer = JSON.parse(message.data);
-            console.log(dataFromServer)
             const { gameID,input,type,clienId } = dataFromServer
             if (type === 'ping') {
                 if (dataFromServer.clientId === this.state.clientId) {this.ping()}
