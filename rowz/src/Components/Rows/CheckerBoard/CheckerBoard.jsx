@@ -8,7 +8,9 @@ import { Menu } from '../Menu/menu.component'
 import React, { Component } from 'react'
 import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
-import pieces from '../pieces'
+// import pieces from '../pieces'
+import pieces from '../pieces' // For production
+// import pieces from '../test_pieces' // Testing only
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { AI } from './ai.logic'
 // const client = new W3CWebSocket(`ws://127.0.0.1:8004`); // production
