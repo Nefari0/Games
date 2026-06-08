@@ -585,7 +585,9 @@ class CheckerBoard extends Component {
                             // transform: 'rotate(180deg)'
                         }}
                         onClick={() => this.setState({singlePlayer:!this.state.singlePlayer})}
-                    >single player{this.state.singlePlayer ? ' on' : ' off'}</button>
+                    >
+                        single player{this.state.singlePlayer ? ' on' : ' off'}
+                    </button>
             </div>
         );
     }
