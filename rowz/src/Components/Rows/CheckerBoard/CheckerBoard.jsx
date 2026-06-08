@@ -5,6 +5,7 @@ import { ErrorMsg } from '../Error/error.component'
 import { attackLogic } from './attack.logic'
 import { CheckerTable,Rowz } from './board.styles'
 import { Menu } from '../Menu/menu.component'
+import { MultiPlayerOptions } from './SinglePlayerOptions/singleplayer.options.component'
 import React, { Component } from 'react'
 import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
@@ -576,18 +577,7 @@ class CheckerBoard extends Component {
                         {mappedMatrix}
                     </Rowz>
                 </CheckerTable>
-                    <button
-                        style={{
-                            position:'absolute',
-                            left:'50%',
-                            bottom:'-50px',
-                            zIndex:'100',
-                            // transform: 'rotate(180deg)'
-                        }}
-                        onClick={() => this.setState({singlePlayer:!this.state.singlePlayer})}
-                    >
-                        single player{this.state.singlePlayer ? ' on' : ' off'}
-                    </button>
+                    <MultiPlayerOptions state={this.state} handleInput={this.handleInput}/>
             </div>
         );
     }
