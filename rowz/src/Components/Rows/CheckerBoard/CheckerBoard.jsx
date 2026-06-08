@@ -84,7 +84,6 @@ class CheckerBoard extends Component {
         client.onmessage = (message) => {
             const { currentGame } = this.props
             const dataFromServer = JSON.parse(message.data);
-            console.log(dataFromServer)
             const { gameID,input,type,clienId } = dataFromServer
             if (type === 'ping') {
                 if (dataFromServer.clientId === this.state.clientId) {this.ping()}
@@ -586,7 +585,9 @@ class CheckerBoard extends Component {
                             // transform: 'rotate(180deg)'
                         }}
                         onClick={() => this.setState({singlePlayer:!this.state.singlePlayer})}
-                    >single player{this.state.singlePlayer ? ' on' : ' off'}</button>
+                    >
+                        single player{this.state.singlePlayer ? ' on' : ' off'}
+                    </button>
             </div>
         );
     }
