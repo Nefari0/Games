@@ -70,16 +70,38 @@ class CheckerBoard extends Component {
     checkURL = () => {
         const parts = window.location.pathname.split("/").filter(Boolean);
 
-        const [game, gameID, rotation] = parts;
-        console.log(game,gameID,rotation)
+        const game = parts[parts.indexOf('game')+1]
+        const gameID = parts[parts.indexOf("id")+1]
+        const rotation = (parts[parts.indexOf("rotation")+1])
+            
         if (game === "checkergame" && gameID) {
-                this.setState({
-                    clientId: gameID,
-                    boardRotation:rotation,
-                    singlePlayer:false,
-                });
-            }
-    }
+            this.setState({
+                clientId: gameID,
+                boardRotation: rotation,
+                singlePlayer: false,
+            });
+        }
+    };
+
+// checkURL = () => {
+//     const parts = window.location.pathname.split("/").filter(Boolean);
+//     console.log(parts)
+//     if (parts[0] !== "checkergame") return;
+
+//     const map = {};
+//     for (let i = 1; i < parts.length; i += 2) {
+//         map[parts[i]] = parts[i + 1];
+//     }
+
+
+//     if (map.id) {
+//         this.setState({
+//             clientId: map.id,
+//             boardRotation: map.rotation ?? 180,
+//             singlePlayer: false,
+//         });
+//     }
+// };
 
     getUniqueID = () => {
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -109,7 +131,6 @@ class CheckerBoard extends Component {
             
             if (type === 'checkerTurn' && clientId === this.state.clientId ) {
                 // --- Save game on browsers --- //
-                // this.saveGame(message.data)
                 this.saveGame(message.data)
                 // ----------------------- //
                 const { previousPiece,newPieces,currentPlayer,autoTurn } = input
@@ -219,6 +240,7 @@ class CheckerBoard extends Component {
                 })
             } else {
                 this.newGame()
+                // this.setState({pieces:pieces})
             }
         } catch (err) {
             return
@@ -228,23 +250,26 @@ class CheckerBoard extends Component {
     newGame = (singlePlayer) => {
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         const id = s4() + s4() + '-' + s4();
-        const game = `/checkergame/${id}/${180}`
-        // window.history.replaceState({}, "", "/");
+        window.history.replaceState({}, "", "/");
+        const game = `game/checkergame/id/${id}/rotation/180`
         window.history.replaceState({}, "", game);
         this.setState({
             pieces:pieces,
             clientId:id,
             boardRotation:180,
             singlePlayer:singlePlayer
+        },
+        () => {
+
+            this.saveGame('')
+            const gameObject = {
+                newPieces:pieces,
+                currentPlayer:this.state.currentPlayer,
+                clientId:id
+            }
+           
+            this.sendToSocketsSwitch(gameObject)
         })
-        this.saveGame('')
-        const gameObject = {
-            newPieces:pieces,
-            currentPlayer:this.state.currentPlayer,
-            clientId:id
-        }
-       
-        this.sendToSocketsSwitch(gameObject)
     }
 
     boardFactory = () => {

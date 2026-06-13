@@ -4,8 +4,9 @@ export const MultiPlayerOptions = ({state,handleInput}) => {
     const { singlePlayer,clientId } = state
 
     const copyInvite = () => {
-        navigator.clipboard.writeText(`${window.location.href.replace(/\d+$/, "0")}`)
-        handleInput('clientId',clientId)
+        // const currentUrl = 
+        navigator.clipboard.writeText(`${window.location.origin}/game/checkergame/id/${clientId}/rotation/0`)
+        handleInput('clientId',clientId) // Makes certain shared games will use same id
     }
 
     return (
