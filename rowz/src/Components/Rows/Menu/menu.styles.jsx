@@ -8,12 +8,9 @@ export const CheckerMenu = styled.header`
     height: ${50 * multiplier}px;
     width: ${350 * multiplier}px;
     right:0px;
-    // bottom:100px;
     display:flex;
     justify-content:center;
     z-index:10;
-    // transform: rotateX(-20deg) rotateY(10deg) rotateZ(0deg); 
-    // transform: rotateZ(-20deg); 
     
     button {
         margin:5px;
@@ -32,9 +29,14 @@ export const ConfirmNewGame = styled.div`
 
     button {
         z-index:1;
+        height:50px;
     }
 
-    ${menuStyling}
+    position:absolute;
+    min-height:100px;
+    width:100px;
+    display:flex;
+    flex-direction:column;
     
     // position:absolute;
     // height:100px;

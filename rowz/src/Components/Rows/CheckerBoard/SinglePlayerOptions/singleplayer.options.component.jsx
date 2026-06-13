@@ -10,7 +10,7 @@ export const MultiPlayerOptions = ({state,handleInput}) => {
 
     return (
         <PlayerOptions>
-            <button
+            {/* <button
                 style={{
                     position:'relative',
                     zIndex:'110',
@@ -18,7 +18,7 @@ export const MultiPlayerOptions = ({state,handleInput}) => {
                 onClick={() => handleInput('singlePlayer',!state.singlePlayer)}
             >
                 single player{singlePlayer ? ' on' : ' off'}
-            </button>
+            </button> */}
             {
                 !singlePlayer &&
                 <button onClick={() => copyInvite()}>invite</button>
