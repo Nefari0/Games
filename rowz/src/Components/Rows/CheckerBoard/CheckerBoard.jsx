@@ -23,6 +23,19 @@ const downLeft = [-1,1]
 const downRight = [1,1]
 const moves = [upLeft,upRight,downLeft,downRight]
 
+const toBool = (value, defaultValue = false) => {
+    if (value === true) return true;
+    if (value === false) return false;
+    if (typeof value !== "string") return defaultValue;
+
+    const v = value.toLowerCase().trim();
+
+    if (v === "true") return true;
+    if (v === "false") return false;
+
+    return defaultValue;
+};
+
 class CheckerBoard extends Component {
     constructor(props) {
         super(props)
@@ -67,41 +80,29 @@ class CheckerBoard extends Component {
         await this.loadGame()
     };
 
-    checkURL = () => {
-        const parts = window.location.pathname.split("/").filter(Boolean);
 
-        const game = parts[parts.indexOf('game')+1]
-        const gameID = parts[parts.indexOf("id")+1]
-        const rotation = (parts[parts.indexOf("rotation")+1])
-            
-        if (game === "checkergame" && gameID) {
-            this.setState({
-                clientId: gameID,
-                boardRotation: rotation,
-                singlePlayer: false,
-            });
+checkURL = () => {
+    const parts = window.location.pathname.split("/").filter(Boolean);
+
+    const params = {};
+
+    parts.forEach(part => {
+        const [key, value] = part.split("=");
+        if (key && value !== undefined) {
+            params[key] = value;
         }
-    };
+    });
 
-// checkURL = () => {
-//     const parts = window.location.pathname.split("/").filter(Boolean);
-//     console.log(parts)
-//     if (parts[0] !== "checkergame") return;
+    console.log(params)
 
-//     const map = {};
-//     for (let i = 1; i < parts.length; i += 2) {
-//         map[parts[i]] = parts[i + 1];
-//     }
-
-
-//     if (map.id) {
-//         this.setState({
-//             clientId: map.id,
-//             boardRotation: map.rotation ?? 180,
-//             singlePlayer: false,
-//         });
-//     }
-// };
+    if (params.game === "checkergame" && params.id) {
+        this.setState({
+            clientId: params.id,
+            boardRotation: Number(params.rotation ?? 180),
+            singlePlayer: toBool(params.singleplayer),
+        });
+    }
+};
 
     getUniqueID = () => {
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -251,7 +252,7 @@ class CheckerBoard extends Component {
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         const id = s4() + s4() + '-' + s4();
         window.history.replaceState({}, "", "/");
-        const game = `game/checkergame/id/${id}/rotation/180`
+        const game = `game=checkergame/id=${id}/rotation=180/singleplayer=${singlePlayer}`
         window.history.replaceState({}, "", game);
         this.setState({
             pieces:pieces,
