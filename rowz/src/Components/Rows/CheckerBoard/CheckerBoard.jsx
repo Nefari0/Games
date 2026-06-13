@@ -5,6 +5,7 @@ import { ErrorMsg } from '../Error/error.component'
 import { attackLogic } from './attack.logic'
 import { CheckerTable,Rowz } from './board.styles'
 import { Menu } from '../Menu/menu.component'
+import { MultiPlayerOptions } from './SinglePlayerOptions/singleplayer.options.component'
 import React, { Component } from 'react'
 import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
@@ -12,8 +13,8 @@ import pieces from '../pieces' // For production
 // import pieces from '../test_pieces' // Testing only
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { AI } from './ai.logic'
-// const client = new W3CWebSocket(`ws://127.0.0.1:8004`); // production
-const client = new W3CWebSocket(`ws://165.227.102.189:8004`); // build
+const client = new W3CWebSocket(`ws://127.0.0.1:8004`); // production
+// const client = new W3CWebSocket(`ws://165.227.102.189:8004`); // build
 // const singlePlayerClient = new W3CWebSocket(`ws://165.227.102.189:8000`)// build
 
 const upLeft = [-1,-1]
@@ -21,6 +22,19 @@ const upRight = [1,-1]
 const downLeft = [-1,1]
 const downRight = [1,1]
 const moves = [upLeft,upRight,downLeft,downRight]
+
+const toBool = (value, defaultValue = false) => {
+    if (value === true) return true;
+    if (value === false) return false;
+    if (typeof value !== "string") return defaultValue;
+
+    const v = value.toLowerCase().trim();
+
+    if (v === "true") return true;
+    if (v === "false") return false;
+
+    return defaultValue;
+};
 
 class CheckerBoard extends Component {
     constructor(props) {
@@ -37,7 +51,7 @@ class CheckerBoard extends Component {
             errorMessage:null,
             goodPieceCount:12,
             badPieceCount:12,
-            clientId:null,
+            clientId:null, // Used for gameID
             singlePlayer:true,
             boardRotation:180
         }
@@ -55,14 +69,40 @@ class CheckerBoard extends Component {
         this.kingAll = this.kingAll.bind(this)
         this.checkIfWinner = this.checkIfWinner.bind(this)
         this.ping = this.ping.bind(this)
+        this.checkURL = this.checkURL.bind(this)
     };
 
     async componentDidMount() {
-        await this.getUniqueID()
+        await this.checkURL()
+        // await this.getUniqueID()
         await this.boardFactory()
         await this.getConnected()
         await this.loadGame()
     };
+
+
+checkURL = () => {
+    const parts = window.location.pathname.split("/").filter(Boolean);
+
+    const params = {};
+
+    parts.forEach(part => {
+        const [key, value] = part.split("=");
+        if (key && value !== undefined) {
+            params[key] = value;
+        }
+    });
+
+    console.log(params)
+
+    if (params.game === "checkergame" && params.id) {
+        this.setState({
+            clientId: params.id,
+            boardRotation: Number(params.rotation ?? 180),
+            singlePlayer: toBool(params.singleplayer),
+        });
+    }
+};
 
     getUniqueID = () => {
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -79,17 +119,18 @@ class CheckerBoard extends Component {
         client.onopen = () => {
             console.log('GET CONNECTED')
             console.log('client connected')
-            if (this.state.clientId) {this.ping()}
+            // if (this.state.clientId) {this.ping()}
         }
         client.onmessage = (message) => {
             const { currentGame } = this.props
             const dataFromServer = JSON.parse(message.data);
-            const { gameID,input,type,clienId } = dataFromServer
-            if (type === 'ping') {
-                if (dataFromServer.clientId === this.state.clientId) {this.ping()}
-            }
+            const { gameID,input,type,clientId } = dataFromServer
             
-            if (type === 'checkerTurn' && clienId === this.state.clientId ) {
+            // if (type === 'ping') {
+            //     if (dataFromServer.clientId === this.state.clientId) {this.ping()}
+            // }
+            
+            if (type === 'checkerTurn' && clientId === this.state.clientId ) {
                 // --- Save game on browsers --- //
                 this.saveGame(message.data)
                 // ----------------------- //
@@ -102,7 +143,8 @@ class CheckerBoard extends Component {
                     previousPiece:previousPiece,
                     // currentPlayer:currentPlayer,
                     goodPieceCount:pieceCount('good'),
-                    badPieceCount:pieceCount('bad')
+                    badPieceCount:pieceCount('bad'),
+                    clientId:clientId
                 })
                 this.switchPlayer(currentPlayer,newPieces,currentPlayer)
                 this.checkIfWinner()
@@ -127,12 +169,14 @@ class CheckerBoard extends Component {
         // this.kingAll()
         const { currentGame } = this.props
         const { clientId } = this.state
-        this.setState({activeLocation:[null,null]})
+        this.setState({
+            activeLocation:[null,null],
+        })
         var gameObject = {
             type:"checkerTurn",
             input,
             gameID:currentGame,
-            clienId:clientId
+            clientId:clientId
         }
         gameObject = JSON.stringify(gameObject)
         client.send(gameObject)
@@ -144,7 +188,7 @@ class CheckerBoard extends Component {
         client.send(JSON.stringify(pingObject));
     }
 
-    // pong = () => {
+    // pong = () => { 
     //     // clearTimeout(300);
     //     this.ping()
 
@@ -175,16 +219,21 @@ class CheckerBoard extends Component {
     };
 
     saveGame = (items) => {
-            localStorage.setItem('savedGame',items)
+        localStorage.setItem('savedGame',items)
     }
 
     loadGame = () => {
         const pieces = localStorage.getItem('savedGame')
+        // console.log('load',pieces)
         try {
             if (pieces) {
                 const data = JSON.parse(pieces)
-                const { input } = data
-                const { currentPlayer,previousPiece } = input
+                const { 
+                    input,
+                    currentPlayer,
+                    previousPiece,
+                } = data
+                console.log(data)
                 this.switchPlayer(currentPlayer)
                 this.setState({
                     pieces:data.input.newPieces,
@@ -192,20 +241,36 @@ class CheckerBoard extends Component {
                 })
             } else {
                 this.newGame()
+                // this.setState({pieces:pieces})
             }
         } catch (err) {
             return
         }
     }
 
-    newGame = () => {
-        this.setState({pieces:pieces})
-        this.saveGame('')
-        const gameObject = {
-            newPieces:pieces,
-            currentPlayer:this.state.currentPlayer,
-        }
-        this.sendToSocketsSwitch(gameObject)
+    newGame = (singlePlayer) => {
+        const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+        const id = s4() + s4() + '-' + s4();
+        window.history.replaceState({}, "", "/");
+        const game = `game=checkergame/id=${id}/rotation=180/singleplayer=${singlePlayer}`
+        window.history.replaceState({}, "", game);
+        this.setState({
+            pieces:pieces,
+            clientId:id,
+            boardRotation:180,
+            singlePlayer:singlePlayer
+        },
+        () => {
+
+            this.saveGame('')
+            const gameObject = {
+                newPieces:pieces,
+                currentPlayer:this.state.currentPlayer,
+                clientId:id
+            }
+           
+            this.sendToSocketsSwitch(gameObject)
+        })
     }
 
     boardFactory = () => {
@@ -367,7 +432,8 @@ class CheckerBoard extends Component {
                     var sendInfo = {
                         newPieces:updatedPieces,
                         currentPlayer:this.state.currentPlayer,
-                        previousPiece:updatedPieces[pieceIndex]
+                        previousPiece:updatedPieces[pieceIndex],
+                        clientId:this.state.clientId
                     }
                     this.sendToSocketsSwitch(sendInfo)
                     return 
@@ -426,6 +492,7 @@ class CheckerBoard extends Component {
                     newPieces:updatePieces,
                     currentPlayer:this.state.currentPlayer,
                     previousPiece:updatePieces[pieceIndex],
+                    clientId:this.state.clientId
                 }
                 this.sendToSocketsSwitch(sendInfo)
             }
@@ -576,18 +643,7 @@ class CheckerBoard extends Component {
                         {mappedMatrix}
                     </Rowz>
                 </CheckerTable>
-                    <button
-                        style={{
-                            position:'absolute',
-                            left:'50%',
-                            bottom:'-50px',
-                            zIndex:'100',
-                            // transform: 'rotate(180deg)'
-                        }}
-                        onClick={() => this.setState({singlePlayer:!this.state.singlePlayer})}
-                    >
-                        single player{this.state.singlePlayer ? ' on' : ' off'}
-                    </button>
+                    <MultiPlayerOptions state={this.state} handleInput={this.handleInput}/>
             </div>
         );
     }

@@ -11,20 +11,28 @@ export const Menu = ({newGame}) => {
 
             {confirmNewGame && <ConfirmNewGame>
 
-                <h6>are you sure?</h6>
+                <h6>new game?</h6>
 
                 <button 
                     onClick={() => {
-                        newGame()
+                        newGame(true)
                         setConfirmNewGame(!confirmNewGame)}
                     }
-                    >yes
+                    >one player
+                </button>
+
+                <button 
+                    onClick={() => {
+                        newGame(false)
+                        setConfirmNewGame(!confirmNewGame)}
+                    }
+                    >two player
                 </button>
                     
                 
                 <button
                     onClick={() => setConfirmNewGame(!confirmNewGame)}
-                    >no
+                    >cancel
                 </button>
 
             </ConfirmNewGame>}
