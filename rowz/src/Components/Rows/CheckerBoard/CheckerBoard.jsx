@@ -73,7 +73,7 @@ class CheckerBoard extends Component {
     };
 
     async componentDidMount() {
-        await this.checkURL()
+        // await this.checkURL()
         // await this.getUniqueID()
         await this.boardFactory()
         await this.getConnected()
