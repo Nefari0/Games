@@ -82,10 +82,10 @@ class CheckerBoard extends Component {
 
 
 checkURL = () => {
-    const parts = window.location.pathname.split("/").filter(Boolean);
+    const parts = window.location.hash.split("/").filter(Boolean);
 
     const params = {};
-
+    console.log(window.location.hash)
     parts.forEach(part => {
         const [key, value] = part.split("=");
         if (key && value !== undefined) {
@@ -252,7 +252,7 @@ checkURL = () => {
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
         const id = s4() + s4() + '-' + s4();
         window.history.replaceState({}, "", "/");
-        const game = `game=checkergame/id=${id}/rotation=180/singleplayer=${singlePlayer}`
+        const game = `#/game=checkergame/id=${id}/rotation=180/singleplayer=${singlePlayer}`
         window.history.replaceState({}, "", game);
         this.setState({
             pieces:pieces,
