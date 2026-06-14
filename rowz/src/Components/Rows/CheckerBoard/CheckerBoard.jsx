@@ -240,7 +240,7 @@ checkURL = () => {
                     previousPiece:previousPiece,
                 })
             } else {
-                this.newGame()
+                this.newGame(true)
                 // this.setState({pieces:pieces})
             }
         } catch (err) {
