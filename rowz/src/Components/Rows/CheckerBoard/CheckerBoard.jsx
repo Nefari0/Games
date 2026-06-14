@@ -223,10 +223,12 @@ checkURL = () => {
     }
 
     loadGame = () => {
+
         const pieces = localStorage.getItem('savedGame')
-        // console.log('load',pieces)
+        console.log('load',pieces)
+
         try {
-            if (pieces) {
+            if (pieces && pieces.length > 0) {
                 const data = JSON.parse(pieces)
                 const { 
                     input,
@@ -254,23 +256,21 @@ checkURL = () => {
         window.history.replaceState({}, "", "/");
         const game = `#/game=checkergame/id=${id}/rotation=180/singleplayer=${singlePlayer}`
         window.history.replaceState({}, "", game);
+        this.saveGame('')
         this.setState({
             pieces:pieces,
             clientId:id,
             boardRotation:180,
             singlePlayer:singlePlayer
-        },
-        () => {
-
-            this.saveGame('')
-            const gameObject = {
-                newPieces:pieces,
-                currentPlayer:this.state.currentPlayer,
-                clientId:id
-            }
-           
-            this.sendToSocketsSwitch(gameObject)
         })
+
+        const gameObject = {
+            newPieces:pieces,
+            currentPlayer:this.state.currentPlayer,
+            clientId:id
+        }
+       
+        this.sendToSocketsSwitch(gameObject)
     }
 
     boardFactory = () => {
