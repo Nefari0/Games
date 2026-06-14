@@ -225,7 +225,6 @@ checkURL = () => {
     loadGame = () => {
 
         const pieces = localStorage.getItem('savedGame')
-        console.log('load',pieces)
 
         try {
             if (pieces && pieces.length > 0) {
