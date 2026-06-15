@@ -81,28 +81,28 @@ class CheckerBoard extends Component {
     };
 
 
-checkURL = () => {
-    const parts = window.location.hash.split("/").filter(Boolean);
+    checkURL = () => {
+        const parts = window.location.hash.split("/").filter(Boolean);
 
-    const params = {};
-    console.log(window.location.hash)
-    parts.forEach(part => {
-        const [key, value] = part.split("=");
-        if (key && value !== undefined) {
-            params[key] = value;
-        }
-    });
-
-    console.log(params)
-
-    if (params.game === "checkergame" && params.id) {
-        this.setState({
-            clientId: params.id,
-            boardRotation: Number(params.rotation ?? 180),
-            singlePlayer: toBool(params.singleplayer),
+        const params = {};
+        console.log(window.location.hash)
+        parts.forEach(part => {
+            const [key, value] = part.split("=");
+            if (key && value !== undefined) {
+                params[key] = value;
+            }
         });
-    }
-};
+
+        console.log(params)
+
+        if (params.game === "checkergame" && params.id) {
+            this.setState({
+                clientId: params.id,
+                boardRotation: Number(params.rotation ?? 180),
+                singlePlayer: toBool(params.singleplayer),
+            });
+        }
+    };
 
     getUniqueID = () => {
         const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
@@ -263,16 +263,18 @@ checkURL = () => {
         }
 
         this.saveGame('')
-        this.setState({
-            pieces:pieces,
-            clientId:gameObject.clientId,
-            boardRotation:180,
-            singlePlayer:singlePlayer
-        })
+        this.setState(
+            {
+                pieces:pieces,
+                clientId:gameObject.clientId,
+                boardRotation:180,
+                singlePlayer:singlePlayer
+            },
+            () => {
+                this.sendToSocketsSwitch(gameObject)
+            }
+        )
 
-
-       
-        this.sendToSocketsSwitch(gameObject)
     }
 
     boardFactory = () => {
