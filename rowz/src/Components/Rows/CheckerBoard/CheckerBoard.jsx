@@ -255,19 +255,22 @@ checkURL = () => {
         window.history.replaceState({}, "", "/");
         const game = `#/game=checkergame/id=${id}/rotation=180/singleplayer=${singlePlayer}`
         window.history.replaceState({}, "", game);
-        this.saveGame('')
-        this.setState({
-            pieces:pieces,
-            clientId:id,
-            boardRotation:180,
-            singlePlayer:singlePlayer
-        })
 
         const gameObject = {
             newPieces:pieces,
             currentPlayer:this.state.currentPlayer,
             clientId:id
         }
+
+        this.saveGame('')
+        this.setState({
+            pieces:pieces,
+            clientId:gameObject.clientId,
+            boardRotation:180,
+            singlePlayer:singlePlayer
+        })
+
+
        
         this.sendToSocketsSwitch(gameObject)
     }
