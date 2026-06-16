@@ -11,6 +11,7 @@ import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
 import pieces from '../pieces' // For production
 // import pieces from '../test_pieces' // Testing only
+import defaultPieces from '../pieces' // In care there are mutated pieces in original pieces import
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { AI } from './ai.logic'
 // const client = new W3CWebSocket(`ws://127.0.0.1:8004`); // production
@@ -104,16 +105,16 @@ class CheckerBoard extends Component {
         }
     };
 
-    getUniqueID = () => {
-        const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
-        const id = s4() + s4() + '-' + s4();
-        if (!this.state.clientId) {
-            this.setState({
-                clientId:id
-            })
-        }
-        return 
-    };
+    // getUniqueID = () => {
+    //     const s4 = () => Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    //     const id = s4() + s4() + '-' + s4();
+    //     if (!this.state.clientId) {
+    //         this.setState({
+    //             clientId:id
+    //         })
+    //     }
+    //     return 
+    // };
 
     getConnected = () => {
         client.onopen = () => {
@@ -256,25 +257,35 @@ class CheckerBoard extends Component {
         const game = `#/game=checkergame/id=${id}/rotation=180/singleplayer=${singlePlayer}`
         window.history.replaceState({}, "", game);
 
-        const gameObject = {
+        const createNewBoard = () =>
+            defaultPieces.map(piece => ({
+                ...piece
+            }));
+
+        const input = {
             newPieces:pieces,
-            currentPlayer:this.state.currentPlayer,
+            currentPlayer:'good',
             clientId:id
         }
 
-        this.saveGame('')
+        const saveGame = {
+            input:input,
+            type:'checkerTurn',
+            clientId:id
+        }
+
+        this.saveGame(JSON.stringify(saveGame))
+        // this.saveGame('')
         this.setState(
             {
-                pieces:pieces,
-                clientId:gameObject.clientId,
+                pieces:createNewBoard(),
+                clientId:id,
                 boardRotation:180,
-                singlePlayer:singlePlayer
-            },
-            () => {
-                this.sendToSocketsSwitch(gameObject)
+                singlePlayer:singlePlayer,
+                activeLocation:[null,null],
+                currentPlayer:'good',
             }
         )
-
     }
 
     boardFactory = () => {
@@ -441,7 +452,7 @@ class CheckerBoard extends Component {
                     }
                     this.sendToSocketsSwitch(sendInfo)
                     return 
-                    } else {return}
+                } else {return}
             }
         }
         return await this.executeMovePiece(x,y,id,currentPlayer,isKing,score) 
