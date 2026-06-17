@@ -9,7 +9,7 @@ export const MultiPlayerOptions = ({state,handleInput}) => {
     // }
 
     const copyInvite = () => {
-        const text = `${window.location.origin}/#/game=checkergame/id=${clientId}/rotation=0/singleplayer=${state.singlePlayer}`;
+        const text = `${window.location.origin}/#/game=checkergame/id=${clientId}/rotation=0/singleplayer=${state.singlePlayer}/invite=true`;
 
         // Modern clipboard (works on localhost + HTTPS)
         if (navigator.clipboard && window.isSecureContext) {

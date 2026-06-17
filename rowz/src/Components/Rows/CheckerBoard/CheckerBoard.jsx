@@ -81,13 +81,16 @@ class CheckerBoard extends Component {
         // await this.getUniqueID()
         await this.boardFactory()
         await this.getConnected()
-        await this.loadGame()
+        // await this.loadGame()
     };
 
 
     checkURL = () => {
+        const createNewBoard = () =>
+            defaultPieces.map(piece => ({
+                ...piece
+        }));
         const parts = window.location.hash.split("/").filter(Boolean);
-
         const params = {};
         console.log(window.location.hash)
         parts.forEach(part => {
@@ -106,6 +109,13 @@ class CheckerBoard extends Component {
                 singlePlayer: toBool(params.singleplayer),
             });
         }
+
+        if (toBool(params.invite)) {
+            this.setState({
+                pieces:createNewBoard()
+            })
+            window.history.replaceState({}, "", window.location.hash.replace("/invite=true", ""));
+        } else {this.loadGame()}
     };
 
     // getUniqueID = () => {
