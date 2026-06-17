@@ -11,7 +11,6 @@ export const CheckerTable = styled.main`
     width: ${dimensions*multiplier}px;
     padding-top:10px;
     background-color: rgb(240, 240, 240);
-    // background-color:red;
     // opacity:.5;
     transform: rotate(${({boardRotation}) => boardRotation}deg);
     display: flex;
@@ -24,6 +23,7 @@ export const CheckerTable = styled.main`
     box-shadow: 0px 5px 20px -17px #000000;
     z-index: 0;
     pointer-events:auto;
+    left:20px;
     // -webkit-transform-style: preserve-3d;
 `
 

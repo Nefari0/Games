@@ -14,8 +14,8 @@ import pieces from '../pieces' // For production
 import defaultPieces from '../pieces' // In care there are mutated pieces in original pieces import
 import { w3cwebsocket as W3CWebSocket } from "websocket";
 import { AI } from './ai.logic'
-// const client = new W3CWebSocket(`ws://127.0.0.1:8004`); // production
-const client = new W3CWebSocket(`ws://165.227.102.189:8004`); // build
+const client = new W3CWebSocket(`ws://127.0.0.1:8004`); // production
+// const client = new W3CWebSocket(`ws://165.227.102.189:8004`); // build
 // const singlePlayerClient = new W3CWebSocket(`ws://165.227.102.189:8000`)// build
 
 const upLeft = [-1,-1]
@@ -54,7 +54,10 @@ class CheckerBoard extends Component {
             badPieceCount:12,
             clientId:null, // Used for gameID
             singlePlayer:true,
-            boardRotation:180
+            boardRotation:180,
+            // Captured piece x placement
+            goodCapturedPieceIndex:7,
+            badCapturedPieceIndex:0,
         }
         this.selectTile = this.selectTile.bind(this)
         this.boardFactory = this.boardFactory.bind(this)
@@ -284,6 +287,8 @@ class CheckerBoard extends Component {
                 singlePlayer:singlePlayer,
                 activeLocation:[null,null],
                 currentPlayer:'good',
+                goodCapturedPieceIndex:7,
+                badCapturedPieceIndex:0,
             }
         )
     }
@@ -522,7 +527,20 @@ class CheckerBoard extends Component {
         // var pieceIndex = pieces.findIndex((el) => el.id === id)
         var pieceId = await this.checkPieceLocations(enemyX,enemyY).id
         var killIndex = pieces.findIndex((el) => el.id === pieceId)
-        updatedPieces.splice(killIndex,1)
+        // updatedPieces.splice(killIndex,1)
+        if(updatedPieces[killIndex].player==='bad') {
+            updatedPieces[killIndex].x=8
+            updatedPieces[killIndex].y=this.state.badCapturedPieceIndex
+            updatedPieces[killIndex].isInGame=false
+            this.setState({badCapturedPieceIndex:this.state.badCapturedPieceIndex+.5})
+        } else {
+            // updatedPieces[killIndex].y=-3
+            // updatedPieces[killIndex].x=this.state.goodCapturedPieceIndex
+            updatedPieces[killIndex].x=-1
+            updatedPieces[killIndex].y=this.state.goodCapturedPieceIndex
+            updatedPieces[killIndex].isInGame=false
+            this.setState({goodCapturedPieceIndex:this.state.goodCapturedPieceIndex-.5})
+        }
         
         return updatedPieces
     }
@@ -581,10 +599,16 @@ class CheckerBoard extends Component {
         this.handleInput('activeLocation',[null,null])
     };
 
+    // checkIfWinner = () => {
+    //     const { goodPieceCount,badPieceCount } = this.state
+    //     const good = goodPieceCount === 0
+    //     const bad = badPieceCount === 0
+    //     if (good || bad) {this.props.updateNotice((bad ? `black` : `white`)+' wins!')}
+    // }
+
     checkIfWinner = () => {
-        const { goodPieceCount,badPieceCount } = this.state
-        const good = goodPieceCount === 0
-        const bad = badPieceCount === 0
+        const good = this.state.pieces.filter((el) => el.player==='good').every(piece => piece.isInGame===false)
+        const bad = this.state.pieces.filter((el) => el.player==='bad').every(piece => piece.isInGame===false)
         if (good || bad) {this.props.updateNotice((bad ? `black` : `white`)+' wins!')}
     }
 
@@ -658,7 +682,7 @@ class CheckerBoard extends Component {
                         {mappedMatrix}
                     </Rowz>
                 </CheckerTable>
-                    <MultiPlayerOptions state={this.state} handleInput={this.handleInput}/>
+                <MultiPlayerOptions state={this.state} handleInput={this.handleInput}/>
             </div>
         );
     }
