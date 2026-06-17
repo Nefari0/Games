@@ -524,18 +524,14 @@ class CheckerBoard extends Component {
     killPiece = async (enemyX,enemyY,id) => {
         const { pieces } = this.state
         var updatedPieces = [...pieces]
-        // var pieceIndex = pieces.findIndex((el) => el.id === id)
         var pieceId = await this.checkPieceLocations(enemyX,enemyY).id
         var killIndex = pieces.findIndex((el) => el.id === pieceId)
-        // updatedPieces.splice(killIndex,1)
         if(updatedPieces[killIndex].player==='bad') {
             updatedPieces[killIndex].x=8
             updatedPieces[killIndex].y=this.state.badCapturedPieceIndex
             updatedPieces[killIndex].isInGame=false
             this.setState({badCapturedPieceIndex:this.state.badCapturedPieceIndex+.5})
         } else {
-            // updatedPieces[killIndex].y=-3
-            // updatedPieces[killIndex].x=this.state.goodCapturedPieceIndex
             updatedPieces[killIndex].x=-1
             updatedPieces[killIndex].y=this.state.goodCapturedPieceIndex
             updatedPieces[killIndex].isInGame=false
