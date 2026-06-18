@@ -5,7 +5,7 @@ export const AI = (board,checkPieceLocations,setMoves,state) => {
     var availableMoves = []
 
     board.forEach(piece => {
-        if (piece.player === 'bad') {
+        if (piece.player === 'bad' && piece.isInGame === true) {
             availableMoves.push(initialMoves(piece,board,checkPieceLocations,setMoves,matrix))
         }
     });
