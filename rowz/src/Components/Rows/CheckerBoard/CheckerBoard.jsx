@@ -151,7 +151,7 @@ class CheckerBoard extends Component {
                 const { previousPiece,newPieces,currentPlayer,autoTurn } = input
                 const pieceCount = (player) => newPieces.filter((el) => el.player === player).length
 
-                newPieces.forEach(el => el.pendingDeath = false)
+                newPieces.forEach(el => {if(el.isInGame===true) {el.pendingDeath = false}})
                 this.setState({
                     pieces:newPieces,
                     previousPiece:previousPiece,
@@ -341,7 +341,7 @@ class CheckerBoard extends Component {
 
     mandatoryAttack = async () => {
         const { pieces,currentPlayer } = this.state
-        pieces.forEach(el => el.pendingDeath = false)
+        pieces.forEach(el => {if(el.isInGame===true) {el.pendingDeath = false}})
         var currentPieces = pieces.filter((el) => el.player === currentPlayer)
         var enemyPieces = pieces.filter((el) => el.player !== currentPlayer)
 
@@ -410,6 +410,7 @@ class CheckerBoard extends Component {
     }
 
     setMoves = async (x,y,currentPiece,score) => { // gets all move options based on active location
+        if(currentPiece.isInGame===false) {return}
         const { matrix,pieces,currentPlayer } = this.state
         const { isKing,id } = currentPiece[0]
         var pieceIndex = pieces.findIndex((el) => el.id === id)
@@ -540,12 +541,17 @@ class CheckerBoard extends Component {
             updatedPieces[killIndex].x=8
             updatedPieces[killIndex].y=this.state.badCapturedPieceIndex
             updatedPieces[killIndex].isInGame=false
-            this.setState({badCapturedPieceIndex:this.state.badCapturedPieceIndex+.5})
+            updatedPieces[killIndex].pendingDeath=true
+            updatedPieces[killIndex].isKing=false
+            
+            this.setState({badCapturedPieceIndex:this.state.badCapturedPieceIndex+.501})
         } else {
             updatedPieces[killIndex].x=-1
             updatedPieces[killIndex].y=this.state.goodCapturedPieceIndex
             updatedPieces[killIndex].isInGame=false
-            this.setState({goodCapturedPieceIndex:this.state.goodCapturedPieceIndex-.5})
+            updatedPieces[killIndex].pendingDeath=true
+            updatedPieces[killIndex].isKing=false
+            this.setState({goodCapturedPieceIndex:this.state.goodCapturedPieceIndex-.501})
         }
         
         return updatedPieces
