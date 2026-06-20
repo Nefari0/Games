@@ -17,9 +17,12 @@ const getPieceClass = (pieceClass = PIECE_CLASSES.good) =>
     [PIECE_CLASSES.bad]:BadPlayer 
  }[pieceClass]);
 
- const Piece = ({items,activeLocation,checkerBoardState}) => {    
+ const Piece = ({items,activeLocation,checkerBoardState,props}) => {    
+
+    const { goodPieceColor } = props.platformState
 
     const {isKing,player,x,y,pendingDeath} = items
+
     const { boardRotation } = checkerBoardState
     
     const PieceClass = getPieceClass(player)
@@ -33,7 +36,7 @@ const getPieceClass = (pieceClass = PIECE_CLASSES.good) =>
 
     return (
         <div style={engine}>
-            <PieceClass boardRotation={boardRotation}>
+            <PieceClass boardRotation={boardRotation} goodPieceColor={goodPieceColor}>
                 {pendingDeath && SadFace()}
                 {isKing && <Crown />}
                 {isKing && !pendingDeath && SmileFace()}

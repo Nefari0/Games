@@ -9,6 +9,8 @@ const Player = css`
     width: ${35 * multiplier}px;
     border-radius: 50%;
     background-color:#555;
+    ${({goodPieceColor}) => goodPieceColor}
+    ${({goodPieceColor}) => console.log(goodPieceColor)}
     // background: linear-gradient(0turn,#555,rgb(143, 143, 143));
     
     box-shadow: rgba(143, 143, 143, 1) 0px 3px, rgba(143, 143, 143, 1) 0px 4px, rgba(0, 0, 0, 1) 0px 4.5px;
