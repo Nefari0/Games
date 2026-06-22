@@ -15,16 +15,21 @@ import {
   } from "./platform.styles";
   import CurrentPlayer from '../Rows/TurnIndicator/current.component';
   import CheckerBoard from "../Rows/CheckerBoard/CheckerBoard";
+  import { colors } from '../rowz.plugin';
+
+  const { baseColor,secondaryColor,badPieceDefaultColor,goodPieceDefaultColor } = colors
   
   const GameBoard = ({state,currentPlayer}) => {
     const { yRotation, xRotation, currentIndex } = state;
 
     const [platformState,setPlatformState] = useState({
-      goodPieceColor:'background-color: rgb(255 255 128);'
+      goodPieceColor:`background-color: ${goodPieceDefaultColor};`,
+      badPieceColor:`background-color: ${badPieceDefaultColor};`,
+      colorPickerOpen:false,
+      editItem:'badPieceColor', // Current items that's being edited
     })
 
     const stateHandler = (prop,val) => {
-      console.log('hitting handler',prop,val)
       setPlatformState({
         ...platformState,
         [prop]:val
@@ -36,9 +41,9 @@ import {
       <CubeContainer>
         <Cube xRotatuin={xRotation} yRotation={yRotation}>
             <Top>
-               <ColorPicker stateHandler={stateHandler}/>
                 {/* top */}
-                <DarkOverLay>
+                <DarkOverLay colorPickerOpen={platformState.colorPickerOpen}>
+               <ColorPicker stateHandler={stateHandler} platformState={platformState}/>
                   <CurrentPlayer 
                     currentPlayer={currentPlayer.currentPlayer.currentPlayer}
                   />
