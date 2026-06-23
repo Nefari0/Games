@@ -7,8 +7,8 @@ export const colors = {
     tertiary:'#FFF6EF',
     dark:'#B88571',
     backgroundColor:'#BCA6AA',
-    badPieceDefaultColor:'hsl(0, 0%, 33.33%)',
-    goodPieceDefaultColor:'hsl(0, 0%, 100%)',
+    badPieceDefaultColor:'hsl(0, 0%, 100%)',
+    goodPieceDefaultColor:'hsl(0, 0%, 33.33%)',
 
 }
 

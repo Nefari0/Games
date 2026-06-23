@@ -1,28 +1,29 @@
-import { ColorPickerContainer,EditOptions } from "./colorpicker.styles";
+import { ColorPickerContainer } from "./colorpicker.styles";
+import { EditOptions } from "./editoptions.component";
 import { GoodPlayer,BadPlayer } from "../Tile/Piece/piece.styles";
 import Piece from "../Tile/Piece/piece.component";
 import { TileStyles } from "../Tile/tile.styles";
 import { size } from "../../rowz.plugin";
 
-const goodPieceSample = {
-    id:1,
-    player:'good',
-    x:0,
-    y:-.1,
-    isInGame:true,
-    isKing:false,
-    pendingDeath:false,
-}
+// const goodPieceSample = {
+//     id:1,
+//     player:'good',
+//     x:0,
+//     y:-.1,
+//     isInGame:true,
+//     isKing:false,
+//     pendingDeath:false,
+// }
 
-const badPieceSample = {
-    id:1,
-    player:'bad',
-    x:0,
-    y:-.1,
-    isInGame:true,
-    isKing:false,
-    pendingDeath:false,
-}
+// const badPieceSample = {
+//     id:1,
+//     player:'bad',
+//     x:0,
+//     y:-.1,
+//     isInGame:true,
+//     isKing:false,
+//     pendingDeath:false,
+// }
 
 export const ColorPicker = (props) => {
 
@@ -61,8 +62,8 @@ export const ColorPicker = (props) => {
     
     return (
         <ColorPickerContainer colorPickerOpen={platformState.colorPickerOpen}>
-
-            <EditOptions>
+            {/* <EditOptions /> */}
+            {/* <EditOptions>
 
                 <button
                     style={{
@@ -99,10 +100,10 @@ export const ColorPicker = (props) => {
                     />
                 </button>
 
-            </EditOptions>
+            </EditOptions> */}
 
             {M}
-            
+
         </ColorPickerContainer>
     )
 }

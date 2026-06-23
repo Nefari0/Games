@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 
 export const ColorPickerContainer = styled.div`
     min-width:${300}px;
-    background-color:yellow;
+    // background-color:yellow;
     bottom:50px;
     left:80px;
     position:absolute;
@@ -15,8 +15,6 @@ const overlayActive = css`
     top:-90px;
     transition: all 1000ms;
     -webkit-transform: rotateX(-40deg) translateZ(150px);
-
-    @{}
 `
 export const DarkOverLay = styled.div`
     width:100%;
@@ -28,10 +26,25 @@ export const DarkOverLay = styled.div`
     ${({colorPickerOpen}) => colorPickerOpen && overlayActive}
 `
 
-export const EditOptions = styled.div`
+const notSelectedButton = css`
+    opacity:.5;
+`
+export const EditOptionsContainer = styled.div`
+    position:absolute;
     width:300px;
     height:50px;
     background-color:green;
-    position:absolute;
-    top:-55px;
-`
+    top:435px;
+    right:75px;
+    pointer-events:auto;
+    display:flex;
+
+    button {
+        background-color:white;
+        position:absolute;
+        // margin-left:50px;
+        width:50px;
+        height:50px;
+        }
+        `
+        // ${({name,editItem}) => name != editItem && notSelectedButton}

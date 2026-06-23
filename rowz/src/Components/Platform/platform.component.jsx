@@ -16,6 +16,7 @@ import {
   import CurrentPlayer from '../Rows/TurnIndicator/current.component';
   import CheckerBoard from "../Rows/CheckerBoard/CheckerBoard";
   import { colors } from '../rowz.plugin';
+  import { EditOptions } from '../Rows/ColorPicker/editoptions.component';
 
   const { baseColor,secondaryColor,badPieceDefaultColor,goodPieceDefaultColor } = colors
   
@@ -30,6 +31,7 @@ import {
     })
 
     const stateHandler = (prop,val) => {
+      console.log('hitting handler')
       setPlatformState({
         ...platformState,
         [prop]:val
@@ -43,7 +45,11 @@ import {
             <Top>
                 {/* top */}
                 <DarkOverLay colorPickerOpen={platformState.colorPickerOpen}>
-               <ColorPicker stateHandler={stateHandler} platformState={platformState}/>
+                  <EditOptions
+                    platformState={platformState}
+                    stateHandler={stateHandler}
+                   />
+                  <ColorPicker stateHandler={stateHandler} platformState={platformState}/>
                   <CurrentPlayer 
                     currentPlayer={currentPlayer.currentPlayer.currentPlayer}
                   />
