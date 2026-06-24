@@ -6,7 +6,10 @@ export const colors = {
     secondaryColor:'#FF8B5C',//coral
     tertiary:'#FFF6EF',
     dark:'#B88571',
-    backgroundColor:'#BCA6AA'
+    backgroundColor:'#BCA6AA',
+    badPieceDefaultColor:'hsl(0, 0%, 100%)',
+    goodPieceDefaultColor:'hsl(0, 0%, 33.33%)',
+
 }
 
 export const size  = {

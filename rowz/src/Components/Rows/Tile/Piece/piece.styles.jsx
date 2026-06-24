@@ -9,6 +9,7 @@ const Player = css`
     width: ${35 * multiplier}px;
     border-radius: 50%;
     background-color:#555;
+    ${({goodPieceColor}) => goodPieceColor}
     // background: linear-gradient(0turn,#555,rgb(143, 143, 143));
     
     box-shadow: rgba(143, 143, 143, 1) 0px 3px, rgba(143, 143, 143, 1) 0px 4px, rgba(0, 0, 0, 1) 0px 4.5px;
@@ -33,6 +34,7 @@ const Player = css`
         border-radius: 50%;
         box-shadow: inset -9px -5px 9px rgba(255,255,255,0.25), inset 5px 5px 19px rgba(94,104,121,0.6);
       }
+    transition:all 1000ms;
 `
 
 export const GoodPlayer = styled.div`
@@ -47,6 +49,7 @@ export const BadPlayer = styled(GoodPlayer)`
     svg {color:#555}
 
     box-shadow: rgba(143, 143, 143, 1) 0px 3px, rgba(143, 143, 143, 1) 0px 4px, rgba(0, 0, 0, 1) 0px 4.5px;
+    ${({badPieceColor}) => badPieceColor}
 
     &:after{
         box-shadow: inset -9px -5px 9px rgba(255,255,255,0.15), inset 5px 5px 19px rgba(94,104,121,0.6);

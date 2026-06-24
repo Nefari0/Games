@@ -6,6 +6,7 @@ import { attackLogic } from './attack.logic'
 import { CheckerTable,Rowz } from './board.styles'
 import { Menu } from '../Menu/menu.component'
 import { MultiPlayerOptions } from './SinglePlayerOptions/singleplayer.options.component'
+import { ColorPicker } from '../ColorPicker/colorpicker.component'
 import React, { Component } from 'react'
 import Tile from '../Tile/tile.component'
 import Piece from '../Tile/Piece/piece.component'
@@ -92,15 +93,12 @@ class CheckerBoard extends Component {
         }));
         const parts = window.location.hash.split("/").filter(Boolean);
         const params = {};
-        console.log(window.location.hash)
         parts.forEach(part => {
             const [key, value] = part.split("=");
             if (key && value !== undefined) {
                 params[key] = value;
             }
         });
-
-        console.log(params)
 
         if (params.game === "checkergame" && params.id) {
             this.setState({
@@ -248,7 +246,6 @@ class CheckerBoard extends Component {
                     currentPlayer,
                     previousPiece,
                 } = data
-                console.log(data)
                 this.switchPlayer(currentPlayer)
                 this.setState({
                     pieces:data.input.newPieces,
@@ -676,6 +673,7 @@ class CheckerBoard extends Component {
                     activeLocation={activeLocation}
                     pieceClass={el.player}
                     checkerBoardState={this.state}
+                    props={this.props}
                 />
             )
         });

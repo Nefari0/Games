@@ -31,7 +31,7 @@ export const TileStyles = styled.div`
     position: relative;
     height: ${40 * multiplier}px;
     width: ${40 * multiplier}px;
-    background-color: coral;
+    // background-color: coral;
     background-color:${({color}) => (color === -1 ? `${secondaryColor}` : `${baseColor}`)};
     ${({color}) => tileColor(color === -1)}
     margin: ${1 * multiplier}px;
