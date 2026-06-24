@@ -34,6 +34,7 @@ const Player = css`
         border-radius: 50%;
         box-shadow: inset -9px -5px 9px rgba(255,255,255,0.25), inset 5px 5px 19px rgba(94,104,121,0.6);
       }
+    transition:all 1000ms;
 `
 
 export const GoodPlayer = styled.div`

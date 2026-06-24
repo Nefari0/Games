@@ -1,11 +1,12 @@
 import { EditOptionsContainer } from "./colorpicker.styles";
 import Piece from "../Tile/Piece/piece.component";
+import { CloseButton } from "../Tile/Piece/SVG";
+import { CloseController } from "../Tile/ControlPanel/controls.styles";
 
 export const EditOptions = (props) => {
 
     const {platformState,stateHandler} = props
-    const {editItem} = platformState
-    console.log(platformState.editItem)
+    const {editItem,colorPickerOpen} = platformState
 
     const goodPieceSample = {
         id:1,
@@ -28,18 +29,17 @@ export const EditOptions = (props) => {
     }
 
     return (
-        <EditOptionsContainer>
+        <EditOptionsContainer colorPickerOpen={colorPickerOpen}>
 
             <button
                 style={{
-                    // position:'absolute',
+                    opacity:`${editItem==='goodPieceColor' ? 1 : .8}`,
+                    transform: `scale(${editItem==='goodPieceColor' ? 1:.8})`,
+                    transition: "all 1000ms",
                     left:`${50}px`,
-                    // width:'50px',
-                    // height:'50px',
                 }}
                 onClick={() => stateHandler(`editItem`,'goodPieceColor')}
                 name={'goodPieceColor'}
-                editItem={editItem}
             >
                 <Piece
                     key={1}
@@ -51,14 +51,12 @@ export const EditOptions = (props) => {
 
             <button 
                 style={{
-                    // position:'absolute',
+                    opacity:`${editItem==='badPieceColor' ? 1 : .8}`,
+                    transform: `scale(${editItem==='badPieceColor' ? 1:.8})`,
+                     transition: "all 1000ms",
                     left:`${0}px`,
-                    // width:'50px',
-                    // height:'50px',
                 }}
                 onClick={() => stateHandler('editItem','badPieceColor')}
-                name={'badPieceColor'}
-                // editItem={editItem}
             >
 
                 <Piece
@@ -69,9 +67,22 @@ export const EditOptions = (props) => {
                 />
             </button>
 
-            {/* <button>button</button>
-            <button>button</button>
-            <button>button</button> */}
+            <button
+                style={{
+                    right:'10px'
+                }}
+                onClick={() => stateHandler('colorPickerOpen',false)}
+            >
+                <CloseController 
+                    style={{
+                        position:'absolute',
+                        top:'3px',
+                        left:'3px'
+                    }}
+                >
+                    {CloseButton('#fff')}
+                </CloseController>
+            </button>
 
         </EditOptionsContainer>
     )

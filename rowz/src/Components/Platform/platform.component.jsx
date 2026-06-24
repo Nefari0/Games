@@ -45,11 +45,25 @@ import {
             <Top>
                 {/* top */}
                 <DarkOverLay colorPickerOpen={platformState.colorPickerOpen}>
+
+                  <button 
+                    onClick={() => stateHandler('colorPickerOpen',true)}
+                    style={{
+                      position:'absolute',
+                      top:'500px',
+                      left:'200px',
+                      pointerEvents:'auto'
+                    }}
+                  >
+                    colors
+                  </button>
+
                   <EditOptions
                     platformState={platformState}
                     stateHandler={stateHandler}
                    />
                   <ColorPicker stateHandler={stateHandler} platformState={platformState}/>
+
                   <CurrentPlayer 
                     currentPlayer={currentPlayer.currentPlayer.currentPlayer}
                   />
