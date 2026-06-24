@@ -13,6 +13,16 @@ export const ColorPickerContainer = styled.div`
     pointer-events:auto;
     transition: all 1000ms;
     ${({colorPickerOpen}) => !colorPickerOpen && colorPickerClosed}
+
+    @media (max-height:830px) {
+        transform:scale(.8);
+        top:450px;
+    }
+
+    @media (max-height:720px) {
+        transform:scale(.6);
+        top:400px;
+    }
 `
 
 const overlayActive = css`

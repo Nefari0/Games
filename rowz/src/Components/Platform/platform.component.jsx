@@ -46,17 +46,17 @@ import {
                 {/* top */}
                 <DarkOverLay colorPickerOpen={platformState.colorPickerOpen}>
 
-                  <button 
+                  {!platformState.colorPickerOpen && <button 
                     onClick={() => stateHandler('colorPickerOpen',true)}
                     style={{
                       position:'absolute',
                       top:'500px',
                       left:'200px',
-                      pointerEvents:'auto'
+                      pointerEvents:'auto',
                     }}
                   >
                     colors
-                  </button>
+                  </button>}
 
                   <EditOptions
                     platformState={platformState}
